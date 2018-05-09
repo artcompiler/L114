@@ -265,6 +265,9 @@ exports.validate = validate;
 },{"buffer":5,"hashids":37,"https":38}],2:[function(require,module,exports){
 "use strict";
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /* Copyright (c) 2017, Art Compiler LLC */
+
+
 var _share = require("./share.js");
 
 var _react = require("react");
@@ -281,47 +284,408 @@ window.gcexports.viewer = function () {
   function capture(el) {
     return null;
   }
+  function _render(nodes, props) {
+    var elts = [];
+    if (!(nodes instanceof Array)) {
+      // HACK not all arguments are arrays. Not sure they should be.
+      nodes = [nodes];
+    }
+    nodes.forEach(function (n, i) {
+      var args = [];
+      if (n.args) {
+        args = _render(n.args, props);
+      }
+      switch (n.type) {
+        case "container":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "container", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "container-fluid":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "container-fluid", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "table":
+          elts.push(React.createElement(
+            "table",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "thead":
+          elts.push(React.createElement(
+            "thead",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "tbody":
+          elts.push(React.createElement(
+            "tbody",
+            _extends({ className: "container", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "tr":
+          elts.push(React.createElement(
+            "tr",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "th":
+          elts.push(React.createElement(
+            "th",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "td":
+          elts.push(React.createElement(
+            "td",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "row":
+        case "col":
+        case "col-sm":
+        case "col-sm-4":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: n.type, key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "col-sm":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "col-sm", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "bar-chart":
+          elts.push(React.createElement(BarChart, _extends({ key: i, style: n.style }, n)));
+          break;
+        case "twoColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "two columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "threeColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "three columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "fourColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "four columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "fiveColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "five columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "sixColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "six columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "sevenColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "seven columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "eightColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "eight columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "nineColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "nine columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "tenColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "ten columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "elevenColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "eleven columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "twelveColumns":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "twelve columns", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "oneThirdColumn":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "one-third column", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "twoThirdsColumn":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "two-thirds column", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "oneHalfColumn":
+          elts.push(React.createElement(
+            "div",
+            _extends({ className: "one-half column", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "h1":
+          elts.push(React.createElement(
+            "h1",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "h2":
+          elts.push(React.createElement(
+            "h2",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "h3":
+          elts.push(React.createElement(
+            "h3",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "h4":
+          elts.push(React.createElement(
+            "h4",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "h5":
+          elts.push(React.createElement(
+            "h5",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "h6":
+          elts.push(React.createElement(
+            "h6",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "br":
+          elts.push(React.createElement("br", { key: i }));
+          break;
+        case "code":
+          n.style.fontSize = n.style && n.style.fontSize ? n.style.fontSize : "90%";
+          elts.push(React.createElement(
+            "pre",
+            _extends({ key: i, style: n.style }, n.attrs),
+            React.createElement(
+              "code",
+              null,
+              args
+            )
+          ));
+          break;
+        case "cspan":
+          elts.push(React.createElement(
+            "code",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "textarea":
+          elts.push(React.createElement("textarea", _extends({ className: "u-full-width", key: i, rows: "1", onChange: handleTextChange, style: n.style }, n.attrs)));
+          break;
+        case "button":
+          elts.push(React.createElement(
+            "a",
+            _extends({ className: "button", key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "ul":
+          elts.push(React.createElement(
+            "ul",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "ol":
+          elts.push(React.createElement(
+            "ol",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "li":
+          elts.push(React.createElement(
+            "li",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "img":
+          elts.push(React.createElement("img", _extends({ key: i, style: n.style }, n.attrs)));
+          break;
+        case "a":
+          elts.push(React.createElement(
+            "a",
+            _extends({ key: i, style: n.style }, n.attrs),
+            args
+          ));
+          break;
+        case "title":
+          document.title = n.value;
+          break;
+        case "graffito":
+          // elts.push(
+          //   <div key={i} style={{"position": "relative"}}>
+          //     <iframe style={n.style} {...n.attrs}/>
+          //     <a href={n.attrs.src} target="L116-CHILD" style={{
+          //       "position": "absolute",
+          //       "top": 0,
+          //       "left": 0,
+          //       "display": "inline-block",
+          //       "width": "100%",
+          //       "height": "100%",
+          //       "zIndex": 5}}></a>
+          //   </div>
+          // );
+          // elts.push(
+          //   <div key={i} style={{"position": "relative"}}>
+          //     <iframe style={n.style} {...n.attrs}/>
+          //   </div>
+          // );
+          var src = n.attrs.src;
+          var width = n.attrs.width;
+          var height = n.style.height;
+          elts.push(React.createElement(HTMLView, { key: i, width: width, style: n.style, src: src }));
+          break;
+        case "str":
+          elts.push(React.createElement(
+            "span",
+            { className: "u-full-width", key: i, style: n.style },
+            "" + n.value
+          ));
+          break;
+        default:
+          break;
+      }
+    });
+    return elts;
+  }
+  var BarChart = React.createClass({
+    displayName: "BarChart",
+    componentDidMount: function componentDidMount() {
+      this.componentDidUpdate();
+    },
+    componentDidUpdate: function componentDidUpdate() {
+      var data = [];
+      var cols = this.props.args.cols;
+      var vals = this.props.args.vals;
+      var lblName = cols[0].name;
+      var valName = cols[1].name;
+      vals.forEach(function (v) {
+        var d = {};
+        d[lblName] = v[lblName];
+        d[valName] = v[valName];
+        data.push(d);
+      });
+      d3.select("svg.bar-chart").html("<g/>");
+      var svg = d3.select("svg.bar-chart"),
+          margin = { top: 20, right: 20, bottom: 30, left: 40 },
+          width = +svg.attr("width") - margin.left - margin.right,
+          height = +svg.attr("height") - margin.top - margin.bottom;
+
+      var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
+          y = d3.scaleLinear().rangeRound([height, 0]);
+
+      var g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      x.domain(data.map(function (d) {
+        return d[lblName];
+      }));
+      y.domain([0, d3.max(data, function (d) {
+        return d[valName];
+      })]);
+
+      g.append("g").attr("class", "axis axis--x").attr("transform", "translate(0," + height + ")").call(d3.axisBottom(x));
+
+      g.append("g").attr("class", "axis axis--y").call(d3.axisLeft(y).ticks(10, "%")).append("text").attr("transform", "rotate(-90)").attr("y", 6).attr("dy", "0.71em").attr("text-anchor", "end").text("Frequency");
+
+      g.selectAll(".bar").data(data).enter().append("rect").attr("class", "bar").attr("x", function (d) {
+        return x(d[lblName]);
+      }).attr("y", function (d) {
+        return y(d[valName]);
+      }).attr("width", x.bandwidth()).attr("height", function (d) {
+        return height - y(d.frequency);
+      });
+    },
+    render: function render() {
+      return React.createElement("svg", { className: "bar-chart", width: "960", height: "500" });
+    }
+  });
   var Viewer = React.createClass({
     displayName: "Viewer",
-
-    componentDidMount: function componentDidMount() {},
     render: function render() {
       // If you have nested components, make sure you send the props down to the
       // owned components.
       var props = this.props;
-      var obj = props.obj ? [].concat(props.obj) : [];
-      var elts = [];
-      obj.forEach(function (d, i) {
-        var style = {};
-        if (d.style) {
-          Object.keys(d.style).forEach(function (k) {
-            style[k] = d.style[k];
-          });
-        }
-        var val = d.value ? d.value : d;
-        if (val instanceof Array) {
-          val = val.join(" ");
-        } else if (typeof val !== "string" && typeof val !== "number" && typeof val !== "boolean") {
-          val = JSON.stringify(val);
-        }
-        elts.push(React.createElement(
-          "span",
-          { key: i, style: style },
-          val
-        ));
-      });
-      return elts.length > 0 ? React.createElement(
+      var data = props.obj ? [].concat(props.obj) : [];
+      var elts = _render(data, props);
+      return React.createElement(
         "div",
-        null,
+        { className: "L133" },
         elts
-      ) : React.createElement("div", null);
+      );
     }
   });
   return {
     capture: capture,
     Viewer: Viewer
   };
-}(); /* Copyright (c) 2017, Art Compiler LLC */
+}();
 },{"./share.js":1,"d3":8,"react":177}],3:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
