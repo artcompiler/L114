@@ -19,6 +19,8 @@ messages[1004] = "No visitor method defined for '%1'.";
 
 const transform = (function() {
   const table = {
+    "LINE-WIDTH": lineWidth,
+    "LINE-COLORS": lineColors,
     "BAR-CHART": barChart,
     "TIMESERIES-CHART": timeseriesChart,
     "PROG" : program,
@@ -93,7 +95,6 @@ const transform = (function() {
   function timeseriesChart(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
-        console.log("timeseriesChart() val1=" + JSON.stringify(val1));
         let cols = val0;
         let vals = val1;
         resume([].concat(err0).concat(err1), {
@@ -103,6 +104,22 @@ const transform = (function() {
             vals: vals,
           }
         });
+      });
+    });
+  };
+  function lineWidth(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.lineWidth = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function lineColors(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.lineColors = val0;
+        resume([].concat(err0).concat(err1), val1);
       });
     });
   };

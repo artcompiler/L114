@@ -419,8 +419,9 @@ window.gcexports.viewer = (function () {
       });
     },
     componentDidUpdate() {
-//      let columns = this.props.args.vals;
       let rows = [["x", "data1"]].concat(this.props.args.vals);
+      let lineWidth = this.props.lineWidth;
+      let lineColors = this.props.lineColors;
       var chart = c3.generate({
         bindto: "#chart",
         data: {
@@ -431,11 +432,24 @@ window.gcexports.viewer = (function () {
           x: {
             type: 'timeseries',
             tick: {
-                format: '%Y-%m-%d'
-            }
-          }
-        }
+                format: '%m-%d'
+            },
+            // padding: {
+            //   left: "0",
+            //   right: "0",
+            // },
+          },
+        },
+        color: {
+          pattern: lineColors,
+        },
+        legend: {
+          show: false,
+        },
       });
+      if (this.props.lineWidth) {
+        d3.selectAll(".c3-line").style("stroke-width", lineWidth)
+      }
     },
     render () {
       return (

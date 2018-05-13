@@ -680,8 +680,9 @@ window.gcexports.viewer = function () {
       });
     },
     componentDidUpdate: function componentDidUpdate() {
-      //      let columns = this.props.args.vals;
       var rows = [["x", "data1"]].concat(this.props.args.vals);
+      var lineWidth = this.props.lineWidth;
+      var lineColors = this.props.lineColors;
       var chart = c3.generate({
         bindto: "#chart",
         data: {
@@ -692,11 +693,24 @@ window.gcexports.viewer = function () {
           x: {
             type: 'timeseries',
             tick: {
-              format: '%Y-%m-%d'
+              format: '%m-%d'
             }
+            // padding: {
+            //   left: "0",
+            //   right: "0",
+            // },
           }
+        },
+        color: {
+          pattern: lineColors
+        },
+        legend: {
+          show: false
         }
       });
+      if (this.props.lineWidth) {
+        d3.selectAll(".c3-line").style("stroke-width", lineWidth);
+      }
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -717,7 +731,7 @@ window.gcexports.viewer = function () {
         React.createElement("link", { rel: "stylesheet", href: "L104/style.css" }),
         React.createElement(
           "div",
-          { className: "L133" },
+          { className: "L104" },
           elts
         )
       );

@@ -30,10 +30,8 @@ app.get("/compile", function(req, res) {
   });
   req.on('end', function () {
     body = JSON.parse(body);
-    console.log("GET /compile body=" + JSON.stringify(body, null, 2));
     let auth = body.auth;
     validate(auth, (err, data) => {
-      console.log("GET /compile data=" + JSON.stringify(data));
       if (err) {
         res.send(err);
       } else {
@@ -120,7 +118,6 @@ function validate(token, resume) {
       jwt: token,
       lang: "L" + langID,
     }, (err, data) => {
-      console.log("validated() data=" + JSON.stringify(data));
       validated[token] = data;
       resume(err, data);
       count(token, 1);

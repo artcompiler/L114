@@ -1,6 +1,7 @@
 /* @flow */
 window.gcexports.globalLexicon = {
-  "bar-chart" : { "tk": 1, "name": "BAR-CHART", "cls": "function", "length": 2, "arity": 2 },
+  "line-width" : { "tk": 1, "name": "LINE-WIDTH", "cls": "function", "length": 2, "arity": 2 },
+  "line-colors" : { "tk": 1, "name": "LINE-COLORS", "cls": "function", "length": 2, "arity": 2 },
   "timeseries-chart" : { "tk": 1, "name": "TIMESERIES-CHART", "cls": "function", "length": 2, "arity": 2 },
   "val" : { "tk": 1, "name": "VAL", "cls": "function", "length": 2 , "arity": 2 },
   "key" : { "tk": 1, "name": "KEY", "cls": "function", "length": 2 , "arity": 2 },

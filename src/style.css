@@ -180,3 +180,10 @@
 .axis--x path {
   display: none;
 }
+.c3-line {
+  stroke-width: 7px;
+  stroke-linecap: round;
+}
+.c3-axis {
+  color: "#777";
+}
