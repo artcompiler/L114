@@ -19,6 +19,7 @@ messages[1004] = "No visitor method defined for '%1'.";
 
 const transform = (function() {
   const table = {
+    "HIDE-AXIS": hideAxis,
     "LINE-WIDTH": lineWidth,
     "LINE-COLORS": lineColors,
     "BAR-CHART": barChart,
@@ -105,6 +106,12 @@ const transform = (function() {
           }
         });
       });
+    });
+  };
+  function hideAxis(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      val0.showAxis = false;
+      resume([].concat(err0), val0);
     });
   };
   function lineWidth(node, options, resume) {

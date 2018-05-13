@@ -684,6 +684,7 @@ window.gcexports.viewer = function () {
       var rows = [["x", "data1"]].concat(this.props.args.vals);
       var lineWidth = this.props.lineWidth;
       var lineColors = this.props.lineColors;
+      var showAxis = this.props.showAxis;
       var chart = c3.generate({
         bindto: "#chart",
         data: {
@@ -695,11 +696,11 @@ window.gcexports.viewer = function () {
             type: 'timeseries',
             tick: {
               format: '%m-%d'
-            }
-            // padding: {
-            //   left: "0",
-            //   right: "0",
-            // },
+            },
+            show: showAxis
+          },
+          y: {
+            show: showAxis
           }
         },
         color: {

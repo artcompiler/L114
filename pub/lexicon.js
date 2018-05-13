@@ -1,5 +1,6 @@
 /* @flow */
 window.gcexports.globalLexicon = {
+  "hide-axis" : { "tk": 1, "name": "HIDE-AXIS", "cls": "function", "length": 1, "arity": 1 },
   "line-width" : { "tk": 1, "name": "LINE-WIDTH", "cls": "function", "length": 2, "arity": 2 },
   "line-colors" : { "tk": 1, "name": "LINE-COLORS", "cls": "function", "length": 2, "arity": 2 },
   "timeseries-chart" : { "tk": 1, "name": "TIMESERIES-CHART", "cls": "function", "length": 2, "arity": 2 },
