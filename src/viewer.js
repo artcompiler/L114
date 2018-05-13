@@ -15,6 +15,7 @@ window.gcexports.viewer = (function () {
     script.onload = resume;
     script.src = src;
     script.type = "text/javascript";
+    script.async = true;
     document.getElementsByTagName("head")[0].appendChild(script);
   }
   function loadStyle(src, resume) {
