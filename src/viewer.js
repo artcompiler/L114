@@ -9,8 +9,21 @@ import {
   encodeID,
 } from "./share.js";
 import * as React from "react";
-import * as d3 from "d3";
 window.gcexports.viewer = (function () {
+  function loadScript(src, resume) {
+    var script = document.createElement("script");
+    script.onload = resume;
+    script.src = src;
+    script.type = "text/javascript";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  }
+  function loadStyle(src, resume) {
+    var link = document.createElement("link");
+    link.onload = resume;
+    link.href = src;
+    link.rel = "stylesheet";
+    document.getElementsByTagName("head")[0].appendChild(link);
+  }
   function capture(el) {
     return null;
   }
@@ -102,6 +115,11 @@ window.gcexports.viewer = (function () {
       case "bar-chart":
         elts.push(
           <BarChart key={i} style={n.style} {...n}/>
+        );
+        break;
+      case "timeseries-chart":
+        elts.push(
+          <TimeseriesChart key={i} style={n.style} {...n}/>
         );
         break;
       case "twoColumns":
@@ -350,66 +368,84 @@ window.gcexports.viewer = (function () {
   }
   var BarChart = React.createClass({
     componentDidMount() {
-      this.componentDidUpdate();
+      loadScript("/L104/d3.js", () => {
+        loadScript("/L104/c3.js", () => {
+          loadStyle("/L104/c3.css", () => {
+            this.componentDidUpdate();
+          });
+        });
+      });
     },
     componentDidUpdate() {
-      let data = [];
-      let cols = this.props.args.cols;
-      let vals = this.props.args.vals;
-      let lblName = cols[0].name;
-      let valName = cols[1].name;
-      vals.forEach(v => {
-        let d = {};
-        d[lblName] = v[lblName];
-        d[valName] = v[valName];
-        data.push(d);
-      });      
-      d3.select("svg.bar-chart").html("<g/>");
-      var svg = d3.select("svg.bar-chart"),
-          margin = {top: 20, right: 20, bottom: 30, left: 40},
-          width = +svg.attr("width") - margin.left - margin.right,
-          height = +svg.attr("height") - margin.top - margin.bottom;
-
-      var x = d3.scaleBand().rangeRound([0, width]).padding(0.1),
-      y = d3.scaleLinear().rangeRound([height, 0]);
-
-      var g = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-      x.domain(data.map(function(d) { return d[lblName]; }));
-      y.domain([0, d3.max(data, function(d) { return d[valName]; })]);
-
-      g.append("g")
-        .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x));
-
-      g.append("g")
-        .attr("class", "axis axis--y")
-        .call(d3.axisLeft(y).ticks(10, "%"))
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", "0.71em")
-        .attr("text-anchor", "end")
-        .text("Frequency");
-
-      g.selectAll(".bar")
-        .data(data)
-        .enter().append("rect")
-        .attr("class", "bar")
-        .attr("x", function(d) { return x(d[lblName]); })
-        .attr("y", function(d) { return y(d[valName]); })
-        .attr("width", x.bandwidth())
-        .attr("height", function(d) { return height - y(d.frequency); });
+      var chart = c3.generate({
+        bindto: "#bar-chart",
+        data: {
+          columns: [
+            ['data1', 30, 200, 100, 400, 150, 250],
+            ['data2', 130, 100, 140, 200, 150, 50]
+          ],
+          type: 'bar'
+        },
+        bar: {
+          width: {
+            ratio: 0.5 // this makes bar width 50% of length between ticks
+          }
+          // or
+          //width: 100 // this makes bar width 100px
+        }
+      });
+      setTimeout(function () {
+        chart.load({
+          columns: [
+            ['data3', 130, -150, 200, 300, -200, 100]
+          ]
+        });
+      }, 1000);
     },
     render () {
       return (
-        <svg className="bar-chart" width="960" height="500"/>
+        <div id="bar-chart" />
+      );
+    },
+  });
+  var TimeseriesChart = React.createClass({
+    componentDidMount() {
+      loadScript("/L104/d3.js", () => {
+        loadScript("/L104/c3.js", () => {
+          loadStyle("/L104/c3.css", () => {
+            this.componentDidUpdate();
+          });
+        });
+      });
+    },
+    componentDidUpdate() {
+//      let columns = this.props.args.vals;
+      let rows = [["x", "data1"]].concat(this.props.args.vals);
+      var chart = c3.generate({
+        bindto: "#chart",
+        data: {
+          x: "x",
+          rows: rows,
+        },
+        axis: {
+          x: {
+            type: 'timeseries',
+            tick: {
+                format: '%Y-%m-%d'
+            }
+          }
+        }
+      });
+    },
+    render () {
+      return (
+        <div id="chart" />
       );
     },
   });
   var Viewer = React.createClass({
+    componentDidUpdate() {
+    },
     render () {
       // If you have nested components, make sure you send the props down to the
       // owned components.
@@ -417,8 +453,11 @@ window.gcexports.viewer = (function () {
       var data = props.obj ? [].concat(props.obj) : [];
       var elts = render(data, props);
       return (
-        <div className="L133">
+        <div>
+        <link rel="stylesheet" href="L104/style.css" />
+        <div className="L104">
           {elts}
+        </div>
         </div>
       );
     },

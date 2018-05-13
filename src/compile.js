@@ -20,6 +20,7 @@ messages[1004] = "No visitor method defined for '%1'.";
 const transform = (function() {
   const table = {
     "BAR-CHART": barChart,
+    "TIMESERIES-CHART": timeseriesChart,
     "PROG" : program,
     "EXPRS" : exprs,
     "STR": str,
@@ -81,6 +82,22 @@ const transform = (function() {
         let vals = val1;
         resume([].concat(err0).concat(err1), {
           type: "bar-chart",
+          args: {
+            cols: cols,
+            vals: vals,
+          }
+        });
+      });
+    });
+  };
+  function timeseriesChart(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        console.log("timeseriesChart() val1=" + JSON.stringify(val1));
+        let cols = val0;
+        let vals = val1;
+        resume([].concat(err0).concat(err1), {
+          type: "timeseries-chart",
           args: {
             cols: cols,
             vals: vals,

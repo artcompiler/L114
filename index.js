@@ -30,8 +30,10 @@ app.get("/compile", function(req, res) {
   });
   req.on('end', function () {
     body = JSON.parse(body);
+    console.log("GET /compile body=" + JSON.stringify(body, null, 2));
     let auth = body.auth;
     validate(auth, (err, data) => {
+      console.log("GET /compile data=" + JSON.stringify(data));
       if (err) {
         res.send(err);
       } else {
@@ -40,7 +42,7 @@ app.get("/compile", function(req, res) {
           res.sendStatus(401).send(err);
         } else {
           let code = body.src;
-          let data = body.data;
+          let data = body.data || {};
           data.REFRESH = body.refresh; // Stowaway flag.
           let t0 = new Date;
           let obj = compiler.compile(code, data, function (err, val) {
@@ -118,6 +120,7 @@ function validate(token, resume) {
       jwt: token,
       lang: "L" + langID,
     }, (err, data) => {
+      console.log("validated() data=" + JSON.stringify(data));
       validated[token] = data;
       resume(err, data);
       count(token, 1);
