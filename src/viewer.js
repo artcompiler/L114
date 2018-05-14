@@ -371,9 +371,7 @@ window.gcexports.viewer = (function () {
     componentDidMount() {
       loadScript("/L104/d3.js", () => {
         loadScript("/L104/c3.js", () => {
-          loadStyle("/L104/c3.css", () => {
-            this.componentDidUpdate();
-          });
+          this.componentDidUpdate();
         });
       });
     },
