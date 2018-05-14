@@ -730,7 +730,7 @@ window.gcexports.viewer = function () {
       return React.createElement(
         "div",
         null,
-        React.createElement("link", { rel: "stylesheet", href: "L104/style.css" }),
+        React.createElement("link", { rel: "stylesheet", href: "https://l104.artcompiler.com/style.css" }),
         React.createElement(
           "div",
           { className: "L104" },
