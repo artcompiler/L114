@@ -1,9 +1,13 @@
 /* @flow */
 window.gcexports.globalLexicon = {
+  "dot-radius" : { "tk": 1, "name": "DOT-RADIUS", "cls": "function", "length": 2, "arity": 2 },
+  "width" : { "tk": 1, "name": "WIDTH", "cls": "function", "length": 2, "arity": 2 },
+  "height" : { "tk": 1, "name": "HEIGHT", "cls": "function", "length": 2, "arity": 2 },
   "hide-axis" : { "tk": 1, "name": "HIDE-AXIS", "cls": "function", "length": 1, "arity": 1 },
   "line-width" : { "tk": 1, "name": "LINE-WIDTH", "cls": "function", "length": 2, "arity": 2 },
   "line-colors" : { "tk": 1, "name": "LINE-COLORS", "cls": "function", "length": 2, "arity": 2 },
   "timeseries-chart" : { "tk": 1, "name": "TIMESERIES-CHART", "cls": "function", "length": 2, "arity": 2 },
+  "area-chart" : { "tk": 1, "name": "AREA-CHART", "cls": "function", "length": 2, "arity": 2 },
   "val" : { "tk": 1, "name": "VAL", "cls": "function", "length": 2 , "arity": 2 },
   "key" : { "tk": 1, "name": "KEY", "cls": "function", "length": 2 , "arity": 2 },
   "len" : { "tk": 1, "name": "LEN", "cls": "function", "length": 1 , "arity": 1 },

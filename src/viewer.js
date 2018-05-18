@@ -123,6 +123,11 @@ window.gcexports.viewer = (function () {
           <TimeseriesChart key={i} style={n.style} {...n}/>
         );
         break;
+      case "area-chart":
+        elts.push(
+          <AreaChart key={i} style={n.style} {...n}/>
+        );
+        break;
       case "twoColumns":
         elts.push(
           <div className="two columns" key={i} style={n.style} {...n.attrs}>
@@ -391,7 +396,11 @@ window.gcexports.viewer = (function () {
           }
           // or
           //width: 100 // this makes bar width 100px
-        }
+        },
+        size: {
+          width: this.props.width,
+          height: this.props.height,
+        },
       });
       setTimeout(function () {
         chart.load({
@@ -432,7 +441,7 @@ window.gcexports.viewer = (function () {
           x: {
             type: 'timeseries',
             tick: {
-                format: '%m-%d'
+//                format: '%m-%d'
             },
             show: showAxis,
           },
@@ -446,9 +455,72 @@ window.gcexports.viewer = (function () {
         legend: {
           show: false,
         },
+        size: {
+          width: this.props.width,
+          height: this.props.height,
+        },
       });
       if (this.props.lineWidth) {
         d3.selectAll(".c3-line").style("stroke-width", lineWidth)
+      }
+    },
+    render () {
+      return (
+        <div id="chart" />
+      );
+    },
+  });
+  var AreaChart = React.createClass({
+    componentDidMount() {
+      loadScript("/L104/d3.js", () => {
+        loadScript("/L104/c3.js", () => {
+          loadStyle("/L104/c3.css", () => {
+            this.componentDidUpdate();
+          });
+        });
+      });
+    },
+    componentDidUpdate() {
+      let labels = this.props.labels || ["data1"];
+      let rows = [labels].concat(this.props.args.vals);
+      let lineWidth = this.props.lineWidth;
+      let lineColors = this.props.lineColors;
+      let showAxis = this.props.showAxis;
+      let dotRadius = this.props.dotRadius;
+      let min = Math.min(...this.props.args.vals);
+      let max = Math.max(...this.props.args.vals);
+      let pad = (max - min) / 3;
+      var chart = c3.generate({
+        bindto: "#chart",
+        data: {
+          rows: rows,
+          types: {
+            data1: "area",
+          },
+        },
+        legend: {
+          show: false,
+        },
+        axis: {
+          x: {
+            show: showAxis,
+          },
+          y: {
+            min: min - pad,
+            show: showAxis,
+          },
+        },
+        color: {
+          pattern: lineColors,
+        },
+        size: {
+          width: this.props.width,
+          height: this.props.height,
+        },
+      });
+      if (this.props.lineWidth) {
+        d3.selectAll(".c3-line").style("stroke-width", lineWidth)
+        d3.selectAll(".c3-circle").attr("r", dotRadius)
       }
     },
     render () {

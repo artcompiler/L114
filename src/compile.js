@@ -20,10 +20,14 @@ messages[1004] = "No visitor method defined for '%1'.";
 const transform = (function() {
   const table = {
     "HIDE-AXIS": hideAxis,
+    "DOT-RADIUS": dotRadius,
+    "WIDTH": width,
+    "HEIGHT": height,
     "LINE-WIDTH": lineWidth,
     "LINE-COLORS": lineColors,
     "BAR-CHART": barChart,
     "TIMESERIES-CHART": timeseriesChart,
+    "AREA-CHART": areaChart,
     "PROG" : program,
     "EXPRS" : exprs,
     "STR": str,
@@ -108,10 +112,49 @@ const transform = (function() {
       });
     });
   };
+  function areaChart(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        let cols = val0;
+        let vals = val1;
+        resume([].concat(err0).concat(err1), {
+          type: "area-chart",
+          args: {
+            cols: cols,
+            vals: vals,
+          }
+        });
+      });
+    });
+  };
   function hideAxis(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       val0.showAxis = false;
       resume([].concat(err0), val0);
+    });
+  };
+  function dotRadius(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.dotRadius = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function width(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.width = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function height(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.height = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
     });
   };
   function lineWidth(node, options, resume) {

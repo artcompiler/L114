@@ -276,6 +276,8 @@ var React = _interopRequireWildcard(_react);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 window.gcexports.viewer = function () {
   function loadScript(src, resume) {
     var script = document.createElement("script");
@@ -385,6 +387,9 @@ window.gcexports.viewer = function () {
           break;
         case "timeseries-chart":
           elts.push(React.createElement(TimeseriesChart, _extends({ key: i, style: n.style }, n)));
+          break;
+        case "area-chart":
+          elts.push(React.createElement(AreaChart, _extends({ key: i, style: n.style }, n)));
           break;
         case "twoColumns":
           elts.push(React.createElement(
@@ -653,7 +658,11 @@ window.gcexports.viewer = function () {
 
             // or
             //width: 100 // this makes bar width 100px
-          } }
+          } },
+        size: {
+          width: this.props.width,
+          height: this.props.height
+        }
       });
       setTimeout(function () {
         chart.load({
@@ -693,7 +702,7 @@ window.gcexports.viewer = function () {
           x: {
             type: 'timeseries',
             tick: {
-              format: '%m-%d'
+              //                format: '%m-%d'
             },
             show: showAxis
           },
@@ -706,10 +715,74 @@ window.gcexports.viewer = function () {
         },
         legend: {
           show: false
+        },
+        size: {
+          width: this.props.width,
+          height: this.props.height
         }
       });
       if (this.props.lineWidth) {
         d3.selectAll(".c3-line").style("stroke-width", lineWidth);
+      }
+    },
+    render: function render() {
+      return React.createElement("div", { id: "chart" });
+    }
+  });
+  var AreaChart = React.createClass({
+    displayName: "AreaChart",
+    componentDidMount: function componentDidMount() {
+      var _this3 = this;
+
+      loadScript("/L104/d3.js", function () {
+        loadScript("/L104/c3.js", function () {
+          loadStyle("/L104/c3.css", function () {
+            _this3.componentDidUpdate();
+          });
+        });
+      });
+    },
+    componentDidUpdate: function componentDidUpdate() {
+      var labels = this.props.labels || ["data1"];
+      var rows = [labels].concat(this.props.args.vals);
+      var lineWidth = this.props.lineWidth;
+      var lineColors = this.props.lineColors;
+      var showAxis = this.props.showAxis;
+      var dotRadius = this.props.dotRadius;
+      var min = Math.min.apply(Math, _toConsumableArray(this.props.args.vals));
+      var max = Math.max.apply(Math, _toConsumableArray(this.props.args.vals));
+      var pad = (max - min) / 3;
+      var chart = c3.generate({
+        bindto: "#chart",
+        data: {
+          rows: rows,
+          types: {
+            data1: "area"
+          }
+        },
+        legend: {
+          show: false
+        },
+        axis: {
+          x: {
+            show: showAxis
+          },
+          y: {
+            min: min - pad,
+            show: showAxis
+          }
+        },
+        color: {
+          pattern: lineColors
+        },
+        size: {
+          width: this.props.width,
+          height: this.props.height
+        }
+      });
+      if (this.props.lineWidth) {
+        d3.selectAll(".c3-line").style("stroke-width", lineWidth);
+        d3.selectAll(".c3-circle").attr("r", dotRadius);
       }
     },
     render: function render() {
