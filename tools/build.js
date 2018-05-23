@@ -46,7 +46,8 @@ function bundle(debug) {
   exec("cp ./src/lexicon.js ./pub");
   exec("cp ./src/style.css ./pub");
   exec("cp ./node_modules/d3/build/d3.min.js ./pub/d3.js");
-  exec("cp ./c3/c3.min.js ./pub/c3.js");
+  exec("cp ./c3/c3.js ./pub/c3.js");
+  exec("cp ./c3/c3.css ./pub/c3.css");
   if (debug) {
     exec("browserify ./lib/viewer.js -s viewer > ./pub/viewer.js");
   } else {

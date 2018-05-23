@@ -381,34 +381,51 @@ window.gcexports.viewer = (function () {
       });
     },
     componentDidUpdate() {
+      let props = this.props;
+      let xAxisLabel = props.xAxisLabel;
+      let barWidth = props.barWidth || {ratio: 0.5};
+      let labels = props.labels ? [this.props.labels] : [];
+      let colors = props.colors
+      let padding = props.padding;
+      let rows = labels.concat(props.args.vals);
       var chart = c3.generate({
         bindto: "#bar-chart",
         data: {
-          columns: [
-            ['data1', 30, 200, 100, 400, 150, 250],
-            ['data2', 130, 100, 140, 200, 150, 50]
-          ],
+          rows: rows,
           type: 'bar'
         },
+        color: {
+          pattern: colors,
+        },
         bar: {
-          width: {
-            ratio: 0.5 // this makes bar width 50% of length between ticks
-          }
-          // or
-          //width: 100 // this makes bar width 100px
+          width: barWidth,
         },
         size: {
-          width: this.props.width,
-          height: this.props.height,
+          width: props.width,
+          height: props.height,
         },
+        axis: {
+          x: {
+            label: {
+              text: xAxisLabel,
+              position: "outer-center",
+            }
+          }
+        }
       });
-      setTimeout(function () {
-        chart.load({
-          columns: [
-            ['data3', 130, -150, 200, 300, -200, 100]
-          ]
-        });
-      }, 1000);
+      if (padding) {
+        let labels = rows[0];
+        if (labels.length === 2) {
+          d3.selectAll(".c3-target-" + labels[0]).attr("transform", "translate(" + (-padding / 2) + ")");
+          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + (padding / 2) + ")");
+        }
+      }
+      d3.selectAll(".c3-legend-item-tile").nodes().forEach(n => {
+        let x1 = +d3.select(n).attr("x1");
+        d3.select(n).attr("x1", x1 + 5);
+        d3.select(n).attr("x2", x1 + 5);
+      });
+      d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round")
     },
     render () {
       return (
@@ -429,7 +446,7 @@ window.gcexports.viewer = (function () {
     componentDidUpdate() {
       let rows = [["x", "data1"]].concat(this.props.args.vals);
       let lineWidth = this.props.lineWidth;
-      let lineColors = this.props.lineColors;
+      let colors = this.props.colors;
       let showAxis = this.props.showAxis;
       var chart = c3.generate({
         bindto: "#chart",
@@ -450,7 +467,7 @@ window.gcexports.viewer = (function () {
           },
         },
         color: {
-          pattern: lineColors,
+          pattern: colors,
         },
         legend: {
           show: false,
@@ -484,7 +501,7 @@ window.gcexports.viewer = (function () {
       let labels = this.props.labels || ["data1"];
       let rows = [labels].concat(this.props.args.vals);
       let lineWidth = this.props.lineWidth;
-      let lineColors = this.props.lineColors;
+      let colors = this.props.colors;
       let showAxis = this.props.showAxis;
       let dotRadius = this.props.dotRadius;
       let min = Math.min(...this.props.args.vals);
@@ -511,17 +528,13 @@ window.gcexports.viewer = (function () {
           },
         },
         color: {
-          pattern: lineColors,
+          pattern: colors,
         },
         size: {
           width: this.props.width,
           height: this.props.height,
         },
       });
-      if (this.props.lineWidth) {
-        d3.selectAll(".c3-line").style("stroke-width", lineWidth)
-        d3.selectAll(".c3-circle").attr("r", dotRadius)
-      }
     },
     render () {
       return (

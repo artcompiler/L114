@@ -19,12 +19,16 @@ messages[1004] = "No visitor method defined for '%1'.";
 
 const transform = (function() {
   const table = {
+    "X-AXIS-LABEL": xAxisLabel,
+    "PADDING": padding,
     "HIDE-AXIS": hideAxis,
     "DOT-RADIUS": dotRadius,
+    "BAR-WIDTH": barWidth,
     "WIDTH": width,
     "HEIGHT": height,
     "LINE-WIDTH": lineWidth,
-    "LINE-COLORS": lineColors,
+    "LINE-COLORS": colors,
+    "COLORS": colors,
     "BAR-CHART": barChart,
     "TIMESERIES-CHART": timeseriesChart,
     "AREA-CHART": areaChart,
@@ -84,16 +88,12 @@ const transform = (function() {
   // BEGIN VISITOR METHODS
   function barChart(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
-      visit(node.elts[1], options, function (err1, val1) {
-        let cols = val0;
-        let vals = val1;
-        resume([].concat(err0).concat(err1), {
-          type: "bar-chart",
-          args: {
-            cols: cols,
-            vals: vals,
-          }
-        });
+      let vals = val0;
+      resume([].concat(err0), {
+        type: "bar-chart",
+        args: {
+          vals: vals,
+        }
       });
     });
   };
@@ -141,6 +141,30 @@ const transform = (function() {
       });
     });
   };
+  function xAxisLabel(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.xAxisLabel = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function padding(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.padding = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function barWidth(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.barWidth = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
   function width(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
@@ -165,10 +189,10 @@ const transform = (function() {
       });
     });
   };
-  function lineColors(node, options, resume) {
+  function colors(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
-        val1.lineColors = val0;
+        val1.colors = val0;
         resume([].concat(err0).concat(err1), val1);
       });
     });
