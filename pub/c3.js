@@ -7676,7 +7676,7 @@
         return function (d, i) {
           // 4 points that make a bar
           var points = getPoints(d, i);
-          
+
           // switch points if axis is rotated, not applicable for sub chart
           var indexX = config.axis_rotated ? 1 : 0;
           var indexY = config.axis_rotated ? 0 : 1;
@@ -7690,15 +7690,15 @@
           let x4 = points[3][indexX];
           let y4 = points[3][indexY];
           let r = (x4 - x1) / 2;
-
-            var path = 
-                'M' + x1 + ',' + (y1 - r) + ' ' + 
+          let p = config.axis_y_padding.bottom || 0;
+          var path =
+                'M' + x1 + ',' + (y1 - r - p) + ' ' +
                 'L' + x2 + ',' + (y2 + r) + ' ' +
                 'A' + r + "," + r + " 0 0 1 " + x3 + ',' + (y3 + r) + ' ' +
-                'L' + x4 + ',' + (y4 - r) + " " +
-                'A' + r + "," + r + " 0 0 1 " + x1 + ',' + (y1 - r) + ' ' +
+                'L' + x4 + ',' + (y4 - r - p) + " " +
+                'A' + r + "," + r + " 0 0 1 " + x1 + ',' + (y1 - r - p) + ' ' +
                 'z';
-            return path;
+          return path;
         };
     };
     c3_chart_internal_fn.generateGetBarPoints = function (barIndices, isSub) {

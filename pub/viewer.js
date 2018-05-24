@@ -717,6 +717,10 @@ window.gcexports.viewer = function () {
       }
       var chart = c3.generate({
         bindto: "#bar-chart",
+        padding: {
+          left: 60,
+          bottom: 60
+        },
         data: {
           rows: rows,
           type: 'bar',
@@ -763,6 +767,13 @@ window.gcexports.viewer = function () {
           y: {
             show: true
           }
+        },
+        legend: {
+          padding: 10,
+          inset: {
+            y: 10,
+            anchor: "bottom-left"
+          }
         }
       });
       if (gap && !groups) {
@@ -771,6 +782,11 @@ window.gcexports.viewer = function () {
           d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + gap / 2 + ")");
         }
       }
+      d3.selectAll(".c3-legend-item").attr("transform", "translate(0,-20)");
+      d3.selectAll(".c3-legend-item").nodes().forEach(function (n) {
+        n = n;
+      });
+      // Make tiles round.
       d3.selectAll(".c3-legend-item-tile").nodes().forEach(function (n) {
         var x1 = +d3.select(n).attr("x1");
         d3.select(n).attr("x1", x1 + 5);
