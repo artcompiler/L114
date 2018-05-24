@@ -19,8 +19,12 @@ messages[1004] = "No visitor method defined for '%1'.";
 
 const transform = (function() {
   const table = {
+    "X-TICK-FORMAT": xTickFormat,
+    "Y-TICK-FORMAT": yTickFormat,
+    "Y-TICK-SIZE": yTickSize,
     "X-AXIS-LABEL": xAxisLabel,
     "PADDING": padding,
+    "GAP": gap,
     "HORIZONTAL": horizontal,
     "HIDE-AXIS": hideAxis,
     "STACK": stack,
@@ -169,10 +173,42 @@ const transform = (function() {
       });
     });
   };
+  function xTickFormat(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.xTickFormat = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function yTickFormat(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.yTickFormat = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function yTickSize(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.yTickSize = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
   function padding(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
         val1.padding = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function gap(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.gap = val0;
         resume([].concat(err0).concat(err1), val1);
       });
     });

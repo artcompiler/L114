@@ -265,6 +265,8 @@ exports.validate = validate;
 },{"buffer":5,"hashids":36,"https":37}],2:[function(require,module,exports){
 "use strict";
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; /* Copyright (c) 2017, Art Compiler LLC */
 
 
@@ -634,6 +636,42 @@ window.gcexports.viewer = function () {
     });
     return elts;
   }
+  var getRange = function getRange(vals) {
+    var min = 0,
+        max = 0;
+    vals.forEach(function (val) {
+      if (val instanceof Array) {
+        var _getRange = getRange(val),
+            _getRange2 = _slicedToArray(_getRange, 2),
+            tmin = _getRange2[0],
+            tmax = _getRange2[1];
+
+        if (tmin < min) {
+          min = tmin;
+        }
+        if (tmax > max) {
+          max = tmax;
+        }
+      } else {
+        val = +val;
+        if (val < min) {
+          min = val;
+        }
+        if (val > max) {
+          max = val;
+        }
+      }
+    });
+    return [min, max];
+  };
+  var formatTick = function formatTick(fmt, d) {
+    // If array, then use i to select format string.
+    if (fmt instanceof Object) {
+      return fmt[d] && fmt[d].replace("_", d);
+    } else {
+      return fmt.replace("_", d);
+    }
+  };
   var BarChart = React.createClass({
     displayName: "BarChart",
     componentDidMount: function componentDidMount() {
@@ -654,8 +692,29 @@ window.gcexports.viewer = function () {
       var colors = props.colors;
       var horizontal = props.horizontal;
       var padding = props.padding;
+      var gap = props.gap;
       var style = props.style;
       var groups = props.stack ? [labels] : undefined;
+      var yTickSize = props.yTickSize;
+      var xTickFormat = props.xTickFormat || "_";
+      var yTickFormat = props.yTickFormat || "_";
+      var yTickValues = void 0;
+      if (yTickSize) {
+        var values = [];
+
+        var _getRange3 = getRange(rows),
+            _getRange4 = _slicedToArray(_getRange3, 2),
+            minValue = _getRange4[0],
+            maxValue = _getRange4[1];
+
+        minValue--; // To show ticks.
+        maxValue++;
+        for (var i = minValue; i < maxValue; i += yTickSize) {
+          var value = Math.floor((i + yTickSize) / yTickSize) * yTickSize;
+          values.push(value);
+        }
+        yTickValues = values;
+      }
       var chart = c3.generate({
         bindto: "#bar-chart",
         data: {
@@ -679,15 +738,37 @@ window.gcexports.viewer = function () {
             label: {
               text: xAxisLabel,
               position: "outer-center"
+            },
+            tick: {
+              format: function format(d, i) {
+                return formatTick(xTickFormat, d, i);
+              }
+            }
+          },
+          y: {
+            padding: {
+              top: padding,
+              bottom: padding
+            },
+            tick: {
+              values: yTickValues,
+              format: function format(d, i) {
+                return formatTick(yTickFormat, d, i);
+              }
             }
           },
           rotated: horizontal
+        },
+        grid: {
+          y: {
+            show: true
+          }
         }
       });
-      if (padding && !groups) {
+      if (gap && !groups) {
         if (labels.length === 2) {
-          d3.selectAll(".c3-target-" + labels[0]).attr("transform", "translate(" + -padding / 2 + ")");
-          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + padding / 2 + ")");
+          d3.selectAll(".c3-target-" + labels[0]).attr("transform", "translate(" + -gap / 2 + ")");
+          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + gap / 2 + ")");
         }
       }
       d3.selectAll(".c3-legend-item-tile").nodes().forEach(function (n) {

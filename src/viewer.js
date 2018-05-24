@@ -372,6 +372,37 @@ window.gcexports.viewer = (function () {
     });
     return elts;
   }
+  const getRange = (vals) => {
+    let min = 0, max = 0;
+    vals.forEach(val => {
+      if (val instanceof Array) {
+        let [tmin, tmax] = getRange(val);
+        if (tmin < min) {
+          min = tmin;
+        }
+        if (tmax > max) {
+          max = tmax;
+        }
+      } else {
+        val = +val;
+        if (val < min) {
+          min = val;
+        }
+        if (val > max) {
+          max = val;
+        }
+      }
+    });
+    return [min, max];
+  };
+  const formatTick = (fmt, d) => {
+    // If array, then use i to select format string.
+    if (fmt instanceof Object) {
+      return fmt[d] && fmt[d].replace("_", d);
+    } else {
+      return fmt.replace("_", d);
+    }
+  };
   var BarChart = React.createClass({
     componentDidMount() {
       loadScript("/L104/d3.js", () => {
@@ -389,8 +420,24 @@ window.gcexports.viewer = (function () {
       let colors = props.colors;
       let horizontal = props.horizontal;
       let padding = props.padding;
+      let gap = props.gap;
       let style = props.style;
       let groups = props.stack ? [labels] : undefined;
+      let yTickSize = props.yTickSize;
+      let xTickFormat = props.xTickFormat || "_";
+      let yTickFormat = props.yTickFormat || "_";
+      let yTickValues;
+      if (yTickSize) {
+        let values = [];
+        let [minValue, maxValue] = getRange(rows);
+        minValue--;  // To show ticks.
+        maxValue++;
+        for (let i = minValue; i < maxValue; i += yTickSize) {
+          let value = Math.floor((i + yTickSize) / yTickSize) * yTickSize; 
+          values.push(value);
+        }
+        yTickValues = values;
+      }
       var chart = c3.generate({
         bindto: "#bar-chart",
         data: {
@@ -414,15 +461,37 @@ window.gcexports.viewer = (function () {
             label: {
               text: xAxisLabel,
               position: "outer-center",
-            }
+            },
+            tick: {
+              format: (d, i) => {
+                return formatTick(xTickFormat, d, i);
+              },
+            },
+          },
+          y: {
+            padding: {
+              top: padding,
+              bottom: padding,
+            },
+            tick: {
+              values: yTickValues,
+              format: (d, i) => {
+                return formatTick(yTickFormat, d, i);
+              },
+            },
           },
           rotated: horizontal,
-        }
+        },
+        grid: {
+          y: {
+            show: true,
+          },
+        },
       });
-      if (padding && !groups) {
+      if (gap && !groups) {
         if (labels.length === 2) {
-          d3.selectAll(".c3-target-" + labels[0]).attr("transform", "translate(" + (-padding / 2) + ")");
-          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + (padding / 2) + ")");
+          d3.selectAll(".c3-target-" + labels[0]).attr("transform", "translate(" + (-gap / 2) + ")");
+          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + (gap / 2) + ")");
         }
       }
       d3.selectAll(".c3-legend-item-tile").nodes().forEach(n => {

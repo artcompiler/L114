@@ -1,7 +1,11 @@
 /* @flow */
 window.gcexports.globalLexicon = {
+  "x-tick-format" : { "tk": 1, "name": "X-TICK-FORMAT", "cls": "function", "length": 2, "arity": 2 },
+  "y-tick-format" : { "tk": 1, "name": "Y-TICK-FORMAT", "cls": "function", "length": 2, "arity": 2 },
+  "y-tick-size" : { "tk": 1, "name": "Y-TICK-SIZE", "cls": "function", "length": 2, "arity": 2 },
   "x-axis-label" : { "tk": 1, "name": "X-AXIS-LABEL", "cls": "function", "length": 2, "arity": 2 },
   "padding" : { "tk": 1, "name": "PADDING", "cls": "function", "length": 2, "arity": 2 },
+  "gap" : { "tk": 1, "name": "GAP", "cls": "function", "length": 2, "arity": 2 },
   "dot-radius" : { "tk": 1, "name": "DOT-RADIUS", "cls": "function", "length": 2, "arity": 2 },
   "bar-width" : { "tk": 1, "name": "BAR-WIDTH", "cls": "function", "length": 2, "arity": 2 },
   "width" : { "tk": 1, "name": "WIDTH", "cls": "function", "length": 2, "arity": 2 },
