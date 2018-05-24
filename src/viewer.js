@@ -387,6 +387,7 @@ window.gcexports.viewer = (function () {
       let labels = props.labels ? [this.props.labels] : [];
       let colors = props.colors
       let padding = props.padding;
+      let style = props.style;
       let rows = labels.concat(props.args.vals);
       var chart = c3.generate({
         bindto: "#bar-chart",
@@ -425,7 +426,15 @@ window.gcexports.viewer = (function () {
         d3.select(n).attr("x1", x1 + 5);
         d3.select(n).attr("x2", x1 + 5);
       });
-      d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round")
+      d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round");
+      if (style) {
+        Object.keys(style).forEach(selector => {
+          let styles = style[selector];
+          Object.keys(styles).forEach(style => {
+            d3.selectAll(selector).style(style, styles[style]);
+          });
+        });
+      }
     },
     render () {
       return (

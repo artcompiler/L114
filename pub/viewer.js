@@ -652,6 +652,7 @@ window.gcexports.viewer = function () {
       var labels = props.labels ? [this.props.labels] : [];
       var colors = props.colors;
       var padding = props.padding;
+      var style = props.style;
       var rows = labels.concat(props.args.vals);
       var chart = c3.generate({
         bindto: "#bar-chart",
@@ -691,6 +692,14 @@ window.gcexports.viewer = function () {
         d3.select(n).attr("x2", x1 + 5);
       });
       d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round");
+      if (style) {
+        Object.keys(style).forEach(function (selector) {
+          var styles = style[selector];
+          Object.keys(styles).forEach(function (style) {
+            d3.selectAll(selector).style(style, styles[style]);
+          });
+        });
+      }
     },
     render: function render() {
       return React.createElement("div", { id: "bar-chart" });
