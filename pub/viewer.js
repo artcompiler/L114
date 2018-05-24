@@ -649,16 +649,19 @@ window.gcexports.viewer = function () {
       var props = this.props;
       var xAxisLabel = props.xAxisLabel;
       var barWidth = props.barWidth || { ratio: 0.5 };
-      var labels = props.labels ? [this.props.labels] : [];
+      var labels = props.labels ? this.props.labels : props.args.vals[0];
+      var rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
       var colors = props.colors;
       var padding = props.padding;
       var style = props.style;
-      var rows = labels.concat(props.args.vals);
+      var groups = props.stack ? [labels] : undefined;
       var chart = c3.generate({
         bindto: "#bar-chart",
         data: {
           rows: rows,
-          type: 'bar'
+          type: 'bar',
+          groups: groups,
+          order: "asc"
         },
         color: {
           pattern: colors
@@ -679,11 +682,10 @@ window.gcexports.viewer = function () {
           }
         }
       });
-      if (padding) {
-        var _labels = rows[0];
-        if (_labels.length === 2) {
-          d3.selectAll(".c3-target-" + _labels[0]).attr("transform", "translate(" + -padding / 2 + ")");
-          d3.selectAll(".c3-target-" + _labels[1]).attr("transform", "translate(" + padding / 2 + ")");
+      if (padding && !groups) {
+        if (labels.length === 2) {
+          d3.selectAll(".c3-target-" + labels[0]).attr("transform", "translate(" + -padding / 2 + ")");
+          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + padding / 2 + ")");
         }
       }
       d3.selectAll(".c3-legend-item-tile").nodes().forEach(function (n) {

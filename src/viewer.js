@@ -384,16 +384,19 @@ window.gcexports.viewer = (function () {
       let props = this.props;
       let xAxisLabel = props.xAxisLabel;
       let barWidth = props.barWidth || {ratio: 0.5};
-      let labels = props.labels ? [this.props.labels] : [];
+      let labels = props.labels ? this.props.labels : props.args.vals[0];
+      let rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
       let colors = props.colors
       let padding = props.padding;
       let style = props.style;
-      let rows = labels.concat(props.args.vals);
+      let groups = props.stack ? [labels] : undefined;
       var chart = c3.generate({
         bindto: "#bar-chart",
         data: {
           rows: rows,
-          type: 'bar'
+          type: 'bar',
+          groups: groups,
+          order: "asc",
         },
         color: {
           pattern: colors,
@@ -414,8 +417,7 @@ window.gcexports.viewer = (function () {
           }
         }
       });
-      if (padding) {
-        let labels = rows[0];
+      if (padding && !groups) {
         if (labels.length === 2) {
           d3.selectAll(".c3-target-" + labels[0]).attr("transform", "translate(" + (-padding / 2) + ")");
           d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + (padding / 2) + ")");

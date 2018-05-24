@@ -22,6 +22,7 @@ const transform = (function() {
     "X-AXIS-LABEL": xAxisLabel,
     "PADDING": padding,
     "HIDE-AXIS": hideAxis,
+    "STACK": stack,
     "DOT-RADIUS": dotRadius,
     "BAR-WIDTH": barWidth,
     "WIDTH": width,
@@ -130,6 +131,12 @@ const transform = (function() {
   function hideAxis(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       val0.showAxis = false;
+      resume([].concat(err0), val0);
+    });
+  };
+  function stack(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      val0.stack = true;
       resume([].concat(err0), val0);
     });
   };
