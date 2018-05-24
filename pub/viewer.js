@@ -708,7 +708,7 @@ window.gcexports.viewer = function () {
             maxValue = _getRange4[1];
 
         minValue--; // To show ticks.
-        maxValue++;
+        maxValue = maxValue + yTickSize + 1;
         for (var i = minValue; i < maxValue; i += yTickSize) {
           var value = Math.floor((i + yTickSize) / yTickSize) * yTickSize;
           values.push(value);
@@ -718,8 +718,9 @@ window.gcexports.viewer = function () {
       var chart = c3.generate({
         bindto: "#bar-chart",
         padding: {
-          left: 60,
-          bottom: 60
+          top: 20,
+          left: 35,
+          bottom: 10
         },
         data: {
           rows: rows,
@@ -751,8 +752,7 @@ window.gcexports.viewer = function () {
           },
           y: {
             padding: {
-              top: padding,
-              bottom: padding
+              top: 15
             },
             tick: {
               values: yTickValues,
@@ -765,7 +765,8 @@ window.gcexports.viewer = function () {
         },
         grid: {
           y: {
-            show: true
+            show: true,
+            lines: [{ value: 0 }]
           }
         },
         legend: {
@@ -786,9 +787,9 @@ window.gcexports.viewer = function () {
       nodes.forEach(function (n, i) {
         if (nodes.length === 2) {
           if (i === 0) {
-            d3.select(n).attr("transform", "translate(0, -25)");
+            d3.select(n).attr("transform", "translate(0, 0)");
           } else {
-            d3.select(n).attr("transform", "translate(40, -25)");
+            d3.select(n).attr("transform", "translate(40, 0)");
           }
         }
       });
