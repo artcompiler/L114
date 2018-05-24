@@ -21,6 +21,7 @@ const transform = (function() {
   const table = {
     "X-AXIS-LABEL": xAxisLabel,
     "PADDING": padding,
+    "HORIZONTAL": horizontal,
     "HIDE-AXIS": hideAxis,
     "STACK": stack,
     "DOT-RADIUS": dotRadius,
@@ -128,9 +129,21 @@ const transform = (function() {
       });
     });
   };
+  function horizontal(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      val0.horizontal = true;
+      resume([].concat(err0), val0);
+    });
+  };
   function hideAxis(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       val0.showAxis = false;
+      resume([].concat(err0), val0);
+    });
+  };
+  function horizontal(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      val0.horizontal = true;
       resume([].concat(err0), val0);
     });
   };

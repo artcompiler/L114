@@ -386,7 +386,8 @@ window.gcexports.viewer = (function () {
       let barWidth = props.barWidth || {ratio: 0.5};
       let labels = props.labels ? this.props.labels : props.args.vals[0];
       let rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
-      let colors = props.colors
+      let colors = props.colors;
+      let horizontal = props.horizontal;
       let padding = props.padding;
       let style = props.style;
       let groups = props.stack ? [labels] : undefined;
@@ -414,7 +415,8 @@ window.gcexports.viewer = (function () {
               text: xAxisLabel,
               position: "outer-center",
             }
-          }
+          },
+          rotated: horizontal,
         }
       });
       if (padding && !groups) {

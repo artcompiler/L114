@@ -652,6 +652,7 @@ window.gcexports.viewer = function () {
       var labels = props.labels ? this.props.labels : props.args.vals[0];
       var rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
       var colors = props.colors;
+      var horizontal = props.horizontal;
       var padding = props.padding;
       var style = props.style;
       var groups = props.stack ? [labels] : undefined;
@@ -679,7 +680,8 @@ window.gcexports.viewer = function () {
               text: xAxisLabel,
               position: "outer-center"
             }
-          }
+          },
+          rotated: horizontal
         }
       });
       if (padding && !groups) {
