@@ -782,9 +782,15 @@ window.gcexports.viewer = function () {
           d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + gap / 2 + ")");
         }
       }
-      d3.selectAll(".c3-legend-item").attr("transform", "translate(0,-20)");
-      d3.selectAll(".c3-legend-item").nodes().forEach(function (n) {
-        n = n;
+      var nodes = d3.selectAll(".c3-legend-item").nodes();
+      nodes.forEach(function (n, i) {
+        if (nodes.length === 2) {
+          if (i === 0) {
+            d3.select(n).attr("transform", "translate(0, -25)");
+          } else {
+            d3.select(n).attr("transform", "translate(40, -25)");
+          }
+        }
       });
       // Make tiles round.
       d3.selectAll(".c3-legend-item-tile").nodes().forEach(function (n) {
