@@ -461,6 +461,12 @@ window.gcexports.viewer = (function () {
             y: 10,
             anchor: "bottom-left",
           },
+          item: {
+            tile: {
+              width: 0,
+              height: 10,
+            },
+          }
         };
       } else {
         legend = {
@@ -541,14 +547,13 @@ window.gcexports.viewer = (function () {
           }
         }
       });
-      // Make tiles round.
-      d3.selectAll(".c3-legend-item-tile").nodes().forEach(n => {
-        let x1 = +d3.select(n).attr("x1");
-        d3.select(n).attr("x1", x1 + 5);
-        d3.select(n).attr("x2", x1 + 5);
+      d3.selectAll(".c3-legend-item text").nodes().forEach(n => {
+        // Put space between the tile and the label.
+        d3.select(n).attr("transform", "translate(5)");
       });
       d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round");
       if (style) {
+        // Apply global styles.
         Object.keys(style).forEach(selector => {
           let styles = style[selector];
           Object.keys(styles).forEach(style => {

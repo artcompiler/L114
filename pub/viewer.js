@@ -735,6 +735,12 @@ window.gcexports.viewer = function () {
           inset: {
             y: 10,
             anchor: "bottom-left"
+          },
+          item: {
+            tile: {
+              width: 0,
+              height: 10
+            }
           }
         };
       } else {
@@ -814,14 +820,15 @@ window.gcexports.viewer = function () {
           }
         }
       });
-      // Make tiles round.
-      d3.selectAll(".c3-legend-item-tile").nodes().forEach(function (n) {
-        var x1 = +d3.select(n).attr("x1");
-        d3.select(n).attr("x1", x1 + 5);
-        d3.select(n).attr("x2", x1 + 5);
+      d3.selectAll(".c3-legend-item text").nodes().forEach(function (n) {
+        var x1 = +d3.select(n).attr("x");
+        // d3.select(n).attr("x", x1 + 5);
+        // d3.select(n).attr("x", x1 + 5);
+        d3.select(n).attr("transform", "translate(5)");
       });
       d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round");
       if (style) {
+        // Apply global styles.
         Object.keys(style).forEach(function (selector) {
           var styles = style[selector];
           Object.keys(styles).forEach(function (style) {
