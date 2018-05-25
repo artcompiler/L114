@@ -396,6 +396,19 @@ window.gcexports.viewer = (function () {
     });
     return [min, max];
   };
+  const rebaseValues = (offset, vals) => {
+    let rebasedVals = [];
+    vals.forEach(val => {
+      if (val instanceof Array) {
+        rebasedVals.push(rebaseValues(offset, val));
+      } else if (!isNaN(+val)) {
+        rebasedVals.push(+val + offset);
+      } else {
+        rebasedVals.push(val);  // Not a number so return as is.
+      }
+    });
+    return rebasedVals;
+  };
   const formatTick = (fmt, d) => {
     // If array, then use i to select format string.
     if (fmt instanceof Object) {
@@ -623,13 +636,11 @@ window.gcexports.viewer = (function () {
       let dotRadius = this.props.dotRadius;
       let [min, max] = getRange(rows.slice(1)); // Slice off labels.
       let pad = (max - min) / 4;
+      rows = rebaseValues(pad - min, rows);  // val + pad - min
       let types = {}
       types[cols[0]] = "area";
       var chart = c3.generate({
         bindto: "#chart",
-        area: {
-          zerobased: false,
-        },
         padding: {
           top: -5,
           right: -20,
@@ -652,7 +663,6 @@ window.gcexports.viewer = (function () {
             },
           },
           y: {
-            min: min - pad,
             show: showAxis,
             padding: {
               left: 0,
