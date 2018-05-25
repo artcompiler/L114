@@ -720,7 +720,7 @@ window.gcexports.viewer = function () {
         padding: {
           top: 20,
           left: 35,
-          bottom: 10
+          bottom: 5
         },
         data: {
           rows: rows,
@@ -787,9 +787,9 @@ window.gcexports.viewer = function () {
       nodes.forEach(function (n, i) {
         if (nodes.length === 2) {
           if (i === 0) {
-            d3.select(n).attr("transform", "translate(0, 0)");
+            d3.select(n).attr("transform", "translate(0, 5)");
           } else {
-            d3.select(n).attr("transform", "translate(40, 0)");
+            d3.select(n).attr("transform", "translate(40, 5)");
           }
         }
       });

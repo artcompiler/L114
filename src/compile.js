@@ -310,8 +310,20 @@ const transform = (function() {
     }
   }
   function inData(node, options, resume) {
-    let data = options.data ? options.data : [];
-    resume([], data);
+    // If there is input data, then use it, otherwise use default data.
+    if (node.elts.length === 0) {
+      // No args, so use the given data or empty.
+      let data = options.data ? options.data : [];
+      resume([], data);
+    } else {
+      visit(node.elts[0], options, function (err1, val1) {
+        if (false) {
+          err1 = err1.concat(error("Argument must be a number.", node.elts[0]));
+        }
+        let data = options.data && Object.keys(options.data).length != 0 ? options.data : val1;
+        resume([].concat(err1), data);
+      });
+    }
   }
   function arg(node, options, resume) {
     visit(node.elts[0], options, function (err1, val1) {
