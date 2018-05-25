@@ -278,8 +278,6 @@ var React = _interopRequireWildcard(_react);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 window.gcexports.viewer = function () {
   function loadScript(src, resume) {
     var script = document.createElement("script");
@@ -636,9 +634,9 @@ window.gcexports.viewer = function () {
     });
     return elts;
   }
-  var getRange = function getRange(vals) {
-    var min = 0,
-        max = 0;
+  var getRange = function getRange(vals, min, max) {
+    // min and max are seed values is given.
+    // Assert all vals are numbers.
     vals.forEach(function (val) {
       if (val instanceof Array) {
         var _getRange = getRange(val),
@@ -646,18 +644,18 @@ window.gcexports.viewer = function () {
             tmin = _getRange2[0],
             tmax = _getRange2[1];
 
-        if (tmin < min) {
+        if (min === undefined || tmin < min) {
           min = tmin;
         }
-        if (tmax > max) {
+        if (max === undefined || tmax > max) {
           max = tmax;
         }
       } else {
         val = +val;
-        if (val < min) {
+        if (min === undefined || val < min) {
           min = val;
         }
-        if (val > max) {
+        if (max === undefined || val > max) {
           max = val;
         }
       }
@@ -703,10 +701,11 @@ window.gcexports.viewer = function () {
       if (yTickSize) {
         var values = [];
 
-        var _getRange3 = getRange(rows),
+        var _getRange3 = getRange(rows.slice(1), 0),
             _getRange4 = _slicedToArray(_getRange3, 2),
             minValue = _getRange4[0],
-            maxValue = _getRange4[1];
+            maxValue = _getRange4[1]; // Slice off labels.
+
 
         minValue--; // To show ticks.
         maxValue = maxValue + yTickSize;
@@ -891,33 +890,55 @@ window.gcexports.viewer = function () {
       });
     },
     componentDidUpdate: function componentDidUpdate() {
-      var labels = this.props.labels || ["data1"];
-      var rows = [labels].concat(this.props.args.vals);
-      var lineWidth = this.props.lineWidth;
+      var cols = this.props.args.vals[0];
+      var rows = this.props.args.vals;
       var colors = this.props.colors;
       var showAxis = this.props.showAxis;
+      var lineWidth = this.props.lineWidth;
       var dotRadius = this.props.dotRadius;
-      var min = Math.min.apply(Math, _toConsumableArray(this.props.args.vals));
-      var max = Math.max.apply(Math, _toConsumableArray(this.props.args.vals));
-      var pad = (max - min) / 3;
+
+      var _getRange5 = getRange(rows.slice(1)),
+          _getRange6 = _slicedToArray(_getRange5, 2),
+          min = _getRange6[0],
+          max = _getRange6[1]; // Slice off labels.
+
+
+      var pad = (max - min) / 4;
+      var types = {};
+      types[cols[0]] = "area";
       var chart = c3.generate({
         bindto: "#chart",
+        area: {
+          zerobased: false
+        },
+        padding: {
+          top: -5,
+          right: -20,
+          bottom: -7,
+          left: -20
+        },
         data: {
           rows: rows,
-          types: {
-            data1: "area"
-          }
+          types: types
         },
         legend: {
           show: false
         },
         axis: {
           x: {
-            show: showAxis
+            show: showAxis,
+            padding: {
+              left: 1,
+              right: 1
+            }
           },
           y: {
             min: min - pad,
-            show: showAxis
+            show: showAxis,
+            padding: {
+              left: 0,
+              right: 0
+            }
           }
         },
         color: {
@@ -928,6 +949,12 @@ window.gcexports.viewer = function () {
           height: this.props.height
         }
       });
+      if (lineWidth) {
+        d3.selectAll(".c3-line").style("stroke-width", lineWidth);
+      }
+      if (dotRadius) {
+        d3.selectAll(".c3-circle").attr("r", dotRadius);
+      }
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });

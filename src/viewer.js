@@ -372,23 +372,24 @@ window.gcexports.viewer = (function () {
     });
     return elts;
   }
-  const getRange = (vals) => {
-    let min = 0, max = 0;
+  const getRange = (vals, min, max) => {
+    // min and max are seed values is given.
+    // Assert all vals are numbers.
     vals.forEach(val => {
       if (val instanceof Array) {
         let [tmin, tmax] = getRange(val);
-        if (tmin < min) {
+        if (min === undefined || tmin < min) {
           min = tmin;
         }
-        if (tmax > max) {
+        if (max === undefined || tmax > max) {
           max = tmax;
         }
       } else {
         val = +val;
-        if (val < min) {
+        if (min === undefined || val < min) {
           min = val;
         }
-        if (val > max) {
+        if (max === undefined || val > max) {
           max = val;
         }
       }
@@ -430,7 +431,7 @@ window.gcexports.viewer = (function () {
       let yTickValues;
       if (yTickSize) {
         let values = [];
-        let [minValue, maxValue] = getRange(rows);
+        let [minValue, maxValue] = getRange(rows.slice(1), 0); // Slice off labels.
         minValue--;  // To show ticks.
         maxValue = maxValue + yTickSize;
         for (let i = minValue; i < maxValue - 1; i += yTickSize) {
@@ -614,22 +615,30 @@ window.gcexports.viewer = (function () {
       });
     },
     componentDidUpdate() {
-      let labels = this.props.labels || ["data1"];
-      let rows = [labels].concat(this.props.args.vals);
-      let lineWidth = this.props.lineWidth;
+      let cols = this.props.args.vals[0];
+      let rows = this.props.args.vals;
       let colors = this.props.colors;
       let showAxis = this.props.showAxis;
+      let lineWidth = this.props.lineWidth;
       let dotRadius = this.props.dotRadius;
-      let min = Math.min(...this.props.args.vals);
-      let max = Math.max(...this.props.args.vals);
-      let pad = (max - min) / 3;
+      let [min, max] = getRange(rows.slice(1)); // Slice off labels.
+      let pad = (max - min) / 4;
+      let types = {}
+      types[cols[0]] = "area";
       var chart = c3.generate({
         bindto: "#chart",
+        area: {
+          zerobased: false,
+        },
+        padding: {
+          top: -5,
+          right: -20,
+          bottom: -7,
+          left: -20,
+        },
         data: {
           rows: rows,
-          types: {
-            data1: "area",
-          },
+          types: types,
         },
         legend: {
           show: false,
@@ -637,10 +646,18 @@ window.gcexports.viewer = (function () {
         axis: {
           x: {
             show: showAxis,
+            padding: {
+              left: 1,
+              right: 1,
+            },
           },
           y: {
             min: min - pad,
             show: showAxis,
+            padding: {
+              left: 0,
+              right: 0,
+            }
           },
         },
         color: {
@@ -651,6 +668,12 @@ window.gcexports.viewer = (function () {
           height: this.props.height,
         },
       });
+      if (lineWidth) {
+        d3.selectAll(".c3-line").style("stroke-width", lineWidth)
+      }
+      if (dotRadius) {
+        d3.selectAll(".c3-circle").attr("r", dotRadius)
+      }
     },
     render () {
       return (
