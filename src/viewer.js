@@ -425,7 +425,7 @@ window.gcexports.viewer = (function () {
       let style = props.style;
       let groups = props.stack ? [labels] : undefined;
       let yTickSize = props.yTickSize;
-      let showLegend = props.showLegend;
+      let showLegend = props.hideLegend !== false;
       let xTickFormat = props.xTickFormat || "_";
       let yTickFormat = props.yTickFormat || "_";
       let yTickValues;
@@ -564,7 +564,7 @@ window.gcexports.viewer = (function () {
       let rows = [["x", "data1"]].concat(this.props.args.vals);
       let lineWidth = this.props.lineWidth;
       let colors = this.props.colors;
-      let showAxis = this.props.showAxis;
+      let showAxis = this.props.hideAxis !== false;
       var chart = c3.generate({
         bindto: "#chart",
         data: {
@@ -618,7 +618,7 @@ window.gcexports.viewer = (function () {
       let cols = this.props.args.vals[0];
       let rows = this.props.args.vals;
       let colors = this.props.colors;
-      let showAxis = this.props.showAxis;
+      let showAxis = this.props.hideAxis !== false;
       let lineWidth = this.props.lineWidth;
       let dotRadius = this.props.dotRadius;
       let [min, max] = getRange(rows.slice(1)); // Slice off labels.

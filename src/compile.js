@@ -142,13 +142,13 @@ const transform = (function() {
   };
   function hideAxis(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
-      val0.showAxis = false;
+      val0.hideAxis = false;
       resume([].concat(err0), val0);
     });
   };
   function hideLegend(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
-      val0.showLegend = false;
+      val0.hideLegend = false;
       resume([].concat(err0), val0);
     });
   };

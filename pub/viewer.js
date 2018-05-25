@@ -694,7 +694,7 @@ window.gcexports.viewer = function () {
       var style = props.style;
       var groups = props.stack ? [labels] : undefined;
       var yTickSize = props.yTickSize;
-      var showLegend = props.showLegend;
+      var showLegend = props.hideLegend !== false;
       var xTickFormat = props.xTickFormat || "_";
       var yTickFormat = props.yTickFormat || "_";
       var yTickValues = void 0;
@@ -838,7 +838,7 @@ window.gcexports.viewer = function () {
       var rows = [["x", "data1"]].concat(this.props.args.vals);
       var lineWidth = this.props.lineWidth;
       var colors = this.props.colors;
-      var showAxis = this.props.showAxis;
+      var showAxis = this.props.hideAxis !== false;
       var chart = c3.generate({
         bindto: "#chart",
         data: {
@@ -893,7 +893,7 @@ window.gcexports.viewer = function () {
       var cols = this.props.args.vals[0];
       var rows = this.props.args.vals;
       var colors = this.props.colors;
-      var showAxis = this.props.showAxis;
+      var showAxis = this.props.hideAxis !== false;
       var lineWidth = this.props.lineWidth;
       var dotRadius = this.props.dotRadius;
 
