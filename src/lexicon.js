@@ -13,6 +13,7 @@ window.gcexports.globalLexicon = {
   "stack" : { "tk": 1, "name": "STACK", "cls": "function", "length": 1, "arity": 1 },
   "horizontal" : { "tk": 1, "name": "HORIZONTAL", "cls": "function", "length": 1, "arity": 1 },
   "hide-axis" : { "tk": 1, "name": "HIDE-AXIS", "cls": "function", "length": 1, "arity": 1 },
+  "hide-legend" : { "tk": 1, "name": "HIDE-LEGEND", "cls": "function", "length": 1, "arity": 1 },
   "line-width" : { "tk": 1, "name": "LINE-WIDTH", "cls": "function", "length": 2, "arity": 2 },
   "line-colors" : { "tk": 1, "name": "COLORS", "cls": "function", "length": 2, "arity": 2 },
   "colors" : { "tk": 1, "name": "COLORS", "cls": "function", "length": 2, "arity": 2 },

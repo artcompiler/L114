@@ -424,6 +424,7 @@ window.gcexports.viewer = (function () {
       let style = props.style;
       let groups = props.stack ? [labels] : undefined;
       let yTickSize = props.yTickSize;
+      let showLegend = props.showLegend;
       let xTickFormat = props.xTickFormat || "_";
       let yTickFormat = props.yTickFormat || "_";
       let yTickValues;
@@ -431,12 +432,26 @@ window.gcexports.viewer = (function () {
         let values = [];
         let [minValue, maxValue] = getRange(rows);
         minValue--;  // To show ticks.
-        maxValue = maxValue + yTickSize + 1;
-        for (let i = minValue; i < maxValue; i += yTickSize) {
+        maxValue = maxValue + yTickSize;
+        for (let i = minValue; i < maxValue - 1; i += yTickSize) {
           let value = Math.floor((i + yTickSize) / yTickSize) * yTickSize; 
           values.push(value);
         }
         yTickValues = values;
+      }
+      let legend;
+      if (showLegend) {
+        legend = {
+          padding: 10,
+          inset: {
+            y: 10,
+            anchor: "bottom-left",
+          },
+        };
+      } else {
+        legend = {
+          show: false,
+        };
       }
       var chart = c3.generate({
         bindto: "#bar-chart",
@@ -494,13 +509,7 @@ window.gcexports.viewer = (function () {
             ]
           },
         },
-        legend: {
-          padding: 10,
-          inset: {
-            y: 10,
-            anchor: "bottom-left",
-          },
-        },
+        legend: legend,
       });
       if (gap && !groups) {
         if (labels.length === 2) {

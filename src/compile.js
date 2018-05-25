@@ -27,6 +27,7 @@ const transform = (function() {
     "GAP": gap,
     "HORIZONTAL": horizontal,
     "HIDE-AXIS": hideAxis,
+    "HIDE-LEGEND": hideLegend,
     "STACK": stack,
     "DOT-RADIUS": dotRadius,
     "BAR-WIDTH": barWidth,
@@ -142,6 +143,12 @@ const transform = (function() {
   function hideAxis(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       val0.showAxis = false;
+      resume([].concat(err0), val0);
+    });
+  };
+  function hideLegend(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      val0.showLegend = false;
       resume([].concat(err0), val0);
     });
   };
