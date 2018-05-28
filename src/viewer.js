@@ -428,12 +428,14 @@ window.gcexports.viewer = (function () {
     componentDidUpdate() {
       let props = this.props;
       let xAxisLabel = props.xAxisLabel;
+      let yAxisLabel = props.yAxisLabel;
       let barWidth = props.barWidth || {ratio: 0.5};
       let labels = props.labels ? this.props.labels : props.args.vals[0];
       let rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
       let colors = props.colors;
       let horizontal = props.horizontal;
       let padding = props.padding;
+      let chartPadding = props.chartPadding;
       let gap = props.gap;
       let style = props.style;
       let groups = props.stack ? [labels] : undefined;
@@ -473,13 +475,26 @@ window.gcexports.viewer = (function () {
           show: false,
         };
       }
-      var chart = c3.generate({
-        bindto: "#bar-chart",
-        padding: {
+      if (chartPadding) {
+        if (chartPadding instanceof Array) {
+          chartPadding = {
+            top: chartPadding[0],
+            right: chartPadding[1],
+            bottom: chartPadding[2],
+            left: chartPadding[3],
+          }
+        } // Otherwise, its undefine, scalar or object, which is fine.
+      } else {
+        // Legacy defaults.
+        chartPadding = {
           top: 20,
           left: 35,
           bottom: 5,
-        },
+        };
+      }
+      var chart = c3.generate({
+        bindto: "#bar-chart",
+        padding: chartPadding,
         data: {
           rows: rows,
           type: 'bar',
@@ -517,6 +532,10 @@ window.gcexports.viewer = (function () {
               format: (d, i) => {
                 return formatTick(yTickFormat, d, i);
               },
+            },
+            label: {
+              text: yAxisLabel,
+              position: "outer-center",
             },
           },
           rotated: horizontal,

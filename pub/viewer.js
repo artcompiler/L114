@@ -697,12 +697,14 @@ window.gcexports.viewer = function () {
     componentDidUpdate: function componentDidUpdate() {
       var props = this.props;
       var xAxisLabel = props.xAxisLabel;
+      var yAxisLabel = props.yAxisLabel;
       var barWidth = props.barWidth || { ratio: 0.5 };
       var labels = props.labels ? this.props.labels : props.args.vals[0];
       var rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
       var colors = props.colors;
       var horizontal = props.horizontal;
       var padding = props.padding;
+      var chartPadding = props.chartPadding;
       var gap = props.gap;
       var style = props.style;
       var groups = props.stack ? [labels] : undefined;
@@ -748,13 +750,26 @@ window.gcexports.viewer = function () {
           show: false
         };
       }
-      var chart = c3.generate({
-        bindto: "#bar-chart",
-        padding: {
+      if (chartPadding) {
+        if (chartPadding instanceof Array) {
+          chartPadding = {
+            top: chartPadding[0],
+            right: chartPadding[1],
+            bottom: chartPadding[2],
+            left: chartPadding[3]
+          };
+        } // Otherwise, its undefine, scalar or object, which is fine.
+      } else {
+        // Legacy defaults.
+        chartPadding = {
           top: 20,
           left: 35,
           bottom: 5
-        },
+        };
+      }
+      var chart = c3.generate({
+        bindto: "#bar-chart",
+        padding: chartPadding,
         data: {
           rows: rows,
           type: 'bar',
@@ -792,6 +807,10 @@ window.gcexports.viewer = function () {
               format: function format(d, i) {
                 return formatTick(yTickFormat, d, i);
               }
+            },
+            label: {
+              text: yAxisLabel,
+              position: "outer-center"
             }
           },
           rotated: horizontal
@@ -821,9 +840,7 @@ window.gcexports.viewer = function () {
         }
       });
       d3.selectAll(".c3-legend-item text").nodes().forEach(function (n) {
-        var x1 = +d3.select(n).attr("x");
-        // d3.select(n).attr("x", x1 + 5);
-        // d3.select(n).attr("x", x1 + 5);
+        // Put space between the tile and the label.
         d3.select(n).attr("transform", "translate(5)");
       });
       d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round");

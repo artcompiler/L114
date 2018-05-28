@@ -1231,7 +1231,7 @@
         /*-- Basic Elements --*/
 
         // Define svgs
-        $$.svg = $$.selectChart.append("svg").style("overflow", "hidden").on('mouseenter', function () {
+        $$.svg = $$.selectChart.append("svg").style("overflow", "hidden").style("shape-rendering", "crispEdges").on('mouseenter', function () {
             return config.onmouseover.call($$);
         }).on('mouseleave', function () {
             return config.onmouseout.call($$);
@@ -7678,8 +7678,9 @@
           var points = getPoints(d, i);
 
           // switch points if axis is rotated, not applicable for sub chart
-          var indexX = config.axis_rotated ? 1 : 0;
-          var indexY = config.axis_rotated ? 0 : 1;
+          let h = config.axis_rotated;
+          var indexX = h ? 1 : 0;
+          var indexY = h ? 0 : 1;
 
           let x1 = points[0][indexX];
           let y1 = points[0][indexY];
@@ -7689,14 +7690,14 @@
           let y3 = points[2][indexY];
           let x4 = points[3][indexX];
           let y4 = points[3][indexY];
-          let r = (x4 - x1) / 2;
+          let r = h ? (y4 - y1) / 2 : (x4 - x1) / 2;
           let p = config.axis_y_padding.bottom || 0;
           var path =
-                'M' + x1 + ',' + (y1 - r - p) + ' ' +
-                'L' + x2 + ',' + (y2 + r) + ' ' +
-                'A' + r + "," + r + " 0 0 1 " + x3 + ',' + (y3 + r) + ' ' +
-                'L' + x4 + ',' + (y4 - r - p) + " " +
-                'A' + r + "," + r + " 0 0 1 " + x1 + ',' + (y1 - r - p) + ' ' +
+                'M' + (h ? x1 + r + p : x1) + ',' + (h ? y1 : y1 - r - p) + ' ' +
+                'L' + (h ? x2 - r : x2) + ',' + (h ? y2 : y2 + r) + ' ' +
+                'A' + r + "," + r + " 0 0 1 " + (h ? x3 - r : x3) + ',' + (h ? y3 : y3 + r) + ' ' +
+                'L' + (h ? x4 + r + p : x4) + ',' + (h ? y4 : y4 - r - p) + " " +
+                'A' + r + "," + r + " 0 0 1 " + (h ? x1 + r + p : x1) + ',' + (h ? y1 : y1 - r - p) + ' ' +
                 'z';
           return path;
         };

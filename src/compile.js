@@ -23,6 +23,8 @@ const transform = (function() {
     "Y-TICK-FORMAT": yTickFormat,
     "Y-TICK-SIZE": yTickSize,
     "X-AXIS-LABEL": xAxisLabel,
+    "Y-AXIS-LABEL": yAxisLabel,
+    "CHART-PADDING": chartPadding,
     "PADDING": padding,
     "GAP": gap,
     "HORIZONTAL": horizontal,
@@ -180,6 +182,14 @@ const transform = (function() {
       });
     });
   };
+  function yAxisLabel(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.yAxisLabel = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
   function xTickFormat(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
@@ -208,6 +218,14 @@ const transform = (function() {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
         val1.padding = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function chartPadding(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.chartPadding = val0;
         resume([].concat(err0).concat(err1), val1);
       });
     });
