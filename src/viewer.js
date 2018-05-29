@@ -447,6 +447,14 @@ window.gcexports.viewer = (function () {
       if (yTickSize) {
         let values = [];
         let [minValue, maxValue] = getRange(rows.slice(1), 0); // Slice off labels.
+        if (typeof yTickSize === "string" && yTickSize.indexOf("%") >= 0) {
+          // Make tick size a percent of maxValue.
+          let precision = maxValue.toString().indexOf(".");
+          var factor = Math.pow(10, precision < 0 ? -(maxValue.toString().length - 1): -precision);  // Avoid edge case.
+          let scale = Math.round((maxValue) * factor) / factor;
+          let percent = +yTickSize.substring(0, yTickSize.indexOf("%"));
+          yTickSize = Math.round(scale * percent * 0.01, 0) || 1;  // avoid 0
+        }
         minValue--;  // To show ticks.
         maxValue = maxValue + yTickSize;
         for (let i = minValue; i < maxValue - 1; i += yTickSize) {
