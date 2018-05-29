@@ -7690,14 +7690,17 @@
           let y3 = points[2][indexY];
           let x4 = points[3][indexX];
           let y4 = points[3][indexY];
-          let r = h ? (y4 - y1) / 2 : (x4 - x1) / 2;
+          let dx = h ? x2 - x1 : x3 - x2;
+          let dy = h ? y4 - y1 : y4 - y3;
+          let ry = h ? (y4 - y1) / 2 : (x4 - x1) / 2;
+          let rx = dx > ry ? ry : dx / 2;
           let p = config.axis_y_padding.bottom || 0;
           var path =
-                'M' + (h ? x1 + r + p : x1) + ',' + (h ? y1 : y1 - r - p) + ' ' +
-                'L' + (h ? x2 - r : x2) + ',' + (h ? y2 : y2 + r) + ' ' +
-                'A' + r + "," + r + " 0 0 1 " + (h ? x3 - r : x3) + ',' + (h ? y3 : y3 + r) + ' ' +
-                'L' + (h ? x4 + r + p : x4) + ',' + (h ? y4 : y4 - r - p) + " " +
-                'A' + r + "," + r + " 0 0 1 " + (h ? x1 + r + p : x1) + ',' + (h ? y1 : y1 - r - p) + ' ' +
+                'M' + (h ? x1 + rx + p : x1) + ',' + (h ? y1 : y1 - ry - p) + ' ' +
+                'L' + (h ? x2 - rx : x2) + ',' + (h ? y2 : y2 + ry) + ' ' +
+                'A' + rx + "," + ry + " 0 0 1 " + (h ? x3 - rx : x3) + ',' + (h ? y3 : y3 + ry) + ' ' +
+                'L' + (h ? x4 + rx + p : x4) + ',' + (h ? y4 : y4 - ry - p) + " " +
+                'A' + rx + "," + ry + " 0 0 1 " + (h ? x1 + rx + p : x1) + ',' + (h ? y1 : y1 - ry - p) + ' ' +
                 'z';
           return path;
         };
