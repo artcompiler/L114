@@ -708,6 +708,7 @@ window.gcexports.viewer = function () {
       var colors = props.colors;
       var horizontal = props.horizontal;
       var padding = props.padding;
+      var scale = props.scale;
       var chartPadding = props.chartPadding;
       var gap = props.gap;
       var style = props.style;
@@ -730,9 +731,9 @@ window.gcexports.viewer = function () {
           // Make tick size a percent of maxValue.
           var precision = maxValue.toString().indexOf(".");
           var factor = Math.pow(10, precision < 0 ? -(maxValue.toString().length - 1) : -precision); // Avoid edge case.
-          var scale = Math.round(maxValue * factor) / factor;
+          var _scale = Math.round(maxValue * factor) / factor;
           var percent = +yTickSize.substring(0, yTickSize.indexOf("%"));
-          yTickSize = Math.round(scale * percent * 0.01, 0) || 1; // avoid 0
+          yTickSize = Math.round(_scale * percent * 0.01, 0) || 1; // avoid 0
         }
         minValue--; // To show ticks.
         maxValue = maxValue + yTickSize;
@@ -864,6 +865,9 @@ window.gcexports.viewer = function () {
             d3.selectAll(selector).style(style, styles[style]);
           });
         });
+      }
+      if (scale) {
+        d3.selectAll("svg").attr("transform", "translate(" + (scale - 1) / 2 * props.width + "," + (scale - 1) / 2 * props.height + ") scale(" + scale + ")");
       }
     },
     render: function render() {

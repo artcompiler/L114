@@ -439,6 +439,7 @@ window.gcexports.viewer = (function () {
       let colors = props.colors;
       let horizontal = props.horizontal;
       let padding = props.padding;
+      let scale = props.scale;
       let chartPadding = props.chartPadding;
       let gap = props.gap;
       let style = props.style;
@@ -591,6 +592,9 @@ window.gcexports.viewer = (function () {
             d3.selectAll(selector).style(style, styles[style]);
           });
         });
+      }
+      if (scale) {
+        d3.selectAll("svg").attr("transform", "translate(" + ((scale - 1) / 2 * props.width) + "," + ((scale - 1) / 2 * props.height) + ") scale(" + scale + ")");
       }
     },
     render () {
