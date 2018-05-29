@@ -511,7 +511,7 @@ window.gcexports.viewer = (function () {
           rows: rows,
           type: 'bar',
           groups: groups,
-          order: "asc",
+          order: null,
         },
         color: {
           pattern: colors,
