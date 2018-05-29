@@ -634,7 +634,7 @@ window.gcexports.viewer = function () {
     });
     return elts;
   }
-  var getRange = function getRange(vals, min, max) {
+  var getRange = function getRange(vals, grouped, min, max) {
     // min and max are seed values is given.
     // Assert all vals are numbers.
     vals.forEach(function (val) {
@@ -644,6 +644,10 @@ window.gcexports.viewer = function () {
             tmin = _getRange2[0],
             tmax = _getRange2[1];
 
+        if (grouped) {
+          // Stacked so just add them together.
+          tmin = tmax = tmin + tmax;
+        }
         if (min === undefined || tmin < min) {
           min = tmin;
         }
@@ -716,7 +720,7 @@ window.gcexports.viewer = function () {
       if (yTickSize) {
         var values = [];
 
-        var _getRange3 = getRange(rows.slice(1), 0),
+        var _getRange3 = getRange(rows.slice(1), props.stack, 0),
             _getRange4 = _slicedToArray(_getRange3, 2),
             minValue = _getRange4[0],
             maxValue = _getRange4[1]; // Slice off labels.

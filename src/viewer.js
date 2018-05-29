@@ -372,12 +372,16 @@ window.gcexports.viewer = (function () {
     });
     return elts;
   }
-  const getRange = (vals, min, max) => {
+  const getRange = (vals, grouped, min, max) => {
     // min and max are seed values is given.
     // Assert all vals are numbers.
     vals.forEach(val => {
       if (val instanceof Array) {
         let [tmin, tmax] = getRange(val);
+        if (grouped) {
+          // Stacked so just add them together.
+          tmin = tmax = tmin + tmax;
+        }
         if (min === undefined || tmin < min) {
           min = tmin;
         }
@@ -446,7 +450,7 @@ window.gcexports.viewer = (function () {
       let yTickValues;
       if (yTickSize) {
         let values = [];
-        let [minValue, maxValue] = getRange(rows.slice(1), 0); // Slice off labels.
+        let [minValue, maxValue] = getRange(rows.slice(1), props.stack, 0); // Slice off labels.
         if (typeof yTickSize === "string" && yTickSize.indexOf("%") >= 0) {
           // Make tick size a percent of maxValue.
           let precision = maxValue.toString().indexOf(".");
