@@ -812,7 +812,7 @@ window.gcexports.viewer = function () {
           },
           y: {
             padding: {
-              top: 15
+              top: 25
             },
             tick: {
               values: yTickValues,
