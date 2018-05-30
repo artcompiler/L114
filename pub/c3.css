@@ -17,7 +17,7 @@
 .c3-ygrid,
 .c3-event-rect,
 .c3-bars path {
-  shape-rendering: geometricPrecision; }
+  shape-rendering: crispEdges; }
 
 .c3-chart-arc path {
   stroke: #fff; }
@@ -61,7 +61,7 @@
 
 /*-- Bar --*/
 .c3-bar {
-  stroke-width: 1; }
+  stroke-width: 0; }
 
 .c3-bar._expanded_ {
   fill-opacity: 1;
@@ -145,7 +145,6 @@
 
 /*-- Area --*/
 .c3-area {
-
   stroke-width: 0;
   opacity: 0.2; }
 
