@@ -1231,7 +1231,7 @@
         /*-- Basic Elements --*/
 
         // Define svgs
-        $$.svg = $$.selectChart.append("svg").style("overflow", "hidden").style("shape-rendering", "auto").on('mouseenter', function () {
+        $$.svg = $$.selectChart.append("svg").style("overflow", "hidden").style("shape-rendering", "geometricPrecision").on('mouseenter', function () {
             return config.onmouseover.call($$);
         }).on('mouseleave', function () {
             return config.onmouseout.call($$);
@@ -7929,7 +7929,7 @@
         var mainLine = $$.main.selectAll('.' + CLASS.lines).selectAll('.' + CLASS.line).data($$.lineData.bind($$));
         var mainLineEnter = mainLine.enter().append('path').attr('class', $$.classLine.bind($$)).style("stroke", $$.color);
         $$.mainLine = mainLineEnter.merge(mainLine).style("opacity", $$.initialOpacity.bind($$)).style('shape-rendering', function (d) {
-            return $$.isStepType(d) ? 'crispEdges' : '';
+            return $$.isStepType(d) ? 'geometricPrecision' : '';
         }).attr('transform', null);
         mainLine.exit().transition().duration(durationForExit).style('opacity', 0);
     };
