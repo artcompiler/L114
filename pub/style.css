@@ -200,7 +200,7 @@
 .c3-ygrid,
 .c3-event-rect,
 .c3-bars path {
-  shape-rendering: geometricPrecision; }
+  shape-rendering: auto; }
 
 .c3-chart-arc path {
   stroke: #fff; }
