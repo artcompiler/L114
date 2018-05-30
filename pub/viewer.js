@@ -881,9 +881,7 @@ window.gcexports.viewer = function () {
 
       loadScript("/L104/d3.js", function () {
         loadScript("/L104/c3.js", function () {
-          loadStyle("/L104/c3.css", function () {
-            _this2.componentDidUpdate();
-          });
+          _this2.componentDidUpdate();
         });
       });
     },
@@ -936,9 +934,7 @@ window.gcexports.viewer = function () {
 
       loadScript("/L104/d3.js", function () {
         loadScript("/L104/c3.js", function () {
-          loadStyle("/L104/c3.css", function () {
-            _this3.componentDidUpdate();
-          });
+          _this3.componentDidUpdate();
         });
       });
     },
