@@ -193,7 +193,8 @@
 .c3 text {
   -webkit-user-select: none;
   -moz-user-select: none;
-  user-select: none; }
+  user-select: none;
+  text-rendering: geometricPrecision; }
 
 .c3-legend-item-tile,
 .c3-xgrid-focus,
