@@ -894,6 +894,7 @@ window.gcexports.viewer = function () {
       var style = props.style;
       var width = props.width || "100%";
       var height = props.height || "100%";
+      var padding = props.padding || 10;
       // render the table
       tabulate(data, ["Reward", "Count"]);
       if (style) {
@@ -917,20 +918,20 @@ window.gcexports.viewer = function () {
           });
         }
 
-        table.attr("width", width).attr("height", height);
+        table.attr("width", width + padding * 2).attr("height", height + padding * 2);
 
         // create a row for each object in the data
         var count = data.length;
         var dy = height / count;
         var textSize = +style.tspan["font-size"] || 12;
-        var rows = tbody.selectAll("text").data(data).enter().append("text").attr("x", "0").attr("y", function (d, i) {
-          return (i + 1) * dy - (dy - textSize) / 2 - 2;
+        var rows = tbody.selectAll("text").data(data).enter().append("text").attr("x", padding).attr("y", function (d, i) {
+          return padding + (i + 1) * dy - (dy - textSize) / 2 - 2;
         });
 
-        var lines = tbody.selectAll("line").data(data.slice(1)).enter().append("line").attr("x1", "0").attr("y1", function (d, i) {
-          return (i + 1) * dy;
-        }).attr("x2", "400").attr("y2", function (d, i) {
-          return (i + 1) * dy;
+        var lines = tbody.selectAll("line").data(data.slice(1)).enter().append("line").attr("x1", padding).attr("y1", function (d, i) {
+          return padding + (i + 1) * dy;
+        }).attr("x2", padding + 400).attr("y2", function (d, i) {
+          return padding + (i + 1) * dy;
         });
 
         // create a cell in each row for each column
@@ -941,7 +942,7 @@ window.gcexports.viewer = function () {
         }).enter().append("tspan").attr("text-anchor", function (d, i) {
           return d.column === 0 ? "start" : "end";
         }).attr("x", function (d, i) {
-          return d.column === 0 ? 0 : 245;
+          return d.column === 0 ? padding : padding + width;
         }).html(function (d) {
           return d.value;
         });

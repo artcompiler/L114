@@ -622,6 +622,7 @@ window.gcexports.viewer = (function () {
       let style = props.style;
       let width = props.width || "100%";
       let height = props.height || "100%";
+      let padding = props.padding || 10;
       // render the table
       tabulate(data, ["Reward", "Count"]);
       if (style) {
@@ -638,19 +639,9 @@ window.gcexports.viewer = (function () {
         var table = d3.select("#chart").append("svg"),
         tbody = table.append("g");
         
-        // append the header row
-        if (false) {
-          thead.append("tr")
-            .selectAll("th")
-            .data(columns)
-            .enter()
-            .append("th")
-            .text(function(column) { return column; });
-        }
-
         table
-          .attr("width", width)
-          .attr("height", height);
+          .attr("width", width + padding * 2)
+          .attr("height", height + padding * 2);
 
         // create a row for each object in the data
         let count = data.length;
@@ -660,22 +651,22 @@ window.gcexports.viewer = (function () {
           .data(data)
           .enter()
           .append("text")
-            .attr("x", "0")
+            .attr("x", padding)
             .attr("y", (d, i) => {
-              return (i + 1) * dy - (dy - textSize) / 2 - 2;
+              return padding + (i + 1) * dy - (dy - textSize) / 2 - 2;
             });
 
         var lines = tbody.selectAll("line")
           .data(data.slice(1))
           .enter()
           .append("line")
-            .attr("x1", "0")
+            .attr("x1", padding)
             .attr("y1", (d, i) => {
-              return (i + 1) * dy;
+              return padding + (i + 1) * dy;
             })
-            .attr("x2", "400")
+            .attr("x2", padding + 400)
             .attr("y2", (d, i) => {
-              return (i + 1) * dy;
+              return padding + (i + 1) * dy;
             });
         
         
@@ -692,7 +683,7 @@ window.gcexports.viewer = (function () {
                return d.column === 0 ? "start" : "end"
             })
             .attr("x", (d, i) => {
-               return d.column === 0 ? 0 : 245;
+               return d.column === 0 ? padding : padding + width;
             })
           .html(function(d) { return d.value; });
         
