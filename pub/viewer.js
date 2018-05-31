@@ -900,8 +900,7 @@ window.gcexports.viewer = function () {
 
         // append the header row
         if (false) {
-          thead.append("tr").selectAll("th").data(columns).enter().append("th").attr("style", "font-family: Arial") // sets the font style
-          .attr("style", "font-size: 12px").attr("style", "font-weight: 600").text(function (column) {
+          thead.append("tr").selectAll("th").data(columns).enter().append("th").text(function (column) {
             return column;
           });
         }
@@ -914,8 +913,7 @@ window.gcexports.viewer = function () {
           return columns.map(function (column, i) {
             return { column: i, value: row[i] };
           });
-        }).enter().append("td").attr("style", "font-family: Arial") // sets the font style
-        .attr("style", "font-size: 12px").attr("padding", "10").html(function (d) {
+        }).enter().append("td").attr("style", "font-size: 12px").attr("padding", "10").html(function (d) {
           return d.value;
         });
 
@@ -923,8 +921,16 @@ window.gcexports.viewer = function () {
       }
 
       // render the table
-      // let data = [{"date":"1-May-12","close":"68.13","open":"34.12"},{"date":"30-Apr-12","close":"63.98","open":"45.56"},{"date":"27-Apr-12","close":"67.00","open":"67.89"},{"date":"26-Apr-12","close":"89.70","open":"78.54"},{"date":"25-Apr-12","close":"99.00","open":"89.23"},{"date":"24-Apr-12","close":"130.28","open":"99.23"},{"date":"23-Apr-12","close":"166.70","open":"101.34"},{"date":"20-Apr-12","close":"234.98","open":"122.34"},{"date":"19-Apr-12","close":"345.44","open":"134.56"},{"date":"18-Apr-12","close":"443.34","open":"160.45"},{"date":"17-Apr-12","close":"543.70","open":"180.34"},{"date":"16-Apr-12","close":"580.13","open":"210.23"},{"date":"13-Apr-12","close":"605.23","open":"223.45"},{"date":"12-Apr-12","close":"622.77","open":"201.56"},{"date":"11-Apr-12","close":"626.20","open":"212.67"},{"date":"10-Apr-12","close":"628.44","open":"310.45"},{"date":"9-Apr-12","close":"636.23","open":"350.45"},{"date":"5-Apr-12","close":"633.68","open":"410.23"},{"date":"4-Apr-12","close":"624.31","open":"430.56"},{"date":"3-Apr-12","close":"629.32","open":"460.34"},{"date":"2-Apr-12","close":"618.63","open":"510.34"},{"date":"30-Mar-12","close":"599.55","open":"534.23"},{"date":"29-Mar-12","close":"609.86","open":"578.23"},{"date":"28-Mar-12","close":"617.62","open":"590.12"},{"date":"27-Mar-12","close":"614.48","open":"560.34"},{"date":"26-Mar-12","close":"606.98","open":"580.12"}];
-      var peopleTable = tabulate(data, ["Reward", "Count"]);
+      tabulate(data, ["Reward", "Count"]);
+      if (style) {
+        // Apply global styles.
+        Object.keys(style).forEach(function (selector) {
+          var styles = style[selector];
+          Object.keys(styles).forEach(function (style) {
+            d3.selectAll(selector).style(style, styles[style]);
+          });
+        });
+      }
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
