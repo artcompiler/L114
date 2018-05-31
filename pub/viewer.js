@@ -382,6 +382,9 @@ window.gcexports.viewer = function () {
             args
           ));
           break;
+        case "table-chart":
+          elts.push(React.createElement(TableChart, _extends({ key: i, style: n.style }, n)));
+          break;
         case "bar-chart":
           elts.push(React.createElement(BarChart, _extends({ key: i, style: n.style }, n)));
           break;
@@ -734,6 +737,8 @@ window.gcexports.viewer = function () {
           var _scale = Math.round(maxValue * factor) / factor;
           var percent = +yTickSize.substring(0, yTickSize.indexOf("%"));
           yTickSize = Math.round(_scale * percent * 0.01, 0) || 1; // avoid 0
+        } else {
+          yTickSize = +yTickSize;
         }
         minValue--; // To show ticks.
         maxValue = maxValue + yTickSize;
@@ -874,14 +879,65 @@ window.gcexports.viewer = function () {
       return React.createElement("div", { id: "bar-chart" });
     }
   });
-  var TimeseriesChart = React.createClass({
-    displayName: "TimeseriesChart",
+  var TableChart = React.createClass({
+    displayName: "TableChart",
     componentDidMount: function componentDidMount() {
       var _this2 = this;
 
       loadScript("/L104/d3.js", function () {
+        _this2.componentDidUpdate();
+      });
+    },
+    componentDidUpdate: function componentDidUpdate() {
+      var props = this.props;
+      var data = props.args.vals.slice(1); // Slice off labels.
+      // The table generation function
+      function tabulate(data, columns) {
+        var table = d3.select("#chart").append("table"),
+            //.attr("style", "margin-left: 400px"),
+        thead = table.append("thead"),
+            tbody = table.append("tbody");
+
+        // append the header row
+        if (false) {
+          thead.append("tr").selectAll("th").data(columns).enter().append("th").attr("style", "font-family: Arial") // sets the font style
+          .attr("style", "font-size: 12px").attr("style", "font-weight: 600").text(function (column) {
+            return column;
+          });
+        }
+
+        // create a row for each object in the data
+        var rows = tbody.selectAll("tr").data(data).enter().append("tr");
+
+        // create a cell in each row for each column
+        var cells = rows.selectAll("td").data(function (row) {
+          return columns.map(function (column, i) {
+            return { column: i, value: row[i] };
+          });
+        }).enter().append("td").attr("style", "font-family: Arial") // sets the font style
+        .attr("style", "font-size: 12px").attr("padding", "10").html(function (d) {
+          return d.value;
+        });
+
+        return table;
+      }
+
+      // render the table
+      // let data = [{"date":"1-May-12","close":"68.13","open":"34.12"},{"date":"30-Apr-12","close":"63.98","open":"45.56"},{"date":"27-Apr-12","close":"67.00","open":"67.89"},{"date":"26-Apr-12","close":"89.70","open":"78.54"},{"date":"25-Apr-12","close":"99.00","open":"89.23"},{"date":"24-Apr-12","close":"130.28","open":"99.23"},{"date":"23-Apr-12","close":"166.70","open":"101.34"},{"date":"20-Apr-12","close":"234.98","open":"122.34"},{"date":"19-Apr-12","close":"345.44","open":"134.56"},{"date":"18-Apr-12","close":"443.34","open":"160.45"},{"date":"17-Apr-12","close":"543.70","open":"180.34"},{"date":"16-Apr-12","close":"580.13","open":"210.23"},{"date":"13-Apr-12","close":"605.23","open":"223.45"},{"date":"12-Apr-12","close":"622.77","open":"201.56"},{"date":"11-Apr-12","close":"626.20","open":"212.67"},{"date":"10-Apr-12","close":"628.44","open":"310.45"},{"date":"9-Apr-12","close":"636.23","open":"350.45"},{"date":"5-Apr-12","close":"633.68","open":"410.23"},{"date":"4-Apr-12","close":"624.31","open":"430.56"},{"date":"3-Apr-12","close":"629.32","open":"460.34"},{"date":"2-Apr-12","close":"618.63","open":"510.34"},{"date":"30-Mar-12","close":"599.55","open":"534.23"},{"date":"29-Mar-12","close":"609.86","open":"578.23"},{"date":"28-Mar-12","close":"617.62","open":"590.12"},{"date":"27-Mar-12","close":"614.48","open":"560.34"},{"date":"26-Mar-12","close":"606.98","open":"580.12"}];
+      var peopleTable = tabulate(data, ["Reward", "Count"]);
+    },
+    render: function render() {
+      return React.createElement("div", { id: "chart" });
+    }
+  });
+  var TimeseriesChart = React.createClass({
+    displayName: "TimeseriesChart",
+    componentDidMount: function componentDidMount() {
+      var _this3 = this;
+
+      loadScript("/L104/d3.js", function () {
         loadScript("/L104/c3.js", function () {
-          _this2.componentDidUpdate();
+          _this3.componentDidUpdate();
         });
       });
     },
@@ -930,11 +986,11 @@ window.gcexports.viewer = function () {
   var AreaChart = React.createClass({
     displayName: "AreaChart",
     componentDidMount: function componentDidMount() {
-      var _this3 = this;
+      var _this4 = this;
 
       loadScript("/L104/d3.js", function () {
         loadScript("/L104/c3.js", function () {
-          _this3.componentDidUpdate();
+          _this4.componentDidUpdate();
         });
       });
     },

@@ -39,6 +39,7 @@ const transform = (function() {
     "LINE-WIDTH": lineWidth,
     "LINE-COLORS": colors,
     "COLORS": colors,
+    "TABLE-CHART": tableChart,
     "BAR-CHART": barChart,
     "TIMESERIES-CHART": timeseriesChart,
     "AREA-CHART": areaChart,
@@ -96,6 +97,17 @@ const transform = (function() {
     return table[node.tag](node, options, resume);
   }
   // BEGIN VISITOR METHODS
+  function tableChart(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      let vals = val0;
+      resume([].concat(err0), {
+        type: "table-chart",
+        args: {
+          vals: vals,
+        }
+      });
+    });
+  };
   function barChart(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       let vals = val0;

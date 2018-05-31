@@ -20,6 +20,7 @@ window.gcexports.globalLexicon = {
   "line-width" : { "tk": 1, "name": "LINE-WIDTH", "cls": "function", "length": 2, "arity": 2 },
   "line-colors" : { "tk": 1, "name": "COLORS", "cls": "function", "length": 2, "arity": 2 },
   "colors" : { "tk": 1, "name": "COLORS", "cls": "function", "length": 2, "arity": 2 },
+  "table" : { "tk": 1, "name": "TABLE-CHART", "cls": "function", "length": 1, "arity": 1 },
   "timeseries-chart" : { "tk": 1, "name": "TIMESERIES-CHART", "cls": "function", "length": 2, "arity": 2 },
   "area-chart" : { "tk": 1, "name": "AREA-CHART", "cls": "function", "length": 2, "arity": 2 },
   "bar-chart" : { "tk": 1, "name": "BAR-CHART", "cls": "function", "length": 1, "arity": 1 },
