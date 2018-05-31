@@ -619,11 +619,24 @@ window.gcexports.viewer = (function () {
     componentDidUpdate() {
       let props = this.props;
       let data = props.args.vals.slice(1); // Slice off labels.
+      let style = props.style;
+      let width = props.width || "100%";
+      let height = props.height || "100%";
+      // render the table
+      tabulate(data, ["Reward", "Count"]);
+      if (style) {
+        // Apply global styles.
+        Object.keys(style).forEach(selector => {
+          let styles = style[selector];
+          Object.keys(styles).forEach(style => {
+            d3.selectAll(selector).style(style, styles[style]);
+          });
+        });
+      }
       // The table generation function
       function tabulate(data, columns) {
-        var table = d3.select("#chart").append("table"), //.attr("style", "margin-left: 400px"),
-        thead = table.append("thead"),
-        tbody = table.append("tbody");
+        var table = d3.select("#chart").append("svg"),
+        tbody = table.append("g");
         
         // append the header row
         if (false) {
@@ -635,38 +648,55 @@ window.gcexports.viewer = (function () {
             .text(function(column) { return column; });
         }
 
+        table
+          .attr("width", width)
+          .attr("height", height);
+
         // create a row for each object in the data
-        var rows = tbody.selectAll("tr")
+        let count = data.length;
+        let dy = height / count;
+        let textSize = +style.tspan["font-size"] || 12;
+        var rows = tbody.selectAll("text")
           .data(data)
           .enter()
-          .append("tr");
+          .append("text")
+            .attr("x", "0")
+            .attr("y", (d, i) => {
+              return (i + 1) * dy - (dy - textSize) / 2 - 2;
+            });
+
+        var lines = tbody.selectAll("line")
+          .data(data.slice(1))
+          .enter()
+          .append("line")
+            .attr("x1", "0")
+            .attr("y1", (d, i) => {
+              return (i + 1) * dy;
+            })
+            .attr("x2", "400")
+            .attr("y2", (d, i) => {
+              return (i + 1) * dy;
+            });
+        
         
         // create a cell in each row for each column
-        var cells = rows.selectAll("td")
+        var cells = rows.selectAll("tspan")
           .data(function(row) {
             return columns.map(function(column, i) {
               return {column: i, value: row[i]};
             });
           })
           .enter()
-          .append("td")
-          .attr("style", "font-size: 12px")
-          .attr("padding", "10")
+          .append("tspan")
+            .attr("text-anchor", (d, i) => {
+               return d.column === 0 ? "start" : "end"
+            })
+            .attr("x", (d, i) => {
+               return d.column === 0 ? 0 : 245;
+            })
           .html(function(d) { return d.value; });
         
         return table;
-      }
-
-      // render the table
-      tabulate(data, ["Reward", "Count"]);
-      if (style) {
-        // Apply global styles.
-        Object.keys(style).forEach(selector => {
-          let styles = style[selector];
-          Object.keys(styles).forEach(style => {
-            d3.selectAll(selector).style(style, styles[style]);
-          });
-        });
       }
     },
     render () {

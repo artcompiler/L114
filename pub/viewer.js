@@ -891,35 +891,9 @@ window.gcexports.viewer = function () {
     componentDidUpdate: function componentDidUpdate() {
       var props = this.props;
       var data = props.args.vals.slice(1); // Slice off labels.
-      // The table generation function
-      function tabulate(data, columns) {
-        var table = d3.select("#chart").append("table"),
-            //.attr("style", "margin-left: 400px"),
-        thead = table.append("thead"),
-            tbody = table.append("tbody");
-
-        // append the header row
-        if (false) {
-          thead.append("tr").selectAll("th").data(columns).enter().append("th").text(function (column) {
-            return column;
-          });
-        }
-
-        // create a row for each object in the data
-        var rows = tbody.selectAll("tr").data(data).enter().append("tr");
-
-        // create a cell in each row for each column
-        var cells = rows.selectAll("td").data(function (row) {
-          return columns.map(function (column, i) {
-            return { column: i, value: row[i] };
-          });
-        }).enter().append("td").attr("style", "font-size: 12px").attr("padding", "10").html(function (d) {
-          return d.value;
-        });
-
-        return table;
-      }
-
+      var style = props.style;
+      var width = props.width || "100%";
+      var height = props.height || "100%";
       // render the table
       tabulate(data, ["Reward", "Count"]);
       if (style) {
@@ -930,6 +904,49 @@ window.gcexports.viewer = function () {
             d3.selectAll(selector).style(style, styles[style]);
           });
         });
+      }
+      // The table generation function
+      function tabulate(data, columns) {
+        var table = d3.select("#chart").append("svg"),
+            tbody = table.append("g");
+
+        // append the header row
+        if (false) {
+          thead.append("tr").selectAll("th").data(columns).enter().append("th").text(function (column) {
+            return column;
+          });
+        }
+
+        table.attr("width", width).attr("height", height);
+
+        // create a row for each object in the data
+        var count = data.length;
+        var dy = height / count;
+        var textSize = +style.tspan["font-size"] || 12;
+        var rows = tbody.selectAll("text").data(data).enter().append("text").attr("x", "0").attr("y", function (d, i) {
+          return (i + 1) * dy - (dy - textSize) / 2 - 2;
+        });
+
+        var lines = tbody.selectAll("line").data(data.slice(1)).enter().append("line").attr("x1", "0").attr("y1", function (d, i) {
+          return (i + 1) * dy;
+        }).attr("x2", "400").attr("y2", function (d, i) {
+          return (i + 1) * dy;
+        });
+
+        // create a cell in each row for each column
+        var cells = rows.selectAll("tspan").data(function (row) {
+          return columns.map(function (column, i) {
+            return { column: i, value: row[i] };
+          });
+        }).enter().append("tspan").attr("text-anchor", function (d, i) {
+          return d.column === 0 ? "start" : "end";
+        }).attr("x", function (d, i) {
+          return d.column === 0 ? 0 : 245;
+        }).html(function (d) {
+          return d.value;
+        });
+
+        return table;
       }
     },
     render: function render() {
