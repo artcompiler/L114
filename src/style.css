@@ -1,3 +1,5 @@
+@import url(//fonts.googleapis.com/css?family=ProximaNova:400,300,600);
+
 .editor {
 	border-collapse: collapse;
 	width: 800px;
@@ -183,17 +185,19 @@
 
 /*-- Chart --*/
 .c3 svg {
-  font: 10px sans-serif;
+  font: 10px;
+  font-family: "ProximaNova", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-tap-highlight-color: transparent; }
 
 .c3 path, .c3 line {
   fill: none;
   stroke: #000; }
 
-.c3 text {
+text, td {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
+  font-family: "ProximaNova", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-rendering: geometricPrecision; }
 
 .c3-legend-item-tile,
