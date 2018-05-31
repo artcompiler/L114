@@ -685,7 +685,22 @@ window.gcexports.viewer = (function () {
             .attr("x", (d, i) => {
                return d.column === 0 ? padding : padding + width;
             })
-          .html(function(d) { return d.value; });
+          .html(function(d) {
+            let text = d.value;
+            if (text.length > 34) {
+              let words = text.split(" ");
+              text = "";
+              for (let i = 0; text.length < 36; i++) {
+                if (i) {
+                  text += " ";
+                }
+                text += words[i];
+              }
+              // Now slice off the last word.
+              text = text.slice(0, text.lastIndexOf(" ")) + "\u2026";
+            }
+            return text;
+          });
         
         return table;
       }

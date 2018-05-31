@@ -911,13 +911,6 @@ window.gcexports.viewer = function () {
         var table = d3.select("#chart").append("svg"),
             tbody = table.append("g");
 
-        // append the header row
-        if (false) {
-          thead.append("tr").selectAll("th").data(columns).enter().append("th").text(function (column) {
-            return column;
-          });
-        }
-
         table.attr("width", width + padding * 2).attr("height", height + padding * 2);
 
         // create a row for each object in the data
@@ -944,7 +937,20 @@ window.gcexports.viewer = function () {
         }).attr("x", function (d, i) {
           return d.column === 0 ? padding : padding + width;
         }).html(function (d) {
-          return d.value;
+          var text = d.value;
+          if (text.length > 34) {
+            var words = text.split(" ");
+            text = "";
+            for (var i = 0; text.length < 36; i++) {
+              if (i) {
+                text += " ";
+              }
+              text += words[i];
+            }
+            // Now slice off the last word.
+            text = text.slice(0, text.lastIndexOf(" ")) + "\u2026";
+          }
+          return text;
         });
 
         return table;
