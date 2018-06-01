@@ -748,6 +748,7 @@ window.gcexports.viewer = function () {
         yTickValues = values;
       }
       var legend = void 0;
+      var padding = void 0;
       if (showLegend) {
         legend = {
           padding: 0,
@@ -763,17 +764,23 @@ window.gcexports.viewer = function () {
             }
           }
         };
+        padding = {
+          top: 0,
+          right: 0,
+          bottom: 5,
+          left: 0
+        };
       } else {
         legend = {
           show: false
         };
+        padding = {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0
+        };
       }
-      var padding = {
-        top: 0,
-        right: 0,
-        bottom: 5,
-        left: 36
-      };
       if (chartPadding) {
         if (chartPadding instanceof Array) {
           padding = {
