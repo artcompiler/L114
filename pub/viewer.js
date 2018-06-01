@@ -710,7 +710,6 @@ window.gcexports.viewer = function () {
       var rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
       var colors = props.colors;
       var horizontal = props.horizontal;
-      var padding = props.padding;
       var scale = props.scale;
       var chartPadding = props.chartPadding;
       var gap = props.gap;
@@ -751,11 +750,12 @@ window.gcexports.viewer = function () {
       var legend = void 0;
       if (showLegend) {
         legend = {
-          padding: 10,
-          inset: {
-            y: 10,
-            anchor: "bottom-left"
-          },
+          padding: 0,
+          // inset: {
+          //   x: 40,
+          //   y: 40,
+          //   anchor: "top-left",
+          // },
           item: {
             tile: {
               width: 0,
@@ -768,26 +768,25 @@ window.gcexports.viewer = function () {
           show: false
         };
       }
+      var padding = {
+        top: 0,
+        right: 0,
+        bottom: 5,
+        left: 36
+      };
       if (chartPadding) {
         if (chartPadding instanceof Array) {
-          chartPadding = {
-            top: chartPadding[0],
-            right: chartPadding[1],
-            bottom: chartPadding[2],
-            left: chartPadding[3]
+          padding = {
+            top: padding.top + chartPadding[0],
+            right: padding.right + chartPadding[1],
+            bottom: padding.bottom + chartPadding[2],
+            left: padding.left + chartPadding[3]
           };
         } // Otherwise, its undefine, scalar or object, which is fine.
-      } else {
-        // Legacy defaults.
-        chartPadding = {
-          top: 20,
-          left: 35,
-          bottom: 5
-        };
       }
       var chart = c3.generate({
         bindto: "#bar-chart",
-        padding: chartPadding,
+        padding: padding,
         data: {
           rows: rows,
           type: 'bar',
@@ -818,7 +817,8 @@ window.gcexports.viewer = function () {
           },
           y: {
             padding: {
-              top: 25
+              top: 25,
+              bottom: 0
             },
             tick: {
               values: yTickValues,
@@ -870,9 +870,6 @@ window.gcexports.viewer = function () {
             d3.selectAll(selector).style(style, styles[style]);
           });
         });
-      }
-      if (scale) {
-        d3.selectAll("svg").attr("transform", "translate(" + (scale - 1) / 2 * props.width + "," + (scale - 1) / 2 * props.height + ") scale(" + scale + ")");
       }
     },
     render: function render() {

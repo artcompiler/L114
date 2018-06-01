@@ -5,8 +5,6 @@ window.gcexports.globalLexicon = {
   "y-tick-size" : { "tk": 1, "name": "Y-TICK-SIZE", "cls": "function", "length": 2, "arity": 2 },
   "x-axis-label" : { "tk": 1, "name": "X-AXIS-LABEL", "cls": "function", "length": 2, "arity": 2 },
   "y-axis-label" : { "tk": 1, "name": "Y-AXIS-LABEL", "cls": "function", "length": 2, "arity": 2 },
-  "padding" : { "tk": 1, "name": "PADDING", "cls": "function", "length": 2, "arity": 2 },
-  "scale" : { "tk": 1, "name": "SCALE", "cls": "function", "length": 2, "arity": 2 },
   "chart-padding" : { "tk": 1, "name": "CHART-PADDING", "cls": "function", "length": 2, "arity": 2 },
   "gap" : { "tk": 1, "name": "GAP", "cls": "function", "length": 2, "arity": 2 },
   "dot-radius" : { "tk": 1, "name": "DOT-RADIUS", "cls": "function", "length": 2, "arity": 2 },

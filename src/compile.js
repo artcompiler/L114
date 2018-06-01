@@ -25,8 +25,6 @@ const transform = (function() {
     "X-AXIS-LABEL": xAxisLabel,
     "Y-AXIS-LABEL": yAxisLabel,
     "CHART-PADDING": chartPadding,
-    "PADDING": padding,
-    "SCALE": scale,
     "GAP": gap,
     "HORIZONTAL": horizontal,
     "HIDE-AXIS": hideAxis,
@@ -223,22 +221,6 @@ const transform = (function() {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
         val1.yTickSize = val0;
-        resume([].concat(err0).concat(err1), val1);
-      });
-    });
-  };
-  function padding(node, options, resume) {
-    visit(node.elts[0], options, function (err0, val0) {
-      visit(node.elts[1], options, function (err1, val1) {
-        val1.padding = val0;
-        resume([].concat(err0).concat(err1), val1);
-      });
-    });
-  };
-  function scale(node, options, resume) {
-    visit(node.elts[0], options, function (err0, val0) {
-      visit(node.elts[1], options, function (err1, val1) {
-        val1.scale = val0;
         resume([].concat(err0).concat(err1), val1);
       });
     });
