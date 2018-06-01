@@ -752,11 +752,6 @@ window.gcexports.viewer = function () {
       if (showLegend) {
         legend = {
           padding: 0,
-          // inset: {
-          //   x: 40,
-          //   y: 40,
-          //   anchor: "top-left",
-          // },
           item: {
             tile: {
               width: 0,
@@ -1029,12 +1024,14 @@ window.gcexports.viewer = function () {
       });
     },
     componentDidUpdate: function componentDidUpdate() {
-      var cols = this.props.args.vals[0];
-      var rows = this.props.args.vals;
-      var colors = this.props.colors;
-      var showAxis = this.props.hideAxis !== false;
-      var lineWidth = this.props.lineWidth;
-      var dotRadius = this.props.dotRadius;
+      var props = this.props;
+      var cols = props.args.vals[0];
+      var rows = props.args.vals;
+      var colors = props.colors;
+      var showAxis = props.hideAxis !== false;
+      var lineWidth = props.lineWidth;
+      var dotRadius = props.dotRadius;
+      var chartPadding = props.chartPadding;
 
       var _getRange5 = getRange(rows.slice(1)),
           _getRange6 = _slicedToArray(_getRange5, 2),
@@ -1046,14 +1043,25 @@ window.gcexports.viewer = function () {
       rows = rebaseValues(pad - min, rows); // val + pad - min
       var types = {};
       types[cols[0]] = "area";
+      var padding = {
+        top: -5,
+        right: -20,
+        bottom: -7,
+        left: -20
+      };
+      if (chartPadding) {
+        if (chartPadding instanceof Array) {
+          padding = {
+            top: padding.top + chartPadding[0],
+            right: padding.right + chartPadding[1],
+            bottom: padding.bottom + chartPadding[2],
+            left: padding.left + chartPadding[3]
+          };
+        } // Otherwise, its undefine, scalar or object, which is fine.
+      }
       var chart = c3.generate({
         bindto: "#chart",
-        padding: {
-          top: -5,
-          right: -20,
-          bottom: -7,
-          left: -20
-        },
+        padding: padding,
         data: {
           rows: rows,
           types: types

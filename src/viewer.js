@@ -479,11 +479,6 @@ window.gcexports.viewer = (function () {
       if (showLegend) {
         legend = {
           padding: 0,
-          // inset: {
-          //   x: 40,
-          //   y: 40,
-          //   anchor: "top-left",
-          // },
           item: {
             tile: {
               width: 0,
@@ -776,25 +771,38 @@ window.gcexports.viewer = (function () {
       });
     },
     componentDidUpdate() {
-      let cols = this.props.args.vals[0];
-      let rows = this.props.args.vals;
-      let colors = this.props.colors;
-      let showAxis = this.props.hideAxis !== false;
-      let lineWidth = this.props.lineWidth;
-      let dotRadius = this.props.dotRadius;
+      let props = this.props;
+      let cols = props.args.vals[0];
+      let rows = props.args.vals;
+      let colors = props.colors;
+      let showAxis = props.hideAxis !== false;
+      let lineWidth = props.lineWidth;
+      let dotRadius = props.dotRadius;
+      let chartPadding = props.chartPadding;
       let [min, max] = getRange(rows.slice(1)); // Slice off labels.
       let pad = (max - min) / 4;
       rows = rebaseValues(pad - min, rows);  // val + pad - min
       let types = {}
       types[cols[0]] = "area";
+      let padding = {
+        top: -5,
+        right: -20,
+        bottom: -7,
+        left: -20,
+      };
+      if (chartPadding) {
+        if (chartPadding instanceof Array) {
+          padding = {
+            top: padding.top + chartPadding[0],
+            right: padding.right + chartPadding[1],
+            bottom: padding.bottom + chartPadding[2],
+            left: padding.left + chartPadding[3],
+          }
+        } // Otherwise, its undefine, scalar or object, which is fine.
+      }
       var chart = c3.generate({
         bindto: "#chart",
-        padding: {
-          top: -5,
-          right: -20,
-          bottom: -7,
-          left: -20,
-        },
+        padding: padding,
         data: {
           rows: rows,
           types: types,
