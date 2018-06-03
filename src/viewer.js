@@ -1,3 +1,5 @@
+// NEEDS https://github.com/jsdom/jsdom/pull/2129
+
 /* Copyright (c) 2017, Art Compiler LLC */
 /* @flow */
 import {
@@ -9,6 +11,8 @@ import {
   encodeID,
 } from "./share.js";
 import * as React from "react";
+let d3 = require("d3");
+let c3 = require("../c3/c3.js");
 window.gcexports.viewer = (function () {
   function loadScript(src, resume) {
     var script = document.createElement("script");
@@ -428,10 +432,10 @@ window.gcexports.viewer = (function () {
   };
   var BarChart = React.createClass({
     componentDidMount() {
+      // NOTE this is required because C3 loads the wrong version of D3
+      // otherwise.
       loadScript("/L104/d3.js", () => {
-        loadScript("/L104/c3.js", () => {
-          this.componentDidUpdate();
-        });
+        this.componentDidUpdate();
       });
     },
     componentDidUpdate() {
