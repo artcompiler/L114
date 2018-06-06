@@ -134,16 +134,12 @@ const transform = (function() {
   };
   function areaChart(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
-      visit(node.elts[1], options, function (err1, val1) {
-        let cols = val0;
-        let vals = val1;
-        resume([].concat(err0).concat(err1), {
-          type: "area-chart",
-          args: {
-            cols: cols,
-            vals: vals,
-          }
-        });
+      let vals = val0;
+      resume([].concat(err0), {
+        type: "area-chart",
+        args: {
+          vals: vals,
+        }
       });
     });
   };
