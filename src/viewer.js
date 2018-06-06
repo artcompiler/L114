@@ -11,8 +11,8 @@ import {
   encodeID,
 } from "./share.js";
 import * as React from "react";
-let d3 = require("d3");
-let c3 = require("../c3/c3.js");
+// let d3 = require("d3");
+// let c3 = require("../c3/c3.js");
 window.gcexports.viewer = (function () {
   function loadScript(src, resume) {
     var script = document.createElement("script");
@@ -391,18 +391,18 @@ window.gcexports.viewer = (function () {
           // Stacked so just add them together.
           tmin = tmax = tmin + tmax;
         }
-        if (min === undefined || tmin < min) {
+        if (!isNaN(tmin) && min === undefined || tmin < min) {
           min = tmin;
         }
-        if (max === undefined || tmax > max) {
+        if (!isNaN(tmax) && max === undefined || tmax > max) {
           max = tmax;
         }
       } else {
         val = +val;
-        if (min === undefined || val < min) {
+        if (!isNaN(val) && min === undefined || val < min) {
           min = val;
         }
-        if (max === undefined || val > max) {
+        if (!isNaN(val) && max === undefined || val > max) {
           max = val;
         }
       }
@@ -435,7 +435,9 @@ window.gcexports.viewer = (function () {
       // NOTE this is required because C3 loads the wrong version of D3
       // otherwise.
       loadScript("/L104/d3.js", () => {
-        this.componentDidUpdate();
+        loadScript("/L104/c3.js", () => {
+          this.componentDidUpdate();
+        });
       });
     },
     componentDidUpdate() {
@@ -606,6 +608,7 @@ window.gcexports.viewer = (function () {
           });
         });
       }
+      d3.select("#graff-view").append("div").classed("done-rendering", true);
     },
     render () {
       return (
@@ -637,6 +640,7 @@ window.gcexports.viewer = (function () {
           });
         });
       }
+      d3.select("#graff-view").append("div").classed("done-rendering", true);
       // The table generation function
       function tabulate(data, columns) {
         var table = d3.select("#chart").append("svg"),
@@ -778,6 +782,7 @@ window.gcexports.viewer = (function () {
       let props = this.props;
       let cols = props.args.vals[0];
       let rows = props.args.vals;
+      let vals = [];
       let colors = props.colors;
       let showAxis = props.hideAxis !== false;
       let lineWidth = props.lineWidth;
@@ -787,7 +792,7 @@ window.gcexports.viewer = (function () {
       let pad = (max - min) / 4;
       rows = rebaseValues(pad - min, rows);  // val + pad - min
       let types = {}
-      types[cols[0]] = "area";
+      types[cols[cols.length - 1]] = "area";  // Use last column as values.
       let padding = {
         top: -5,
         right: -20,
@@ -844,6 +849,7 @@ window.gcexports.viewer = (function () {
       if (dotRadius) {
         d3.selectAll(".c3-circle").attr("r", dotRadius)
       }
+      d3.select("#graff-view").append("div").classed("done-rendering", true);
     },
     render () {
       return (
