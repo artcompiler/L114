@@ -868,7 +868,7 @@ window.gcexports.viewer = (function () {
       var elts = render(data, props);
       return (
         <div>
-        <link rel="stylesheet" href="https://l104.artcompiler.com/style.css" />
+        <link rel="stylesheet" href="L104/style.css" />
         <div className="L104">
           {elts}
         </div>
