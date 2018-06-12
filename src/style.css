@@ -1,19 +1,17 @@
 /* localhost
  */
-/*
-@font-face {
-font-family:"proxima-soft";
-src:url("https://use.typekit.net/af/9acb9d/00000000000000003b9af203/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"),url("https://use.typekit.net/af/9acb9d/00000000000000003b9af203/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"),url("https://use.typekit.net/af/9acb9d/00000000000000003b9af203/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
-font-style:normal;font-weight:400;
-}
-*/
-
 /* fivestars domains
  */
 @font-face {
 font-family:"proxima-soft";
 src:url("https://use.typekit.net/af/9acb9d/00000000000000003b9af203/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"),url("https://use.typekit.net/af/9acb9d/00000000000000003b9af203/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"),url("https://use.typekit.net/af/9acb9d/00000000000000003b9af203/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
 font-style:normal;font-weight:400;
+}
+
+@font-face {
+font-family:"proxima-nova";
+src:url("https://use.typekit.net/af/12260d/00000000000000003b9b0932/27/l?subset_id=2&fvd=n3&v=3") format("woff2"),url("https://use.typekit.net/af/12260d/00000000000000003b9b0932/27/d?subset_id=2&fvd=n3&v=3") format("woff"),url("https://use.typekit.net/af/12260d/00000000000000003b9b0932/27/a?subset_id=2&fvd=n3&v=3") format("opentype");
+font-style:normal;font-weight:300;
 }
 
 .editor {
@@ -201,7 +199,7 @@ font-style:normal;font-weight:400;
 
 /*-- Chart --*/
 .c3 svg {
-  font-family: "proxima-soft", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "proxima-nova", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-tap-highlight-color: transparent; }
 
 .c3 path, .c3 line {
@@ -212,8 +210,8 @@ text, td {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
-//  font-family: "proxima-soft", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-family: "proxima-soft";
+//  font-family: "proxima-nova", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "proxima-nova";
   text-rendering: geometricPrecision; }
 
 .c3-legend-item-tile,
