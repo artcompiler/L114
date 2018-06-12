@@ -637,9 +637,9 @@ window.gcexports.viewer = (function () {
       let props = this.props;
       let data = props.args.vals.slice(1); // Slice off labels.
       let style = props.style;
-      let width = props.width || "100%";
-      let height = props.height || "100%";
-      let padding = props.padding || 10;
+      let padding = props.chartPadding || 0;
+      let width = props.width - 2 * padding || "100%";
+      let height = props.height - 2 * padding || "100%";
       // render the table
       tabulate(data, ["Reward", "Count"]);
       if (style) {
@@ -658,8 +658,8 @@ window.gcexports.viewer = (function () {
         tbody = table.append("g");
         
         table
-          .attr("width", width + padding * 2)
-          .attr("height", height + padding * 2);
+          .attr("width", width + 2 * padding)
+          .attr("height", height + 2 * padding);
 
         // create a row for each object in the data
         let count = data.length;

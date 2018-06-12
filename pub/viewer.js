@@ -909,9 +909,9 @@ window.gcexports.viewer = function () {
       var props = this.props;
       var data = props.args.vals.slice(1); // Slice off labels.
       var style = props.style;
-      var width = props.width || "100%";
-      var height = props.height || "100%";
-      var padding = props.padding || 10;
+      var padding = props.chartPadding || 0;
+      var width = props.width - 2 * padding || "100%";
+      var height = props.height - 2 * padding || "100%";
       // render the table
       tabulate(data, ["Reward", "Count"]);
       if (style) {
@@ -929,7 +929,7 @@ window.gcexports.viewer = function () {
         var table = d3.select("#chart").append("svg"),
             tbody = table.append("g");
 
-        table.attr("width", width).attr("height", height);
+        table.attr("width", width + 2 * padding).attr("height", height + 2 * padding);
 
         // create a row for each object in the data
         var count = data.length;
