@@ -713,6 +713,7 @@ window.gcexports.viewer = function () {
       var yAxisLabel = props.yAxisLabel;
       var barWidth = props.barWidth || { ratio: 0.5 };
       var labels = props.labels ? this.props.labels : props.args.vals[0];
+      var keys = { value: labels.slice(1) }; // Slice off first label label.
       var rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
       var colors = props.colors;
       var horizontal = props.horizontal;
@@ -720,7 +721,7 @@ window.gcexports.viewer = function () {
       var chartPadding = props.chartPadding;
       var gap = props.gap;
       var style = props.style;
-      var groups = props.stack ? [labels] : undefined;
+      var groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
       var yTickSize = props.yTickSize;
       var showLegend = props.hideLegend !== false;
       var xTickFormat = props.xTickFormat || "_";
@@ -792,13 +793,23 @@ window.gcexports.viewer = function () {
           };
         } // Otherwise, its undefine, scalar or object, which is fine.
       }
+      var json = [];
+      rows.slice(1).forEach(function (vals) {
+        var row = {};
+        vals.forEach(function (val, i) {
+          row[labels[i]] = val;
+        });
+        json.push(row);
+      });
       var chart = c3.generate({
         bindto: "#bar-chart",
         padding: padding,
         data: {
-          rows: rows,
+          //          rows: rows,
+          json: json,
           type: 'bar',
           groups: groups,
+          keys: keys,
           order: null
         },
         color: {
@@ -850,9 +861,9 @@ window.gcexports.viewer = function () {
         legend: legend
       });
       if (gap && !groups) {
-        if (labels.length === 2) {
-          d3.selectAll(".c3-target-" + labels[0]).attr("transform", "translate(" + -gap / 2 + ")");
-          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + gap / 2 + ")");
+        if (labels.length === 3) {
+          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + -gap / 2 + ")");
+          d3.selectAll(".c3-target-" + labels[2]).attr("transform", "translate(" + gap / 2 + ")");
         }
       }
       var nodes = d3.selectAll(".c3-legend-item").nodes();
@@ -918,7 +929,7 @@ window.gcexports.viewer = function () {
         var table = d3.select("#chart").append("svg"),
             tbody = table.append("g");
 
-        table.attr("width", width + padding * 2).attr("height", height + padding * 2);
+        table.attr("width", width).attr("height", height);
 
         // create a row for each object in the data
         var count = data.length;

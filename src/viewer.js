@@ -446,6 +446,7 @@ window.gcexports.viewer = (function () {
       let yAxisLabel = props.yAxisLabel;
       let barWidth = props.barWidth || {ratio: 0.5};
       let labels = props.labels ? this.props.labels : props.args.vals[0];
+      let keys = { value: labels.slice(1) }; // Slice off first label label.
       let rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
       let colors = props.colors;
       let horizontal = props.horizontal;
@@ -453,7 +454,7 @@ window.gcexports.viewer = (function () {
       let chartPadding = props.chartPadding;
       let gap = props.gap;
       let style = props.style;
-      let groups = props.stack ? [labels] : undefined;
+      let groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
       let yTickSize = props.yTickSize;
       let showLegend = props.hideLegend !== false;
       let xTickFormat = props.xTickFormat || "_";
@@ -519,13 +520,23 @@ window.gcexports.viewer = (function () {
           }
         } // Otherwise, its undefine, scalar or object, which is fine.
       }
+      let json = [];
+      rows.slice(1).forEach(vals => {
+        let row = {};
+        vals.forEach((val, i) => {
+          row[labels[i]] = val;
+        });
+        json.push(row);
+      });
       var chart = c3.generate({
         bindto: "#bar-chart",
         padding: padding,
         data: {
-          rows: rows,
+//          rows: rows,
+          json: json,
           type: 'bar',
           groups: groups,
+          keys: keys,
           order: null,
         },
         color: {
@@ -579,9 +590,9 @@ window.gcexports.viewer = (function () {
         legend: legend,
       });
       if (gap && !groups) {
-        if (labels.length === 2) {
-          d3.selectAll(".c3-target-" + labels[0]).attr("transform", "translate(" + (-gap / 2) + ")");
-          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + (gap / 2) + ")");
+        if (labels.length === 3) {
+          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + (-gap / 2) + ")");
+          d3.selectAll(".c3-target-" + labels[2]).attr("transform", "translate(" + (gap / 2) + ")");
         }
       }
       let nodes = d3.selectAll(".c3-legend-item").nodes();
