@@ -456,7 +456,10 @@ window.gcexports.viewer = (function () {
       let style = props.style;
       let groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
       let yTickSize = props.yTickSize;
-      let showLegend = props.hideLegend !== false;
+      let showLegend = props.hideLegend !== true;
+      let showGrid = props.hideGrid !== true;
+      let showXAxis = props.hideXAxis !== true;
+      let showYAxis = props.hideYAxis !== true;
       let xTickFormat = props.xTickFormat || "_";
       let yTickFormat = props.yTickFormat || "_";
       let yTickValues;
@@ -551,6 +554,7 @@ window.gcexports.viewer = (function () {
         },
         axis: {
           x: {
+            show: showXAxis,
             label: {
               text: xAxisLabel,
               position: "outer-center",
@@ -562,6 +566,7 @@ window.gcexports.viewer = (function () {
             },
           },
           y: {
+            show: showYAxis,
             padding: {
               top: 25,
               bottom: 0,
@@ -580,8 +585,11 @@ window.gcexports.viewer = (function () {
           rotated: horizontal,
         },
         grid: {
+          x: {
+            show: showGrid,
+          },
           y: {
-            show: true,
+            show: showGrid,
             lines: [
               {value: 0}
             ]
@@ -591,8 +599,10 @@ window.gcexports.viewer = (function () {
       });
       if (gap && !groups) {
         if (labels.length === 3) {
-          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + (-gap / 2) + ")");
-          d3.selectAll(".c3-target-" + labels[2]).attr("transform", "translate(" + (gap / 2) + ")");
+          let dx = horizontal ? 0 : gap / 2;
+          let dy = horizontal ? gap / 2 : 0;
+          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + -dx + "," + -dy + ")");
+          d3.selectAll(".c3-target-" + labels[2]).attr("transform", "translate(" + dx + "," + dy + ")");
         }
       }
       let nodes = d3.selectAll(".c3-legend-item").nodes();
@@ -741,7 +751,8 @@ window.gcexports.viewer = (function () {
       let rows = [["x", "data1"]].concat(this.props.args.vals);
       let lineWidth = this.props.lineWidth;
       let colors = this.props.colors;
-      let showAxis = this.props.hideAxis !== false;
+      let showXAxis = this.props.hideXAxis !== true;
+      let showYAxis = this.props.hideYAxis !== true;
       var chart = c3.generate({
         bindto: "#chart",
         data: {
@@ -754,10 +765,10 @@ window.gcexports.viewer = (function () {
             tick: {
 //                format: '%m-%d'
             },
-            show: showAxis,
+            show: showXAxis,
           },
           y: {
-            show: showAxis,
+            show: showYAxis,
           },
         },
         color: {
@@ -795,7 +806,8 @@ window.gcexports.viewer = (function () {
       let rows = props.args.vals;
       let vals = [];
       let colors = props.colors;
-      let showAxis = props.hideAxis !== false;
+      let showXAxis = props.hideXAxis !== true;
+      let showYAxis = props.hideYAxis !== true;
       let lineWidth = props.lineWidth;
       let dotRadius = props.dotRadius;
       let chartPadding = props.chartPadding;
@@ -832,14 +844,14 @@ window.gcexports.viewer = (function () {
         },
         axis: {
           x: {
-            show: showAxis,
+            show: showXAxis,
             padding: {
               left: 1,
               right: 1,
             },
           },
           y: {
-            show: showAxis,
+            show: showYAxis,
             padding: {
               left: 0,
               right: 0,
