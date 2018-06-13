@@ -488,7 +488,7 @@ window.gcexports.viewer = (function () {
           padding: 0,
           item: {
             tile: {
-              width: 10,
+              width: 1,  // 0 doesn't work in phantomjs
               height: 10,
             },
           }
