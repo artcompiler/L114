@@ -488,7 +488,7 @@ window.gcexports.viewer = (function () {
           padding: 0,
           item: {
             tile: {
-              width: 0,
+              width: 10,
               height: 10,
             },
           }
