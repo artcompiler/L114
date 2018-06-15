@@ -457,7 +457,8 @@ window.gcexports.viewer = (function () {
       let groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
       let yTickSize = props.yTickSize;
       let showLegend = props.hideLegend !== true;
-      let showGrid = props.hideGrid !== true;
+      let showXGrid = props.hideGrid !== true && props.hideXGrid !== true;
+      let showYGrid = props.hideGrid !== true && props.hideYGrid !== true;
       let showXAxis = props.hideXAxis !== true;
       let showYAxis = props.hideYAxis !== true;
       let xTickFormat = props.xTickFormat || "_";
@@ -586,10 +587,10 @@ window.gcexports.viewer = (function () {
         },
         grid: {
           x: {
-            show: showGrid,
+            show: showXGrid,
           },
           y: {
-            show: showGrid,
+            show: showYGrid,
             lines: [
               {value: 0}
             ]

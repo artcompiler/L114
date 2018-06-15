@@ -724,7 +724,8 @@ window.gcexports.viewer = function () {
       var groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
       var yTickSize = props.yTickSize;
       var showLegend = props.hideLegend !== true;
-      var showGrid = props.hideGrid !== true;
+      var showXGrid = props.hideGrid !== true && props.hideXGrid !== true;
+      var showYGrid = props.hideGrid !== true && props.hideYGrid !== true;
       var showXAxis = props.hideXAxis !== true;
       var showYAxis = props.hideYAxis !== true;
       var xTickFormat = props.xTickFormat || "_";
@@ -859,10 +860,10 @@ window.gcexports.viewer = function () {
         },
         grid: {
           x: {
-            show: showGrid
+            show: showXGrid
           },
           y: {
-            show: showGrid,
+            show: showYGrid,
             lines: [{ value: 0 }]
           }
         },

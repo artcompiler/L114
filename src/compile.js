@@ -32,6 +32,8 @@ const transform = (function() {
     "HIDE-Y-AXIS": hideYAxis,
     "HIDE-LEGEND": hideLegend,
     "HIDE-GRID": hideGrid,
+    "HIDE-X-GRID": hideXGrid,
+    "HIDE-Y-GRID": hideYGrid,
     "STACK": stack,
     "DOT-RADIUS": dotRadius,
     "BAR-WIDTH": barWidth,
@@ -179,7 +181,20 @@ const transform = (function() {
   };
   function hideGrid(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
-      val0.hideGrid = true;
+      val0.hideXGrid = true;
+      val0.hideYGrid = true;
+      resume([].concat(err0), val0);
+    });
+  };
+  function hideXGrid(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      val0.hideXGrid = true;
+      resume([].concat(err0), val0);
+    });
+  };
+  function hideYGrid(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      val0.hideYGrid = true;
       resume([].concat(err0), val0);
     });
   };
