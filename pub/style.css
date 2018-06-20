@@ -210,8 +210,7 @@ text, td {
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
-//  font-family: "proxima-nova", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-family: "proxima-nova";
+  font-family: "proxima-nova", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-rendering: geometricPrecision; }
 
 .c3-legend-item-tile,

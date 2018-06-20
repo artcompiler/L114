@@ -20,6 +20,7 @@ window.gcexports.globalLexicon = {
   "hide-grid" : { "tk": 1, "name": "HIDE-GRID", "cls": "function", "length": 1, "arity": 1 },
   "hide-x-grid" : { "tk": 1, "name": "HIDE-X-GRID", "cls": "function", "length": 1, "arity": 1 },
   "hide-y-grid" : { "tk": 1, "name": "HIDE-Y-GRID", "cls": "function", "length": 1, "arity": 1 },
+  "show-y-values" : { "tk": 1, "name": "SHOW-Y-VALUES", "cls": "function", "length": 1, "arity": 1 },
   "line-width" : { "tk": 1, "name": "LINE-WIDTH", "cls": "function", "length": 2, "arity": 2 },
   "line-colors" : { "tk": 1, "name": "COLORS", "cls": "function", "length": 2, "arity": 2 },
   "colors" : { "tk": 1, "name": "COLORS", "cls": "function", "length": 2, "arity": 2 },

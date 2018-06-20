@@ -461,8 +461,11 @@ window.gcexports.viewer = (function () {
       let showYGrid = props.hideGrid !== true && props.hideYGrid !== true;
       let showXAxis = props.hideXAxis !== true;
       let showYAxis = props.hideYAxis !== true;
+      let showYValues = !!props.showYValues;
       let xTickFormat = props.xTickFormat || "_";
       let yTickFormat = props.yTickFormat || "_";
+      let width = props.width || "100%";
+      let height = props.height || "100%";
       let yTickValues;
       if (yTickSize) {
         let values = [];
@@ -480,7 +483,7 @@ window.gcexports.viewer = (function () {
         minValue--;  // To show ticks.
         maxValue = maxValue + yTickSize;
         for (let i = minValue; i < maxValue - 1; i += yTickSize) {
-          let value = Math.floor((i + yTickSize) / yTickSize) * yTickSize; 
+          let value = Math.floor((i + yTickSize) / yTickSize) * yTickSize;
           values.push(value);
         }
         yTickValues = values;
@@ -515,10 +518,11 @@ window.gcexports.viewer = (function () {
         };
       }
       if (chartPadding) {
+        const yValueWidth = showYValues ? 13 : 0;
         if (chartPadding instanceof Array) {
           padding = {
             top: padding.top + chartPadding[0],
-            right: padding.right + chartPadding[1],
+            right: padding.right + chartPadding[1] + yValueWidth,
             bottom: padding.bottom + chartPadding[2],
             left: padding.left + chartPadding[3],
           }
@@ -533,10 +537,9 @@ window.gcexports.viewer = (function () {
         json.push(row);
       });
       var chart = c3.generate({
-        bindto: "#bar-chart",
+        bindto: "#chart",
         padding: padding,
         data: {
-//          rows: rows,
           json: json,
           type: 'bar',
           groups: groups,
@@ -550,8 +553,8 @@ window.gcexports.viewer = (function () {
           width: barWidth,
         },
         size: {
-          width: props.width,
-          height: props.height,
+          width: width,
+          height: height,
         },
         axis: {
           x: {
@@ -631,10 +634,67 @@ window.gcexports.viewer = (function () {
         });
       }
       d3.select("#graff-view").append("div").classed("done-rendering", true);
+      let data = rows;
+      if (showYValues) {
+        tabulate(data, ["Frequency"]);
+      }
+      function tabulate(data, columns) {
+        var topPadding = padding.top - 5 + chartPadding[0];
+        var table = d3.select("#chart svg"),
+            tbody = table.append("g");
+        table
+          .attr("width", width)
+          .attr("height", height);
+
+        // create a row for each object in the data
+        let count = data.length;
+        let dy = (height - 2) / count;
+        let textSize = style.tspan && +style.tspan["font-size"] || 12;
+        var rows = tbody.selectAll("text")
+          .data(data.slice(1))  // Slice off labels.
+          .enter()
+          .append("text")
+            .attr("x", 10 /*padding*/)
+            .attr("y", (d, i) => {
+              return topPadding + (i + 1) * dy - (dy - textSize) / 2;
+            });
+
+        // create a cell in each row for each column
+        var cells = rows.selectAll("tspan")
+          .data(function(row) {
+            return columns.map(function(column) {
+              let i = data[0].indexOf(column);  // Index of column.
+              return {column: i, value: row[i]};
+            });
+          })
+          .enter()
+          .append("tspan")
+            .attr("text-anchor", "end")
+            .attr("x", (d, i) => {
+               return width - 10; // right padding
+            })
+          .html(function(d) {
+            let text = d.value;
+            if (text.length > 34) {
+              let words = text.split(" ");
+              text = "";
+              for (let i = 0; text.length < 36; i++) {
+                if (i) {
+                  text += " ";
+                }
+                text += words[i];
+              }
+              // Now slice off the last word.
+              text = text.slice(0, text.lastIndexOf(" ")) + "\u2026";
+            }
+            return text;
+          });
+        return table;
+      }
     },
     render () {
       return (
-        <div id="bar-chart"/>
+        <div id="chart"/>
       );
     },
   });
@@ -667,7 +727,6 @@ window.gcexports.viewer = (function () {
       function tabulate(data, columns) {
         var table = d3.select("#chart").append("svg"),
         tbody = table.append("g");
-        
         table
           .attr("width", width + 2 * padding)
           .attr("height", height + 2 * padding);
@@ -697,8 +756,6 @@ window.gcexports.viewer = (function () {
             .attr("y2", (d, i) => {
               return padding + (i + 1) * dy;
             });
-        
-        
         // create a cell in each row for each column
         var cells = rows.selectAll("tspan")
           .data(function(row) {
@@ -730,7 +787,6 @@ window.gcexports.viewer = (function () {
             }
             return text;
           });
-        
         return table;
       }
     },
