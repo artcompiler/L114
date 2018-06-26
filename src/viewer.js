@@ -752,7 +752,7 @@ window.gcexports.viewer = (function () {
             .attr("y1", (d, i) => {
               return padding + (i + 1) * dy;
             })
-            .attr("x2", padding + 400)
+            .attr("x2", width + padding)
             .attr("y2", (d, i) => {
               return padding + (i + 1) * dy;
             });

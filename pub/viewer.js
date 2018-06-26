@@ -999,7 +999,7 @@ window.gcexports.viewer = function () {
 
         var lines = tbody.selectAll("line").data(data.slice(1)).enter().append("line").attr("x1", padding).attr("y1", function (d, i) {
           return padding + (i + 1) * dy;
-        }).attr("x2", padding + 400).attr("y2", function (d, i) {
+        }).attr("x2", width + padding).attr("y2", function (d, i) {
           return padding + (i + 1) * dy;
         });
         // create a cell in each row for each column
