@@ -772,9 +772,11 @@ window.gcexports.viewer = (function () {
                return d.column === 0 ? padding : padding + width;
             })
           .html(function(d) {
-            let text = d.value;
-            if (text.length > 34) {
-              let words = text.split(" ");
+            let text;
+            if (!d.value) {
+              text = String(d.value);
+            } else if (d.value.length > 34) {
+              let words = d.value.split(" ");
               text = "";
               for (let i = 0; text.length < 36; i++) {
                 if (i) {
@@ -784,6 +786,8 @@ window.gcexports.viewer = (function () {
               }
               // Now slice off the last word.
               text = text.slice(0, text.lastIndexOf(" ")) + "\u2026";
+            } else {
+              text = d.value;
             }
             return text;
           });

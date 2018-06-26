@@ -1012,9 +1012,11 @@ window.gcexports.viewer = function () {
         }).attr("x", function (d, i) {
           return d.column === 0 ? padding : padding + width;
         }).html(function (d) {
-          var text = d.value;
-          if (text.length > 34) {
-            var words = text.split(" ");
+          var text = void 0;
+          if (!d.value) {
+            text = String(d.value);
+          } else if (d.value.length > 34) {
+            var words = d.value.split(" ");
             text = "";
             for (var i = 0; text.length < 36; i++) {
               if (i) {
@@ -1024,6 +1026,8 @@ window.gcexports.viewer = function () {
             }
             // Now slice off the last word.
             text = text.slice(0, text.lastIndexOf(" ")) + "\u2026";
+          } else {
+            text = d.value;
           }
           return text;
         });
