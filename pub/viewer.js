@@ -690,8 +690,16 @@ window.gcexports.viewer = function () {
     // If array, then use i to select format string.
     if (fmt instanceof Object) {
       return fmt[d] && fmt[d].replace("_", d);
+    } else if (fmt === "week range") {
+      var d1 = new Date(d);
+      var d2 = new Date(d);
+      d2.setDate(d1.getDate() + 7);
+      return formatDate(d1) + "-" + formatDate(d2);
     } else {
       return fmt.replace("_", d);
+    }
+    function formatDate(d) {
+      return d.getMonth() + 1 + "/" + d.getDate();
     }
   };
   var BarChart = React.createClass({
@@ -708,6 +716,8 @@ window.gcexports.viewer = function () {
       });
     },
     componentDidUpdate: function componentDidUpdate() {
+      var _this2 = this;
+
       var props = this.props;
       var xAxisLabel = props.xAxisLabel;
       var yAxisLabel = props.yAxisLabel;
@@ -838,7 +848,9 @@ window.gcexports.viewer = function () {
             },
             tick: {
               format: function format(d, i) {
-                return formatTick(xTickFormat, d, i);
+                var self = _this2;
+                var lbl = rows[d + 1][0];
+                return formatTick(xTickFormat, lbl, i);
               }
             }
           },
@@ -958,10 +970,10 @@ window.gcexports.viewer = function () {
   var TableChart = React.createClass({
     displayName: "TableChart",
     componentDidMount: function componentDidMount() {
-      var _this2 = this;
+      var _this3 = this;
 
       loadScript("/L104/d3.js", function () {
-        _this2.componentDidUpdate();
+        _this3.componentDidUpdate();
       });
     },
     componentDidUpdate: function componentDidUpdate() {
@@ -1041,11 +1053,11 @@ window.gcexports.viewer = function () {
   var TimeseriesChart = React.createClass({
     displayName: "TimeseriesChart",
     componentDidMount: function componentDidMount() {
-      var _this3 = this;
+      var _this4 = this;
 
       loadScript("/L104/d3.js", function () {
         loadScript("/L104/c3.js", function () {
-          _this3.componentDidUpdate();
+          _this4.componentDidUpdate();
         });
       });
     },
@@ -1095,11 +1107,11 @@ window.gcexports.viewer = function () {
   var AreaChart = React.createClass({
     displayName: "AreaChart",
     componentDidMount: function componentDidMount() {
-      var _this4 = this;
+      var _this5 = this;
 
       loadScript("/L104/d3.js", function () {
         loadScript("/L104/c3.js", function () {
-          _this4.componentDidUpdate();
+          _this5.componentDidUpdate();
         });
       });
     },

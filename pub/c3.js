@@ -7720,6 +7720,7 @@
           let p = config.axis_y_padding.bottom || 0;
           var path = "";
           if (dy) {
+            // Only draw bar if it has a non-zero height.
             path =
                 'M' + (h ? x1 + rx1 + p : x1) + ',' + (h ? y1 : y1 - ry1 - p) + ' ' +
                 'L' + (h ? x2 - rx2 : x2) + ',' + (h ? y2 : y2 + ry2) + ' ' +

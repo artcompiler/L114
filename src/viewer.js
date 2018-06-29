@@ -426,8 +426,16 @@ window.gcexports.viewer = (function () {
     // If array, then use i to select format string.
     if (fmt instanceof Object) {
       return fmt[d] && fmt[d].replace("_", d);
+    } else if (fmt === "week range") {
+      let d1 = new Date(d);
+      let d2 = new Date(d);
+      d2.setDate(d1.getDate() + 7);
+      return formatDate(d1) + "-" + formatDate(d2);
     } else {
       return fmt.replace("_", d);
+    }
+    function formatDate(d) {
+      return (d.getMonth() + 1) + "/" + d.getDate();
     }
   };
   var BarChart = React.createClass({
@@ -565,7 +573,9 @@ window.gcexports.viewer = (function () {
             },
             tick: {
               format: (d, i) => {
-                return formatTick(xTickFormat, d, i);
+                let self = this;
+                let lbl = rows[d + 1][0];
+                return formatTick(xTickFormat, lbl, i);
               },
             },
           },
