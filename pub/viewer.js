@@ -907,7 +907,7 @@ window.gcexports.viewer = function () {
       d3.select("#graff-view").append("div").classed("done-rendering", true);
       var data = rows;
       if (showYValues) {
-        tabulate(data, ["Frequency"]);
+        tabulate(data, ["Visitors"]); // FIXME put this in the code.
       }
       function tabulate(data, columns) {
         var topPadding = padding.top - 5 + chartPadding[0];
