@@ -7697,17 +7697,19 @@
           let ry = h ? (y4 - y1) / 2 : (x4 - x1) / 2;
           let rx = dx > ry ? ry : dx / 2;
           let rx1, rx2, ry1, ry2;
+          let h1 = +config.data_json[i][groups[0]];
+          let h2 = +config.data_json[i][groups[1]];
           if (groups.length === 2) {
             if (groups.indexOf(d.id) === 0) {
               // First bar.
               rx1 = rx;
               ry1 = ry;
-              rx2 = 0;
-              ry2 = 0;
+              rx2 = h2 ? 0 : rx;
+              ry2 = h2 ? 0 : ry;
             } else {
               // Second bar.
-              rx1 = 0;
-              ry1 = 0;
+              rx1 = h1 ? 0 : rx;
+              ry1 = h1 ? 0 : ry;
               rx2 = rx;
               ry2 = ry;
             }
@@ -7716,13 +7718,16 @@
             ry1 = ry2 = ry;
           }
           let p = config.axis_y_padding.bottom || 0;
-          var path =
+          var path = "";
+          if (dy) {
+            path =
                 'M' + (h ? x1 + rx1 + p : x1) + ',' + (h ? y1 : y1 - ry1 - p) + ' ' +
                 'L' + (h ? x2 - rx2 : x2) + ',' + (h ? y2 : y2 + ry2) + ' ' +
                 'A' + rx2 + "," + ry2 + " 0 0 1 " + (h ? x3 - rx2 : x3) + ',' + (h ? y3 : y3 + ry2) + ' ' +
                 'L' + (h ? x4 + rx1 + p : x4) + ',' + (h ? y4 : y4 - ry1 - p) + " " +
                 'A' + rx1 + "," + ry1 + " 0 0 1 " + (h ? x1 + rx1 + p : x1) + ',' + (h ? y1 : y1 - ry1 - p) + ' ' +
                 'z';
+          }
           return path;
         };
     };
