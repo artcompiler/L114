@@ -686,16 +686,18 @@ window.gcexports.viewer = function () {
     });
     return rebasedVals;
   };
-  var formatTick = function formatTick(fmt, d) {
-    // If array, then use i to select format string.
+  var formatTick = function formatTick(fmt, d, rows) {
     if (fmt instanceof Object) {
+      // If array, then use i to select format string.
       return fmt[d] && fmt[d].replace("_", d);
     } else if (fmt === "week range") {
+      var lbl = rows[d + 1][0];
       var d1 = new Date(d);
       var d2 = new Date(d);
       d2.setDate(d1.getDate() + 7);
       return formatDate(d1) + "-" + formatDate(d2);
     } else {
+      // Just use the given text.
       return fmt.replace("_", d);
     }
     function formatDate(d) {
@@ -849,8 +851,7 @@ window.gcexports.viewer = function () {
             tick: {
               format: function format(d, i) {
                 var self = _this2;
-                var lbl = rows[d + 1][0];
-                return formatTick(xTickFormat, lbl, i);
+                return formatTick(xTickFormat, d, rows);
               }
             }
           },
@@ -863,7 +864,7 @@ window.gcexports.viewer = function () {
             tick: {
               values: yTickValues,
               format: function format(d, i) {
-                return formatTick(yTickFormat, d, i);
+                return formatTick(yTickFormat, d, []);
               }
             },
             label: {
