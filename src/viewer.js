@@ -432,8 +432,8 @@ window.gcexports.viewer = (function () {
       return fmt[d] && fmt[d].replace("_", d);
     } else if (fmt === "week range") {
       let lbl = rows[d+1][0];
-      let d1 = getDate(d);
-      let d2 = getDate(d);
+      let d1 = getDate(lbl);
+      let d2 = getDate(lbl);
       d2.setDate(d1 + 7);
       return formatDate(d1) + "-" + formatDate(d2);
     } else {
