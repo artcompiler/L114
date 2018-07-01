@@ -424,7 +424,7 @@ window.gcexports.viewer = (function () {
   };
   const getDate = (str) => {
     let [y, m, d] = str.split("-");
-    return new Date(Date.UTC(+y, +m - 1, +d - 1));
+    return new Date(Date.UTC(+y, +m - 1, +d + 1));
   };
   const formatTick = (fmt, d, rows) => {
     if (fmt instanceof Object) {
