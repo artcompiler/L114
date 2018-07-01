@@ -701,8 +701,8 @@ window.gcexports.viewer = function () {
       return fmt[d] && fmt[d].replace("_", d);
     } else if (fmt === "week range") {
       var lbl = rows[d + 1][0];
-      var d1 = getDate(d);
-      var d2 = getDate(d);
+      var d1 = getDate(lbl);
+      var d2 = getDate(lbl);
       d2.setDate(d1 + 7);
       return formatDate(d1) + "-" + formatDate(d2);
     } else {
