@@ -423,7 +423,7 @@ window.gcexports.viewer = (function () {
     return rebasedVals;
   };
   const getDate = (str) => {
-    let [y, m, d] = str.slice("-");
+    let [y, m, d] = str.split("-");
     return new Date(Date.UTC(y, m, d));
   };
   const formatTick = (fmt, d, rows) => {

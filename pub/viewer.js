@@ -687,11 +687,11 @@ window.gcexports.viewer = function () {
     return rebasedVals;
   };
   var getDate = function getDate(str) {
-    var _str$slice = str.slice("-"),
-        _str$slice2 = _slicedToArray(_str$slice, 3),
-        y = _str$slice2[0],
-        m = _str$slice2[1],
-        d = _str$slice2[2];
+    var _str$split = str.split("-"),
+        _str$split2 = _slicedToArray(_str$split, 3),
+        y = _str$split2[0],
+        m = _str$split2[1],
+        d = _str$split2[2];
 
     return new Date(Date.UTC(y, m, d));
   };
