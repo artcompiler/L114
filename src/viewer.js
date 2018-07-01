@@ -455,6 +455,7 @@ window.gcexports.viewer = (function () {
       });
     },
     componentDidUpdate() {
+      if (window.c3) {
       let props = this.props;
       let xAxisLabel = props.xAxisLabel;
       let yAxisLabel = props.yAxisLabel;
@@ -705,6 +706,7 @@ window.gcexports.viewer = (function () {
             return text;
           });
         return table;
+      }
       }
     },
     render () {

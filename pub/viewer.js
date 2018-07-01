@@ -729,248 +729,251 @@ window.gcexports.viewer = function () {
     componentDidUpdate: function componentDidUpdate() {
       var _this2 = this;
 
-      var props = this.props;
-      var xAxisLabel = props.xAxisLabel;
-      var yAxisLabel = props.yAxisLabel;
-      var barWidth = props.barWidth || { ratio: 0.5 };
-      var labels = props.labels ? this.props.labels : props.args.vals[0];
-      var keys = { value: labels.slice(1) }; // Slice off first label label.
-      var rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
-      var colors = props.colors;
-      var horizontal = props.horizontal;
-      var scale = props.scale;
-      var chartPadding = props.chartPadding;
-      var gap = props.gap;
-      var style = props.style;
-      var groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
-      var yTickSize = props.yTickSize;
-      var showLegend = props.hideLegend !== true;
-      var showXGrid = props.hideGrid !== true && props.hideXGrid !== true;
-      var showYGrid = props.hideGrid !== true && props.hideYGrid !== true;
-      var showXAxis = props.hideXAxis !== true;
-      var showYAxis = props.hideYAxis !== true;
-      var showYValues = !!props.showYValues;
-      var xTickFormat = props.xTickFormat || "_";
-      var yTickFormat = props.yTickFormat || "_";
-      var width = props.width || "100%";
-      var height = props.height || "100%";
-      var yTickValues = void 0;
-      if (yTickSize) {
-        var values = [];
+      if (window.c3) {
+        var _tabulate = function _tabulate(data, columns) {
+          var topPadding = padding.top - 5 + chartPadding[0];
+          var table = d3.select("#chart svg"),
+              tbody = table.append("g");
+          table.attr("width", width).attr("height", height);
 
-        var _getRange3 = getRange(rows.slice(1), props.stack, 0),
-            _getRange4 = _slicedToArray(_getRange3, 2),
-            minValue = _getRange4[0],
-            maxValue = _getRange4[1]; // Slice off labels.
+          // create a row for each object in the data
+          var count = data.length;
+          var dy = (height - 2) / count;
+          var textSize = style.tspan && +style.tspan["font-size"] || 12;
+          var rows = tbody.selectAll("text").data(data.slice(1)) // Slice off labels.
+          .enter().append("text").attr("x", 10 /*padding*/).attr("y", function (d, i) {
+            return topPadding + (i + 1) * dy - (dy - textSize) / 2;
+          });
 
-
-        if (typeof yTickSize === "string" && yTickSize.indexOf("%") >= 0) {
-          // Make tick size a percent of maxValue.
-          var precision = maxValue.toString().indexOf(".");
-          var factor = Math.pow(10, precision < 0 ? -(maxValue.toString().length - 1) : -precision); // Avoid edge case.
-          var _scale = Math.round(maxValue * factor) / factor;
-          var percent = +yTickSize.substring(0, yTickSize.indexOf("%"));
-          yTickSize = Math.round(_scale * percent * 0.01, 0) || 1; // avoid 0
-        } else {
-          yTickSize = +yTickSize;
-        }
-        minValue--; // To show ticks.
-        maxValue = maxValue + yTickSize;
-        for (var i = minValue; i < maxValue - 1; i += yTickSize) {
-          var value = Math.floor((i + yTickSize) / yTickSize) * yTickSize;
-          values.push(value);
-        }
-        yTickValues = values;
-      }
-      var legend = void 0;
-      var padding = void 0;
-      if (showLegend) {
-        legend = {
-          padding: 0,
-          item: {
-            tile: {
-              width: .1, // 0 doesn't work in phantomjs
-              height: 10
-            }
-          }
-        };
-        padding = {
-          top: 0,
-          right: 0,
-          bottom: 5,
-          left: 0
-        };
-      } else {
-        legend = {
-          show: false
-        };
-        padding = {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0
-        };
-      }
-      if (chartPadding) {
-        var yValueWidth = showYValues ? 13 : 0;
-        if (chartPadding instanceof Array) {
-          padding = {
-            top: padding.top + chartPadding[0],
-            right: padding.right + chartPadding[1] + yValueWidth,
-            bottom: padding.bottom + chartPadding[2],
-            left: padding.left + chartPadding[3]
-          };
-        } // Otherwise, its undefine, scalar or object, which is fine.
-      }
-      var json = [];
-      rows.slice(1).forEach(function (vals) {
-        var row = {};
-        vals.forEach(function (val, i) {
-          row[labels[i]] = val;
-        });
-        json.push(row);
-      });
-      var chart = c3.generate({
-        bindto: "#chart",
-        padding: padding,
-        data: {
-          json: json,
-          type: 'bar',
-          groups: groups,
-          keys: keys,
-          order: null
-        },
-        color: {
-          pattern: colors
-        },
-        bar: {
-          width: barWidth
-        },
-        size: {
-          width: width,
-          height: height
-        },
-        axis: {
-          x: {
-            show: showXAxis,
-            label: {
-              text: xAxisLabel,
-              position: "outer-center"
-            },
-            tick: {
-              format: function format(d, i) {
-                var self = _this2;
-                return formatTick(xTickFormat, d, rows);
+          // create a cell in each row for each column
+          var cells = rows.selectAll("tspan").data(function (row) {
+            return columns.map(function (column) {
+              var i = data[0].indexOf(column); // Index of column.
+              return { column: i, value: row[i] };
+            });
+          }).enter().append("tspan").attr("text-anchor", "end").attr("x", function (d, i) {
+            return width - 10; // right padding
+          }).html(function (d) {
+            var text = d.value;
+            if (text.length > 34) {
+              var words = text.split(" ");
+              text = "";
+              for (var _i = 0; text.length < 36; _i++) {
+                if (_i) {
+                  text += " ";
+                }
+                text += words[_i];
               }
+              // Now slice off the last word.
+              text = text.slice(0, text.lastIndexOf(" ")) + "\u2026";
             }
-          },
-          y: {
-            show: showYAxis,
-            padding: {
-              top: 25,
-              bottom: 0
-            },
-            tick: {
-              values: yTickValues,
-              format: function format(d, i) {
-                return formatTick(yTickFormat, d, []);
-              }
-            },
-            label: {
-              text: yAxisLabel,
-              position: "outer-center"
-            }
-          },
-          rotated: horizontal
-        },
-        grid: {
-          x: {
-            show: showXGrid
-          },
-          y: {
-            show: showYGrid,
-            lines: [{ value: 0 }]
-          }
-        },
-        legend: legend
-      });
-      if (gap && !groups) {
-        if (labels.length === 3) {
-          var dx = horizontal ? 0 : gap / 2;
-          var dy = horizontal ? gap / 2 : 0;
-          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + -dx + "," + -dy + ")");
-          d3.selectAll(".c3-target-" + labels[2]).attr("transform", "translate(" + dx + "," + dy + ")");
-        }
-      }
-      var nodes = d3.selectAll(".c3-legend-item").nodes();
-      nodes.forEach(function (n, i) {
-        if (nodes.length === 2) {
-          if (i === 0) {
-            d3.select(n).attr("transform", "translate(0, 5)");
+            return text;
+          });
+          return table;
+        };
+
+        var props = this.props;
+        var xAxisLabel = props.xAxisLabel;
+        var yAxisLabel = props.yAxisLabel;
+        var barWidth = props.barWidth || { ratio: 0.5 };
+        var labels = props.labels ? this.props.labels : props.args.vals[0];
+        var keys = { value: labels.slice(1) }; // Slice off first label label.
+        var rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
+        var colors = props.colors;
+        var horizontal = props.horizontal;
+        var scale = props.scale;
+        var chartPadding = props.chartPadding;
+        var gap = props.gap;
+        var style = props.style;
+        var groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
+        var yTickSize = props.yTickSize;
+        var showLegend = props.hideLegend !== true;
+        var showXGrid = props.hideGrid !== true && props.hideXGrid !== true;
+        var showYGrid = props.hideGrid !== true && props.hideYGrid !== true;
+        var showXAxis = props.hideXAxis !== true;
+        var showYAxis = props.hideYAxis !== true;
+        var showYValues = !!props.showYValues;
+        var xTickFormat = props.xTickFormat || "_";
+        var yTickFormat = props.yTickFormat || "_";
+        var width = props.width || "100%";
+        var height = props.height || "100%";
+        var yTickValues = void 0;
+        if (yTickSize) {
+          var values = [];
+
+          var _getRange3 = getRange(rows.slice(1), props.stack, 0),
+              _getRange4 = _slicedToArray(_getRange3, 2),
+              minValue = _getRange4[0],
+              maxValue = _getRange4[1]; // Slice off labels.
+
+
+          if (typeof yTickSize === "string" && yTickSize.indexOf("%") >= 0) {
+            // Make tick size a percent of maxValue.
+            var precision = maxValue.toString().indexOf(".");
+            var factor = Math.pow(10, precision < 0 ? -(maxValue.toString().length - 1) : -precision); // Avoid edge case.
+            var _scale = Math.round(maxValue * factor) / factor;
+            var percent = +yTickSize.substring(0, yTickSize.indexOf("%"));
+            yTickSize = Math.round(_scale * percent * 0.01, 0) || 1; // avoid 0
           } else {
-            d3.select(n).attr("transform", "translate(40, 5)");
+            yTickSize = +yTickSize;
+          }
+          minValue--; // To show ticks.
+          maxValue = maxValue + yTickSize;
+          for (var i = minValue; i < maxValue - 1; i += yTickSize) {
+            var value = Math.floor((i + yTickSize) / yTickSize) * yTickSize;
+            values.push(value);
+          }
+          yTickValues = values;
+        }
+        var legend = void 0;
+        var padding = void 0;
+        if (showLegend) {
+          legend = {
+            padding: 0,
+            item: {
+              tile: {
+                width: .1, // 0 doesn't work in phantomjs
+                height: 10
+              }
+            }
+          };
+          padding = {
+            top: 0,
+            right: 0,
+            bottom: 5,
+            left: 0
+          };
+        } else {
+          legend = {
+            show: false
+          };
+          padding = {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0
+          };
+        }
+        if (chartPadding) {
+          var yValueWidth = showYValues ? 13 : 0;
+          if (chartPadding instanceof Array) {
+            padding = {
+              top: padding.top + chartPadding[0],
+              right: padding.right + chartPadding[1] + yValueWidth,
+              bottom: padding.bottom + chartPadding[2],
+              left: padding.left + chartPadding[3]
+            };
+          } // Otherwise, its undefine, scalar or object, which is fine.
+        }
+        var json = [];
+        rows.slice(1).forEach(function (vals) {
+          var row = {};
+          vals.forEach(function (val, i) {
+            row[labels[i]] = val;
+          });
+          json.push(row);
+        });
+        var chart = c3.generate({
+          bindto: "#chart",
+          padding: padding,
+          data: {
+            json: json,
+            type: 'bar',
+            groups: groups,
+            keys: keys,
+            order: null
+          },
+          color: {
+            pattern: colors
+          },
+          bar: {
+            width: barWidth
+          },
+          size: {
+            width: width,
+            height: height
+          },
+          axis: {
+            x: {
+              show: showXAxis,
+              label: {
+                text: xAxisLabel,
+                position: "outer-center"
+              },
+              tick: {
+                format: function format(d, i) {
+                  var self = _this2;
+                  return formatTick(xTickFormat, d, rows);
+                }
+              }
+            },
+            y: {
+              show: showYAxis,
+              padding: {
+                top: 25,
+                bottom: 0
+              },
+              tick: {
+                values: yTickValues,
+                format: function format(d, i) {
+                  return formatTick(yTickFormat, d, []);
+                }
+              },
+              label: {
+                text: yAxisLabel,
+                position: "outer-center"
+              }
+            },
+            rotated: horizontal
+          },
+          grid: {
+            x: {
+              show: showXGrid
+            },
+            y: {
+              show: showYGrid,
+              lines: [{ value: 0 }]
+            }
+          },
+          legend: legend
+        });
+        if (gap && !groups) {
+          if (labels.length === 3) {
+            var dx = horizontal ? 0 : gap / 2;
+            var dy = horizontal ? gap / 2 : 0;
+            d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + -dx + "," + -dy + ")");
+            d3.selectAll(".c3-target-" + labels[2]).attr("transform", "translate(" + dx + "," + dy + ")");
           }
         }
-      });
-      d3.selectAll(".c3-legend-item text").nodes().forEach(function (n) {
-        // Put space between the tile and the label.
-        d3.select(n).attr("transform", "translate(5)");
-      });
-      d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round");
-      if (style) {
-        // Apply global styles.
-        Object.keys(style).forEach(function (selector) {
-          var styles = style[selector];
-          Object.keys(styles).forEach(function (style) {
-            d3.selectAll(selector).style(style, styles[style]);
-          });
-        });
-      }
-      d3.select("#graff-view").append("div").classed("done-rendering", true);
-      var data = rows;
-      if (showYValues) {
-        tabulate(data, ["Visitors"]); // FIXME put this in the code.
-      }
-      function tabulate(data, columns) {
-        var topPadding = padding.top - 5 + chartPadding[0];
-        var table = d3.select("#chart svg"),
-            tbody = table.append("g");
-        table.attr("width", width).attr("height", height);
-
-        // create a row for each object in the data
-        var count = data.length;
-        var dy = (height - 2) / count;
-        var textSize = style.tspan && +style.tspan["font-size"] || 12;
-        var rows = tbody.selectAll("text").data(data.slice(1)) // Slice off labels.
-        .enter().append("text").attr("x", 10 /*padding*/).attr("y", function (d, i) {
-          return topPadding + (i + 1) * dy - (dy - textSize) / 2;
-        });
-
-        // create a cell in each row for each column
-        var cells = rows.selectAll("tspan").data(function (row) {
-          return columns.map(function (column) {
-            var i = data[0].indexOf(column); // Index of column.
-            return { column: i, value: row[i] };
-          });
-        }).enter().append("tspan").attr("text-anchor", "end").attr("x", function (d, i) {
-          return width - 10; // right padding
-        }).html(function (d) {
-          var text = d.value;
-          if (text.length > 34) {
-            var words = text.split(" ");
-            text = "";
-            for (var _i = 0; text.length < 36; _i++) {
-              if (_i) {
-                text += " ";
-              }
-              text += words[_i];
+        var nodes = d3.selectAll(".c3-legend-item").nodes();
+        nodes.forEach(function (n, i) {
+          if (nodes.length === 2) {
+            if (i === 0) {
+              d3.select(n).attr("transform", "translate(0, 5)");
+            } else {
+              d3.select(n).attr("transform", "translate(40, 5)");
             }
-            // Now slice off the last word.
-            text = text.slice(0, text.lastIndexOf(" ")) + "\u2026";
           }
-          return text;
         });
-        return table;
+        d3.selectAll(".c3-legend-item text").nodes().forEach(function (n) {
+          // Put space between the tile and the label.
+          d3.select(n).attr("transform", "translate(5)");
+        });
+        d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round");
+        if (style) {
+          // Apply global styles.
+          Object.keys(style).forEach(function (selector) {
+            var styles = style[selector];
+            Object.keys(styles).forEach(function (style) {
+              d3.selectAll(selector).style(style, styles[style]);
+            });
+          });
+        }
+        d3.select("#graff-view").append("div").classed("done-rendering", true);
+        var data = rows;
+        if (showYValues) {
+          _tabulate(data, ["Visitors"]); // FIXME put this in the code.
+        }
       }
     },
     render: function render() {
