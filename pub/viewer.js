@@ -1126,84 +1126,86 @@ window.gcexports.viewer = function () {
       });
     },
     componentDidUpdate: function componentDidUpdate() {
-      var props = this.props;
-      var cols = props.args.vals[0];
-      var rows = props.args.vals;
-      var vals = [];
-      var colors = props.colors;
-      var showXAxis = props.hideXAxis !== true;
-      var showYAxis = props.hideYAxis !== true;
-      var lineWidth = props.lineWidth;
-      var dotRadius = props.dotRadius;
-      var chartPadding = props.chartPadding;
+      if (window.c3) {
+        var props = this.props;
+        var cols = props.args.vals[0];
+        var rows = props.args.vals;
+        var vals = [];
+        var colors = props.colors;
+        var showXAxis = props.hideXAxis !== true;
+        var showYAxis = props.hideYAxis !== true;
+        var lineWidth = props.lineWidth;
+        var dotRadius = props.dotRadius;
+        var chartPadding = props.chartPadding;
 
-      var _getRange5 = getRange(rows.slice(1)),
-          _getRange6 = _slicedToArray(_getRange5, 2),
-          min = _getRange6[0],
-          max = _getRange6[1]; // Slice off labels.
+        var _getRange5 = getRange(rows.slice(1)),
+            _getRange6 = _slicedToArray(_getRange5, 2),
+            min = _getRange6[0],
+            max = _getRange6[1]; // Slice off labels.
 
 
-      var pad = (max - min) / 4;
-      rows = rebaseValues(pad - min, rows); // val + pad - min
-      var types = {};
-      types[cols[cols.length - 1]] = "area"; // Use last column as values.
-      var padding = {
-        top: -5,
-        right: -20,
-        bottom: -7,
-        left: -20
-      };
-      if (chartPadding) {
-        if (chartPadding instanceof Array) {
-          padding = {
-            top: padding.top + chartPadding[0],
-            right: padding.right + chartPadding[1],
-            bottom: padding.bottom + chartPadding[2],
-            left: padding.left + chartPadding[3]
-          };
-        } // Otherwise, its undefine, scalar or object, which is fine.
-      }
-      var chart = c3.generate({
-        bindto: "#chart",
-        padding: padding,
-        data: {
-          rows: rows,
-          types: types
-        },
-        legend: {
-          show: false
-        },
-        axis: {
-          x: {
-            show: showXAxis,
-            padding: {
-              left: 1,
-              right: 1
+        var pad = (max - min) / 4;
+        rows = rebaseValues(pad - min, rows); // val + pad - min
+        var types = {};
+        types[cols[cols.length - 1]] = "area"; // Use last column as values.
+        var padding = {
+          top: -5,
+          right: -20,
+          bottom: -7,
+          left: -20
+        };
+        if (chartPadding) {
+          if (chartPadding instanceof Array) {
+            padding = {
+              top: padding.top + chartPadding[0],
+              right: padding.right + chartPadding[1],
+              bottom: padding.bottom + chartPadding[2],
+              left: padding.left + chartPadding[3]
+            };
+          } // Otherwise, its undefine, scalar or object, which is fine.
+        }
+        var chart = c3.generate({
+          bindto: "#chart",
+          padding: padding,
+          data: {
+            rows: rows,
+            types: types
+          },
+          legend: {
+            show: false
+          },
+          axis: {
+            x: {
+              show: showXAxis,
+              padding: {
+                left: 1,
+                right: 1
+              }
+            },
+            y: {
+              show: showYAxis,
+              padding: {
+                left: 0,
+                right: 0
+              }
             }
           },
-          y: {
-            show: showYAxis,
-            padding: {
-              left: 0,
-              right: 0
-            }
+          color: {
+            pattern: colors
+          },
+          size: {
+            width: this.props.width,
+            height: this.props.height
           }
-        },
-        color: {
-          pattern: colors
-        },
-        size: {
-          width: this.props.width,
-          height: this.props.height
+        });
+        if (lineWidth) {
+          d3.selectAll(".c3-line").style("stroke-width", lineWidth);
         }
-      });
-      if (lineWidth) {
-        d3.selectAll(".c3-line").style("stroke-width", lineWidth);
+        if (dotRadius) {
+          d3.selectAll(".c3-circle").attr("r", dotRadius);
+        }
+        d3.select("#graff-view").append("div").classed("done-rendering", true);
       }
-      if (dotRadius) {
-        d3.selectAll(".c3-circle").attr("r", dotRadius);
-      }
-      d3.select("#graff-view").append("div").classed("done-rendering", true);
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });

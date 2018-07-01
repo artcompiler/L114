@@ -877,78 +877,80 @@ window.gcexports.viewer = (function () {
       });
     },
     componentDidUpdate() {
-      let props = this.props;
-      let cols = props.args.vals[0];
-      let rows = props.args.vals;
-      let vals = [];
-      let colors = props.colors;
-      let showXAxis = props.hideXAxis !== true;
-      let showYAxis = props.hideYAxis !== true;
-      let lineWidth = props.lineWidth;
-      let dotRadius = props.dotRadius;
-      let chartPadding = props.chartPadding;
-      let [min, max] = getRange(rows.slice(1)); // Slice off labels.
-      let pad = (max - min) / 4;
-      rows = rebaseValues(pad - min, rows);  // val + pad - min
-      let types = {}
-      types[cols[cols.length - 1]] = "area";  // Use last column as values.
-      let padding = {
-        top: -5,
-        right: -20,
-        bottom: -7,
-        left: -20,
-      };
-      if (chartPadding) {
-        if (chartPadding instanceof Array) {
-          padding = {
-            top: padding.top + chartPadding[0],
-            right: padding.right + chartPadding[1],
-            bottom: padding.bottom + chartPadding[2],
-            left: padding.left + chartPadding[3],
-          }
-        } // Otherwise, its undefine, scalar or object, which is fine.
-      }
-      var chart = c3.generate({
-        bindto: "#chart",
-        padding: padding,
-        data: {
-          rows: rows,
-          types: types,
-        },
-        legend: {
-          show: false,
-        },
-        axis: {
-          x: {
-            show: showXAxis,
-            padding: {
-              left: 1,
-              right: 1,
+      if (window.c3) {
+        let props = this.props;
+        let cols = props.args.vals[0];
+        let rows = props.args.vals;
+        let vals = [];
+        let colors = props.colors;
+        let showXAxis = props.hideXAxis !== true;
+        let showYAxis = props.hideYAxis !== true;
+        let lineWidth = props.lineWidth;
+        let dotRadius = props.dotRadius;
+        let chartPadding = props.chartPadding;
+        let [min, max] = getRange(rows.slice(1)); // Slice off labels.
+        let pad = (max - min) / 4;
+        rows = rebaseValues(pad - min, rows);  // val + pad - min
+        let types = {}
+        types[cols[cols.length - 1]] = "area";  // Use last column as values.
+        let padding = {
+          top: -5,
+          right: -20,
+          bottom: -7,
+          left: -20,
+        };
+        if (chartPadding) {
+          if (chartPadding instanceof Array) {
+            padding = {
+              top: padding.top + chartPadding[0],
+              right: padding.right + chartPadding[1],
+              bottom: padding.bottom + chartPadding[2],
+              left: padding.left + chartPadding[3],
+            }
+          } // Otherwise, its undefine, scalar or object, which is fine.
+        }
+        var chart = c3.generate({
+          bindto: "#chart",
+          padding: padding,
+          data: {
+            rows: rows,
+            types: types,
+          },
+          legend: {
+            show: false,
+          },
+          axis: {
+            x: {
+              show: showXAxis,
+              padding: {
+                left: 1,
+                right: 1,
+              },
+            },
+            y: {
+              show: showYAxis,
+              padding: {
+                left: 0,
+                right: 0,
+              }
             },
           },
-          y: {
-            show: showYAxis,
-            padding: {
-              left: 0,
-              right: 0,
-            }
+          color: {
+            pattern: colors,
           },
-        },
-        color: {
-          pattern: colors,
-        },
-        size: {
-          width: this.props.width,
-          height: this.props.height,
-        },
-      });
-      if (lineWidth) {
-        d3.selectAll(".c3-line").style("stroke-width", lineWidth)
+          size: {
+            width: this.props.width,
+            height: this.props.height,
+          },
+        });
+        if (lineWidth) {
+          d3.selectAll(".c3-line").style("stroke-width", lineWidth)
+        }
+        if (dotRadius) {
+          d3.selectAll(".c3-circle").attr("r", dotRadius)
+        }
+        d3.select("#graff-view").append("div").classed("done-rendering", true);
       }
-      if (dotRadius) {
-        d3.selectAll(".c3-circle").attr("r", dotRadius)
-      }
-      d3.select("#graff-view").append("div").classed("done-rendering", true);
     },
     render () {
       return (
