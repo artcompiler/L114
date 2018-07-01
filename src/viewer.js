@@ -422,15 +422,19 @@ window.gcexports.viewer = (function () {
     });
     return rebasedVals;
   };
+  const getDate = (str) => {
+    let [y, m, d] = str.slice("-");
+    return new Date(Date.UTC(y, m, d));
+  };
   const formatTick = (fmt, d, rows) => {
     if (fmt instanceof Object) {
       // If array, then use i to select format string.
       return fmt[d] && fmt[d].replace("_", d);
     } else if (fmt === "week range") {
       let lbl = rows[d+1][0];
-      let d1 = new Date(d);
-      let d2 = new Date(d);
-      d2.setDate(d1.getDate() + 7);
+      let d1 = getDate(d);
+      let d2 = getDate(d);
+      d2.setDate(d1 + 7);
       return formatDate(d1) + "-" + formatDate(d2);
     } else {
       // Just use the given text.

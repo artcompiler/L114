@@ -686,15 +686,24 @@ window.gcexports.viewer = function () {
     });
     return rebasedVals;
   };
+  var getDate = function getDate(str) {
+    var _str$slice = str.slice("-"),
+        _str$slice2 = _slicedToArray(_str$slice, 3),
+        y = _str$slice2[0],
+        m = _str$slice2[1],
+        d = _str$slice2[2];
+
+    return new Date(Date.UTC(y, m, d));
+  };
   var formatTick = function formatTick(fmt, d, rows) {
     if (fmt instanceof Object) {
       // If array, then use i to select format string.
       return fmt[d] && fmt[d].replace("_", d);
     } else if (fmt === "week range") {
       var lbl = rows[d + 1][0];
-      var d1 = new Date(d);
-      var d2 = new Date(d);
-      d2.setDate(d1.getDate() + 7);
+      var d1 = getDate(d);
+      var d2 = getDate(d);
+      d2.setDate(d1 + 7);
       return formatDate(d1) + "-" + formatDate(d2);
     } else {
       // Just use the given text.
