@@ -434,7 +434,7 @@ window.gcexports.viewer = (function () {
       let lbl = rows[d+1][0];
       let d1 = getDate(lbl);
       let d2 = getDate(lbl);
-      d2.setDate(d2.getDate() + 7);
+      d2.setDate(d2.getDate() + 6);
       return formatDate(d1) + "-" + formatDate(d2);
     } else {
       // Just use the given text.
