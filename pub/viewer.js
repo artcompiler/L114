@@ -703,7 +703,7 @@ window.gcexports.viewer = function () {
       var lbl = rows[d + 1][0];
       var d1 = getDate(lbl);
       var d2 = getDate(lbl);
-      d2.setDate(d1 + 7);
+      d2.setDate(d2 + 7);
       return formatDate(d1) + "-" + formatDate(d2);
     } else {
       // Just use the given text.
