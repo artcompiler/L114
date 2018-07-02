@@ -708,6 +708,7 @@ window.gcexports.viewer = (function () {
         return table;
       }
       }
+      snap();
     },
     render () {
       return (
@@ -960,8 +961,43 @@ window.gcexports.viewer = (function () {
       );
     },
   });
+  function snap() {
+    let svg = d3.select("#graff-view")
+    let html = svg && svg.html() || "<div/>";
+    putSnap(html, (err, val) => {
+      let id = window.gcexports.id;
+      let url = "/snap?id=" + id;
+      let win = window.open(url, id);
+    });
+    let data = {
+      itemID: window.gcexports.id,
+//      index: index,
+    };
+    let state = {};
+    state[window.gcexports.id] = {
+      data: data,
+    };
+//    window.gcexports.dispatcher.dispatch(state);
+  }
+  function putSnap(img, resume) {
+    $.ajax({
+      type: "PUT",
+      url: "/snap",
+      data: {
+        id: window.gcexports.id,
+        img: img,
+      },
+      dataType: "text",
+      success: function(data) {
+        resume(null, data);
+      },
+      error: function(xhr, msg, err) {
+        console.log("Unable to submit code. Probably due to a SQL syntax error");
+      }
+    });
+  }
   var Viewer = React.createClass({
-    componentDidUpdate() {
+    componentDidMount() {
     },
     render () {
       // If you have nested components, make sure you send the props down to the

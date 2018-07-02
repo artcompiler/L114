@@ -975,6 +975,7 @@ window.gcexports.viewer = function () {
           _tabulate(data, ["Visitors"]); // FIXME put this in the code.
         }
       }
+      snap();
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1214,9 +1215,44 @@ window.gcexports.viewer = function () {
       return React.createElement("div", { id: "chart" });
     }
   });
+  function snap() {
+    var svg = d3.select("#graff-view");
+    var html = svg && svg.html() || "<div/>";
+    putSnap(html, function (err, val) {
+      var id = window.gcexports.id;
+      var url = "/snap?id=" + id;
+      var win = window.open(url, id);
+    });
+    var data = {
+      itemID: window.gcexports.id
+      //      index: index,
+    };
+    var state = {};
+    state[window.gcexports.id] = {
+      data: data
+    };
+    //    window.gcexports.dispatcher.dispatch(state);
+  }
+  function putSnap(img, resume) {
+    $.ajax({
+      type: "PUT",
+      url: "/snap",
+      data: {
+        id: window.gcexports.id,
+        img: img
+      },
+      dataType: "text",
+      success: function success(data) {
+        resume(null, data);
+      },
+      error: function error(xhr, msg, err) {
+        console.log("Unable to submit code. Probably due to a SQL syntax error");
+      }
+    });
+  }
   var Viewer = React.createClass({
     displayName: "Viewer",
-    componentDidUpdate: function componentDidUpdate() {},
+    componentDidMount: function componentDidMount() {},
     render: function render() {
       // If you have nested components, make sure you send the props down to the
       // owned components.
