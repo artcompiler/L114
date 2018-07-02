@@ -969,7 +969,7 @@ window.gcexports.viewer = (function () {
     putSnap(html, (err, val) => {
       let id = window.gcexports.id;
       let url = "/snap?id=" + id;
-      let win = window.open(url, id);
+//      let win = window.open(url, id);
     });
     let data = {
       itemID: window.gcexports.id,

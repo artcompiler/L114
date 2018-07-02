@@ -1210,8 +1210,8 @@ window.gcexports.viewer = function () {
           d3.selectAll(".c3-circle").attr("r", dotRadius);
         }
         d3.select("#graff-view").append("div").classed("done-rendering", true);
+        snap();
       }
-      snap();
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1223,7 +1223,7 @@ window.gcexports.viewer = function () {
     putSnap(html, function (err, val) {
       var id = window.gcexports.id;
       var url = "/snap?id=" + id;
-      var win = window.open(url, id);
+      //      let win = window.open(url, id);
     });
     var data = {
       itemID: window.gcexports.id
