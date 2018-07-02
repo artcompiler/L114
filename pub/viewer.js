@@ -1059,6 +1059,7 @@ window.gcexports.viewer = function () {
         });
         return table;
       }
+      snap();
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1210,6 +1211,7 @@ window.gcexports.viewer = function () {
         }
         d3.select("#graff-view").append("div").classed("done-rendering", true);
       }
+      snap();
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });

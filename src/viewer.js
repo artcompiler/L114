@@ -811,6 +811,7 @@ window.gcexports.viewer = (function () {
           });
         return table;
       }
+      snap();
     },
     render () {
       return (
@@ -954,6 +955,7 @@ window.gcexports.viewer = (function () {
         }
         d3.select("#graff-view").append("div").classed("done-rendering", true);
       }
+      snap();
     },
     render () {
       return (
