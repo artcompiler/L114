@@ -1210,7 +1210,9 @@ window.gcexports.viewer = function () {
           d3.selectAll(".c3-circle").attr("r", dotRadius);
         }
         d3.select("#graff-view").append("div").classed("done-rendering", true);
-        snap();
+        setTimeout(function () {
+          snap();
+        }, 1000);
       }
     },
     render: function render() {
