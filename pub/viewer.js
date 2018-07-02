@@ -977,7 +977,7 @@ window.gcexports.viewer = function () {
       }
       setTimeout(function () {
         snap();
-      }, 100);
+      }, 200);
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1063,7 +1063,7 @@ window.gcexports.viewer = function () {
       }
       setTimeout(function () {
         snap();
-      }, 100);
+      }, 200);
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1216,7 +1216,7 @@ window.gcexports.viewer = function () {
         d3.select("#graff-view").append("div").classed("done-rendering", true);
         setTimeout(function () {
           snap();
-        }, 100);
+        }, 200);
       }
     },
     render: function render() {

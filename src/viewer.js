@@ -710,7 +710,7 @@ window.gcexports.viewer = (function () {
       }
       setTimeout(() => {
         snap();
-      }, 1000);
+      }, 200);
     },
     render () {
       return (
@@ -815,7 +815,7 @@ window.gcexports.viewer = (function () {
       }
       setTimeout(() => {
         snap();
-      }, 1000);
+      }, 200);
     },
     render () {
       return (
@@ -960,7 +960,7 @@ window.gcexports.viewer = (function () {
         d3.select("#graff-view").append("div").classed("done-rendering", true);
         setTimeout(() => {
           snap();
-        }, 1000);
+        }, 200);
       }
     },
     render () {
