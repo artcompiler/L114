@@ -708,7 +708,9 @@ window.gcexports.viewer = (function () {
         return table;
       }
       }
-      snap();
+      setTimeout(() => {
+        snap();
+      }, 100);
     },
     render () {
       return (
@@ -811,7 +813,9 @@ window.gcexports.viewer = (function () {
           });
         return table;
       }
-      snap();
+      setTimeout(() => {
+        snap();
+      }, 100);
     },
     render () {
       return (
@@ -956,7 +960,7 @@ window.gcexports.viewer = (function () {
         d3.select("#graff-view").append("div").classed("done-rendering", true);
         setTimeout(() => {
           snap();
-        }, 1000);
+        }, 100);
       }
     },
     render () {

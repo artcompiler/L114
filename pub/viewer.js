@@ -975,7 +975,9 @@ window.gcexports.viewer = function () {
           _tabulate(data, ["Visitors"]); // FIXME put this in the code.
         }
       }
-      snap();
+      setTimeout(function () {
+        snap();
+      }, 100);
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1059,7 +1061,9 @@ window.gcexports.viewer = function () {
         });
         return table;
       }
-      snap();
+      setTimeout(function () {
+        snap();
+      }, 100);
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1212,7 +1216,7 @@ window.gcexports.viewer = function () {
         d3.select("#graff-view").append("div").classed("done-rendering", true);
         setTimeout(function () {
           snap();
-        }, 1000);
+        }, 100);
       }
     },
     render: function render() {
