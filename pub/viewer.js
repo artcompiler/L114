@@ -1154,7 +1154,6 @@ window.gcexports.viewer = function () {
 
 
         var pad = (max - min) / 4;
-        pad = pad < 6 ? pad : 6;
         rows = rebaseValues(pad - min, rows); // val + pad - min
         var types = {};
         types[cols[cols.length - 1]] = "area"; // Use last column as values.

@@ -898,7 +898,6 @@ window.gcexports.viewer = (function () {
         let chartPadding = props.chartPadding;
         let [min, max] = getRange(rows.slice(1)); // Slice off labels.
         let pad = (max - min) / 4;
-        pad = pad < 6 ? pad : 6;
         rows = rebaseValues(pad - min, rows);  // val + pad - min
         let types = {}
         types[cols[cols.length - 1]] = "area";  // Use last column as values.
