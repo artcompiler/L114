@@ -961,7 +961,7 @@ window.gcexports.viewer = (function () {
         d3.select("#graff-view").append("div").classed("done-rendering", true);
         setTimeout(() => {
           snap();
-        }, 200);
+        }, 1000);
       }
     },
     render () {
