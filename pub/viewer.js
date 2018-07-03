@@ -1013,6 +1013,7 @@ window.gcexports.viewer = function () {
       d3.select("#graff-view").append("div").classed("done-rendering", true);
       // The table generation function
       function tabulate(data, columns) {
+        d3.select("#chart").html("");
         var table = d3.select("#chart").append("svg"),
             tbody = table.append("g");
         table.attr("width", width + 2 * padding).attr("height", height + 2 * padding);
