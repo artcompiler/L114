@@ -1217,7 +1217,7 @@ window.gcexports.viewer = function () {
         d3.select("#graff-view").append("div").classed("done-rendering", true);
         setTimeout(function () {
           snap();
-        }, 200);
+        }, 1000);
       }
     },
     render: function render() {
@@ -1255,7 +1255,7 @@ window.gcexports.viewer = function () {
         resume(null, data);
       },
       error: function error(xhr, msg, err) {
-        console.log("Unable to submit code. Probably due to a SQL syntax error");
+        console.log("ERROR unable to PUT /snap for id " + window.gcexports.id);
       }
     });
   }

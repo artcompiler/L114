@@ -1001,7 +1001,7 @@ window.gcexports.viewer = (function () {
         resume(null, data);
       },
       error: function(xhr, msg, err) {
-        console.log("Unable to submit code. Probably due to a SQL syntax error");
+        console.log("ERROR unable to PUT /snap for id " + window.gcexports.id);
       }
     });
   }
