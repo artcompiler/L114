@@ -656,7 +656,7 @@ window.gcexports.viewer = (function () {
         function tabulate(data, columns) {
           var topPadding = padding.top - 5 + chartPadding[0];
           var table = d3.select("#chart svg"),
-          tbody = table.append("g");
+          tbody = table.append("g").classed("y-values", true);
           table
             .attr("width", width)
             .attr("height", height);
