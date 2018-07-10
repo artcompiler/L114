@@ -1063,6 +1063,7 @@ window.gcexports.viewer = function () {
         return table;
       }
       setTimeout(function () {
+        d3.select("#graff-view").append("div").classed("done-rendering", true);
         snap();
       }, 1000);
     },
@@ -1215,8 +1216,8 @@ window.gcexports.viewer = function () {
           d3.selectAll(".c3-circle").attr("r", dotRadius);
         }
         setTimeout(function () {
-          snap();
           d3.select("#graff-view").append("div").classed("done-rendering", true);
+          snap();
         }, 1000);
       }
     },
