@@ -969,15 +969,15 @@ window.gcexports.viewer = function () {
             });
           });
         }
-        d3.select("#graff-view").append("div").classed("done-rendering", true);
         var data = rows;
         if (showYValues) {
           _tabulate(data, ["Visitors"]); // FIXME put this in the code.
         }
       }
       setTimeout(function () {
+        d3.select("#graff-view").append("div").classed("done-rendering", true);
         snap();
-      }, 200);
+      }, 1000);
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1064,7 +1064,7 @@ window.gcexports.viewer = function () {
       }
       setTimeout(function () {
         snap();
-      }, 200);
+      }, 1000);
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1214,9 +1214,9 @@ window.gcexports.viewer = function () {
         if (dotRadius) {
           d3.selectAll(".c3-circle").attr("r", dotRadius);
         }
-        d3.select("#graff-view").append("div").classed("done-rendering", true);
         setTimeout(function () {
           snap();
+          d3.select("#graff-view").append("div").classed("done-rendering", true);
         }, 1000);
       }
     },
@@ -1230,19 +1230,17 @@ window.gcexports.viewer = function () {
     putSnap(html, function (err, val) {
       var id = window.gcexports.id;
       var url = "/snap?id=" + id;
-      //      let win = window.open(url, id);
     });
     var data = {
       itemID: window.gcexports.id
-      //      index: index,
     };
     var state = {};
     state[window.gcexports.id] = {
       data: data
     };
-    //    window.gcexports.dispatcher.dispatch(state);
   }
   function putSnap(img, resume) {
+    console.log("putSnap() img=" + img);
     $.ajax({
       type: "PUT",
       url: "/snap",

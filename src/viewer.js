@@ -456,261 +456,261 @@ window.gcexports.viewer = (function () {
     },
     componentDidUpdate() {
       if (window.c3) {
-      let props = this.props;
-      let xAxisLabel = props.xAxisLabel;
-      let yAxisLabel = props.yAxisLabel;
-      let barWidth = props.barWidth || {ratio: 0.5};
-      let labels = props.labels ? this.props.labels : props.args.vals[0];
-      let keys = { value: labels.slice(1) }; // Slice off first label label.
-      let rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
-      let colors = props.colors;
-      let horizontal = props.horizontal;
-      let scale = props.scale;
-      let chartPadding = props.chartPadding;
-      let gap = props.gap;
-      let style = props.style;
-      let groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
-      let yTickSize = props.yTickSize;
-      let showLegend = props.hideLegend !== true;
-      let showXGrid = props.hideGrid !== true && props.hideXGrid !== true;
-      let showYGrid = props.hideGrid !== true && props.hideYGrid !== true;
-      let showXAxis = props.hideXAxis !== true;
-      let showYAxis = props.hideYAxis !== true;
-      let showYValues = !!props.showYValues;
-      let xTickFormat = props.xTickFormat || "_";
-      let yTickFormat = props.yTickFormat || "_";
-      let width = props.width || "100%";
-      let height = props.height || "100%";
-      let yTickValues;
-      if (yTickSize) {
-        let values = [];
-        let [minValue, maxValue] = getRange(rows.slice(1), props.stack, 0); // Slice off labels.
-        if (typeof yTickSize === "string" && yTickSize.indexOf("%") >= 0) {
-          // Make tick size a percent of maxValue.
-          let precision = maxValue.toString().indexOf(".");
-          var factor = Math.pow(10, precision < 0 ? -(maxValue.toString().length - 1): -precision);  // Avoid edge case.
-          let scale = Math.round((maxValue) * factor) / factor;
-          let percent = +yTickSize.substring(0, yTickSize.indexOf("%"));
-          yTickSize = Math.round(scale * percent * 0.01, 0) || 1;  // avoid 0
-        } else {
-          yTickSize = +yTickSize;
-        }
-        minValue--;  // To show ticks.
-        maxValue = maxValue + yTickSize;
-        for (let i = minValue; i < maxValue - 1; i += yTickSize) {
-          let value = Math.floor((i + yTickSize) / yTickSize) * yTickSize;
-          values.push(value);
-        }
-        yTickValues = values;
-      }
-      let legend;
-      let padding;
-      if (showLegend) {
-        legend = {
-          padding: 0,
-          item: {
-            tile: {
-              width: .1,  // 0 doesn't work in phantomjs
-              height: 10,
-            },
-          }
-        };
-        padding = {
-          top: 0,
-          right: 0,
-          bottom: 5,
-          left: 0,
-        };
-      } else {
-        legend = {
-          show: false,
-        };
-        padding = {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-        };
-      }
-      if (chartPadding) {
-        const yValueWidth = showYValues ? 13 : 0;
-        if (chartPadding instanceof Array) {
-          padding = {
-            top: padding.top + chartPadding[0],
-            right: padding.right + chartPadding[1] + yValueWidth,
-            bottom: padding.bottom + chartPadding[2],
-            left: padding.left + chartPadding[3],
-          }
-        } // Otherwise, its undefine, scalar or object, which is fine.
-      }
-      let json = [];
-      rows.slice(1).forEach(vals => {
-        let row = {};
-        vals.forEach((val, i) => {
-          row[labels[i]] = val;
-        });
-        json.push(row);
-      });
-      var chart = c3.generate({
-        bindto: "#chart",
-        padding: padding,
-        data: {
-          json: json,
-          type: 'bar',
-          groups: groups,
-          keys: keys,
-          order: null,
-        },
-        color: {
-          pattern: colors,
-        },
-        bar: {
-          width: barWidth,
-        },
-        size: {
-          width: width,
-          height: height,
-        },
-        axis: {
-          x: {
-            show: showXAxis,
-            label: {
-              text: xAxisLabel,
-              position: "outer-center",
-            },
-            tick: {
-              format: (d, i) => {
-                let self = this;
-                return formatTick(xTickFormat, d, rows);
-              },
-            },
-          },
-          y: {
-            show: showYAxis,
-            padding: {
-              top: 25,
-              bottom: 0,
-            },
-            tick: {
-              values: yTickValues,
-              format: (d, i) => {
-                return formatTick(yTickFormat, d, []);
-              },
-            },
-            label: {
-              text: yAxisLabel,
-              position: "outer-center",
-            },
-          },
-          rotated: horizontal,
-        },
-        grid: {
-          x: {
-            show: showXGrid,
-          },
-          y: {
-            show: showYGrid,
-            lines: [
-              {value: 0}
-            ]
-          },
-        },
-        legend: legend,
-      });
-      if (gap && !groups) {
-        if (labels.length === 3) {
-          let dx = horizontal ? 0 : gap / 2;
-          let dy = horizontal ? gap / 2 : 0;
-          d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + -dx + "," + -dy + ")");
-          d3.selectAll(".c3-target-" + labels[2]).attr("transform", "translate(" + dx + "," + dy + ")");
-        }
-      }
-      let nodes = d3.selectAll(".c3-legend-item").nodes();
-      nodes.forEach((n, i) => {
-        if (nodes.length === 2) {
-          if (i === 0) {
-            d3.select(n).attr("transform", "translate(0, 5)");
+        let props = this.props;
+        let xAxisLabel = props.xAxisLabel;
+        let yAxisLabel = props.yAxisLabel;
+        let barWidth = props.barWidth || {ratio: 0.5};
+        let labels = props.labels ? this.props.labels : props.args.vals[0];
+        let keys = { value: labels.slice(1) }; // Slice off first label label.
+        let rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
+        let colors = props.colors;
+        let horizontal = props.horizontal;
+        let scale = props.scale;
+        let chartPadding = props.chartPadding;
+        let gap = props.gap;
+        let style = props.style;
+        let groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
+        let yTickSize = props.yTickSize;
+        let showLegend = props.hideLegend !== true;
+        let showXGrid = props.hideGrid !== true && props.hideXGrid !== true;
+        let showYGrid = props.hideGrid !== true && props.hideYGrid !== true;
+        let showXAxis = props.hideXAxis !== true;
+        let showYAxis = props.hideYAxis !== true;
+        let showYValues = !!props.showYValues;
+        let xTickFormat = props.xTickFormat || "_";
+        let yTickFormat = props.yTickFormat || "_";
+        let width = props.width || "100%";
+        let height = props.height || "100%";
+        let yTickValues;
+        if (yTickSize) {
+          let values = [];
+          let [minValue, maxValue] = getRange(rows.slice(1), props.stack, 0); // Slice off labels.
+          if (typeof yTickSize === "string" && yTickSize.indexOf("%") >= 0) {
+            // Make tick size a percent of maxValue.
+            let precision = maxValue.toString().indexOf(".");
+            var factor = Math.pow(10, precision < 0 ? -(maxValue.toString().length - 1): -precision);  // Avoid edge case.
+            let scale = Math.round((maxValue) * factor) / factor;
+            let percent = +yTickSize.substring(0, yTickSize.indexOf("%"));
+            yTickSize = Math.round(scale * percent * 0.01, 0) || 1;  // avoid 0
           } else {
-            d3.select(n).attr("transform", "translate(40, 5)");
+            yTickSize = +yTickSize;
+          }
+          minValue--;  // To show ticks.
+          maxValue = maxValue + yTickSize;
+          for (let i = minValue; i < maxValue - 1; i += yTickSize) {
+            let value = Math.floor((i + yTickSize) / yTickSize) * yTickSize;
+            values.push(value);
+          }
+          yTickValues = values;
+        }
+        let legend;
+        let padding;
+        if (showLegend) {
+          legend = {
+            padding: 0,
+            item: {
+              tile: {
+                width: .1,  // 0 doesn't work in phantomjs
+                height: 10,
+              },
+            }
+          };
+          padding = {
+            top: 0,
+            right: 0,
+            bottom: 5,
+            left: 0,
+          };
+        } else {
+          legend = {
+            show: false,
+          };
+          padding = {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          };
+        }
+        if (chartPadding) {
+          const yValueWidth = showYValues ? 13 : 0;
+          if (chartPadding instanceof Array) {
+            padding = {
+              top: padding.top + chartPadding[0],
+              right: padding.right + chartPadding[1] + yValueWidth,
+              bottom: padding.bottom + chartPadding[2],
+              left: padding.left + chartPadding[3],
+            }
+          } // Otherwise, its undefine, scalar or object, which is fine.
+        }
+        let json = [];
+        rows.slice(1).forEach(vals => {
+          let row = {};
+          vals.forEach((val, i) => {
+            row[labels[i]] = val;
+          });
+          json.push(row);
+        });
+        var chart = c3.generate({
+          bindto: "#chart",
+          padding: padding,
+          data: {
+            json: json,
+            type: 'bar',
+            groups: groups,
+            keys: keys,
+            order: null,
+          },
+          color: {
+            pattern: colors,
+          },
+          bar: {
+            width: barWidth,
+          },
+          size: {
+            width: width,
+            height: height,
+          },
+          axis: {
+            x: {
+              show: showXAxis,
+              label: {
+                text: xAxisLabel,
+                position: "outer-center",
+              },
+              tick: {
+                format: (d, i) => {
+                  let self = this;
+                  return formatTick(xTickFormat, d, rows);
+                },
+              },
+            },
+            y: {
+              show: showYAxis,
+              padding: {
+                top: 25,
+                bottom: 0,
+              },
+              tick: {
+                values: yTickValues,
+                format: (d, i) => {
+                  return formatTick(yTickFormat, d, []);
+                },
+              },
+              label: {
+                text: yAxisLabel,
+                position: "outer-center",
+              },
+            },
+            rotated: horizontal,
+          },
+          grid: {
+            x: {
+              show: showXGrid,
+            },
+            y: {
+              show: showYGrid,
+              lines: [
+                {value: 0}
+              ]
+            },
+          },
+          legend: legend,
+        });
+        if (gap && !groups) {
+          if (labels.length === 3) {
+            let dx = horizontal ? 0 : gap / 2;
+            let dy = horizontal ? gap / 2 : 0;
+            d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + -dx + "," + -dy + ")");
+            d3.selectAll(".c3-target-" + labels[2]).attr("transform", "translate(" + dx + "," + dy + ")");
           }
         }
-      });
-      d3.selectAll(".c3-legend-item text").nodes().forEach(n => {
-        // Put space between the tile and the label.
-        d3.select(n).attr("transform", "translate(5)");
-      });
-      d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round");
-      if (style) {
-        // Apply global styles.
-        Object.keys(style).forEach(selector => {
-          let styles = style[selector];
-          Object.keys(styles).forEach(style => {
-            d3.selectAll(selector).style(style, styles[style]);
-          });
+        let nodes = d3.selectAll(".c3-legend-item").nodes();
+        nodes.forEach((n, i) => {
+          if (nodes.length === 2) {
+            if (i === 0) {
+              d3.select(n).attr("transform", "translate(0, 5)");
+            } else {
+              d3.select(n).attr("transform", "translate(40, 5)");
+            }
+          }
         });
-      }
-      d3.select("#graff-view").append("div").classed("done-rendering", true);
-      let data = rows;
-      if (showYValues) {
-        tabulate(data, ["Visitors"]);  // FIXME put this in the code.
-      }
-      function tabulate(data, columns) {
-        var topPadding = padding.top - 5 + chartPadding[0];
-        var table = d3.select("#chart svg"),
-            tbody = table.append("g");
-        table
-          .attr("width", width)
-          .attr("height", height);
+        d3.selectAll(".c3-legend-item text").nodes().forEach(n => {
+          // Put space between the tile and the label.
+          d3.select(n).attr("transform", "translate(5)");
+        });
+        d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round");
+        if (style) {
+          // Apply global styles.
+          Object.keys(style).forEach(selector => {
+            let styles = style[selector];
+            Object.keys(styles).forEach(style => {
+              d3.selectAll(selector).style(style, styles[style]);
+            });
+          });
+        }
+        let data = rows;
+        if (showYValues) {
+          tabulate(data, ["Visitors"]);  // FIXME put this in the code.
+        }
+        function tabulate(data, columns) {
+          var topPadding = padding.top - 5 + chartPadding[0];
+          var table = d3.select("#chart svg"),
+          tbody = table.append("g");
+          table
+            .attr("width", width)
+            .attr("height", height);
 
-        // create a row for each object in the data
-        let count = data.length;
-        let dy = (height - 2) / count;
-        let textSize = style.tspan && +style.tspan["font-size"] || 12;
-        var rows = tbody.selectAll("text")
-          .data(data.slice(1))  // Slice off labels.
-          .enter()
-          .append("text")
+          // create a row for each object in the data
+          let count = data.length;
+          let dy = (height - 2) / count;
+          let textSize = style.tspan && +style.tspan["font-size"] || 12;
+          var rows = tbody.selectAll("text")
+            .data(data.slice(1))  // Slice off labels.
+            .enter()
+            .append("text")
             .attr("x", 10 /*padding*/)
             .attr("y", (d, i) => {
               return topPadding + (i + 1) * dy - (dy - textSize) / 2;
             });
 
-        // create a cell in each row for each column
-        var cells = rows.selectAll("tspan")
-          .data(function(row) {
-            return columns.map(function(column) {
-              let i = data[0].indexOf(column);  // Index of column.
-              return {column: i, value: row[i]};
-            });
-          })
-          .enter()
-          .append("tspan")
+          // create a cell in each row for each column
+          var cells = rows.selectAll("tspan")
+            .data(function(row) {
+              return columns.map(function(column) {
+                let i = data[0].indexOf(column);  // Index of column.
+                return {column: i, value: row[i]};
+              });
+            })
+            .enter()
+            .append("tspan")
             .attr("text-anchor", "end")
             .attr("x", (d, i) => {
-               return width - 10; // right padding
+              return width - 10; // right padding
             })
-          .html(function(d) {
-            let text = d.value;
-            if (text.length > 34) {
-              let words = text.split(" ");
-              text = "";
-              for (let i = 0; text.length < 36; i++) {
-                if (i) {
-                  text += " ";
+            .html(function(d) {
+              let text = d.value;
+              if (text.length > 34) {
+                let words = text.split(" ");
+                text = "";
+                for (let i = 0; text.length < 36; i++) {
+                  if (i) {
+                    text += " ";
+                  }
+                  text += words[i];
                 }
-                text += words[i];
+                // Now slice off the last word.
+                text = text.slice(0, text.lastIndexOf(" ")) + "\u2026";
               }
-              // Now slice off the last word.
-              text = text.slice(0, text.lastIndexOf(" ")) + "\u2026";
-            }
-            return text;
-          });
-        return table;
-      }
+              return text;
+            });
+          return table;
+        }
       }
       setTimeout(() => {
+        d3.select("#graff-view").append("div").classed("done-rendering", true);
         snap();
-      }, 200);
+      }, 1000);
     },
     render () {
       return (
@@ -816,7 +816,7 @@ window.gcexports.viewer = (function () {
       }
       setTimeout(() => {
         snap();
-      }, 200);
+      }, 1000);
     },
     render () {
       return (
@@ -958,9 +958,9 @@ window.gcexports.viewer = (function () {
         if (dotRadius) {
           d3.selectAll(".c3-circle").attr("r", dotRadius)
         }
-        d3.select("#graff-view").append("div").classed("done-rendering", true);
         setTimeout(() => {
           snap();
+          d3.select("#graff-view").append("div").classed("done-rendering", true);
         }, 1000);
       }
     },
@@ -976,19 +976,17 @@ window.gcexports.viewer = (function () {
     putSnap(html, (err, val) => {
       let id = window.gcexports.id;
       let url = "/snap?id=" + id;
-//      let win = window.open(url, id);
     });
     let data = {
       itemID: window.gcexports.id,
-//      index: index,
     };
     let state = {};
     state[window.gcexports.id] = {
       data: data,
     };
-//    window.gcexports.dispatcher.dispatch(state);
   }
   function putSnap(img, resume) {
+    console.log("putSnap() img=" + img);
     $.ajax({
       type: "PUT",
       url: "/snap",
