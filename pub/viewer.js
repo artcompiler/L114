@@ -1015,7 +1015,7 @@ window.gcexports.viewer = function () {
       function tabulate(data, columns) {
         d3.select("#chart").html("");
         var table = d3.select("#chart").append("svg"),
-            tbody = table.append("g");
+            tbody = table.append("g").classed("y-values", true);
         table.attr("width", width + 2 * padding).attr("height", height + 2 * padding);
 
         // create a row for each object in the data
