@@ -786,7 +786,7 @@ window.gcexports.viewer = function () {
         var gap = props.gap;
         var style = props.style;
         var groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
-        var yTickSize = props.yTickSize;
+        var yTickSize = "20%"; // Ignore user setting.
         var showLegend = props.hideLegend !== true;
         var showXGrid = props.hideGrid !== true && props.hideXGrid !== true;
         var showYGrid = props.hideGrid !== true && props.hideYGrid !== true;
@@ -811,7 +811,7 @@ window.gcexports.viewer = function () {
             // Make tick size a percent of maxValue.
             var precision = maxValue.toString().indexOf(".");
             var factor = Math.pow(10, precision < 0 ? -(maxValue.toString().length - 1) : -precision); // Avoid edge case.
-            var _scale = Math.round(maxValue * factor) / factor;
+            var _scale = Math.round(maxValue);
             var percent = +yTickSize.substring(0, yTickSize.indexOf("%"));
             yTickSize = Math.round(_scale * percent * 0.01, 0) || 1; // avoid 0
           } else {
