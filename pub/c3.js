@@ -5216,7 +5216,7 @@
             axis_x_tick_values: null,
             axis_x_tick_rotate: 0,
             axis_x_tick_outer: true,
-            axis_x_tick_multiline: true,
+            axis_x_tick_multiline: false,
             axis_x_tick_width: null,
             axis_x_max: undefined,
             axis_x_min: undefined,
