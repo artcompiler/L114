@@ -975,9 +975,8 @@ window.gcexports.viewer = function () {
         }
       }
       setTimeout(function () {
-        d3.select("#graff-view").append("div").classed("done-rendering", true);
         snap();
-      }, 1000);
+      }, 100);
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1010,7 +1009,6 @@ window.gcexports.viewer = function () {
           });
         });
       }
-      d3.select("#graff-view").append("div").classed("done-rendering", true);
       // The table generation function
       function tabulate(data, columns) {
         d3.select("#chart").html("");
@@ -1063,9 +1061,8 @@ window.gcexports.viewer = function () {
         return table;
       }
       setTimeout(function () {
-        d3.select("#graff-view").append("div").classed("done-rendering", true);
         snap();
-      }, 1000);
+      }, 100);
     },
     render: function render() {
       return React.createElement("div", { id: "chart" });
@@ -1216,9 +1213,8 @@ window.gcexports.viewer = function () {
           d3.selectAll(".c3-circle").attr("r", dotRadius);
         }
         setTimeout(function () {
-          d3.select("#graff-view").append("div").classed("done-rendering", true);
           snap();
-        }, 1000);
+        }, 100);
       }
     },
     render: function render() {
