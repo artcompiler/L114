@@ -958,7 +958,7 @@ window.gcexports.viewer = (function () {
         }
         setTimeout(() => {
           snap();
-        }, 1000);
+        }, 500);
       }
     },
     render () {
