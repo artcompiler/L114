@@ -664,7 +664,7 @@ window.gcexports.viewer = (function () {
           // create a row for each object in the data
           let count = data.length;
           let dy = (height - 2) / count;
-          let textSize = style.tspan && +style.tspan["font-size"] || 12;
+          let textSize = style.tspan && +style.tspan["font-size"] || 11.8;
           var rows = tbody.selectAll("text")
             .data(data.slice(1))  // Slice off labels.
             .enter()

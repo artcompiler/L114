@@ -739,7 +739,7 @@ window.gcexports.viewer = function () {
           // create a row for each object in the data
           var count = data.length;
           var dy = (height - 2) / count;
-          var textSize = style.tspan && +style.tspan["font-size"] || 12;
+          var textSize = style.tspan && +style.tspan["font-size"] || 11.8;
           var rows = tbody.selectAll("text").data(data.slice(1)) // Slice off labels.
           .enter().append("text").attr("x", 10 /*padding*/).attr("y", function (d, i) {
             return topPadding + (i + 1) * dy - (dy - textSize) / 2;
