@@ -1214,7 +1214,7 @@ window.gcexports.viewer = function () {
         }
         setTimeout(function () {
           snap();
-        }, 1500);
+        }, 1000);
       }
     },
     render: function render() {
