@@ -710,7 +710,7 @@ window.gcexports.viewer = function () {
       return fmt.replace("_", d);
     }
     function formatDate(d) {
-      return d.getMonth() + 1 + "/" + d.getDate();
+      return d.getUTCMonth() + 1 + "/" + d.getUTCDate();
     }
   };
   var BarChart = React.createClass({
