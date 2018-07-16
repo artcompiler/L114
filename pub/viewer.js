@@ -693,7 +693,7 @@ window.gcexports.viewer = function () {
         m = _str$split2[1],
         d = _str$split2[2];
 
-    return new Date(Date.UTC(+y, +m - 1, +d + 1));
+    return new Date(Date.UTC(+y, +m - 1, +d));
   };
   var formatTick = function formatTick(fmt, d, rows) {
     if (fmt instanceof Object) {
