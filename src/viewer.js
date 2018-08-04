@@ -708,7 +708,7 @@ window.gcexports.viewer = (function () {
         }
       }
       setTimeout(() => {
-        snap();
+//        snap();
       }, 100);
     },
     render () {
@@ -813,7 +813,7 @@ window.gcexports.viewer = (function () {
         return table;
       }
       setTimeout(() => {
-        snap();
+//        snap();
       }, 100);
     },
     render () {
@@ -957,7 +957,7 @@ window.gcexports.viewer = (function () {
           d3.selectAll(".c3-circle").attr("r", dotRadius)
         }
         setTimeout(() => {
-          snap();
+//          snap();
         }, 100);
       }
     },
