@@ -554,6 +554,9 @@ window.gcexports.viewer = (function () {
         var chart = c3.generate({
           bindto: "#chart",
           padding: padding,
+          transition: {
+            duration: 0
+          },
           data: {
             json: json,
             type: 'bar',
@@ -838,6 +841,9 @@ window.gcexports.viewer = (function () {
       let showYAxis = this.props.hideYAxis !== true;
       var chart = c3.generate({
         bindto: "#chart",
+        transition: {
+          duration: 0
+        },
         data: {
           x: "x",
           rows: rows,
@@ -919,6 +925,9 @@ window.gcexports.viewer = (function () {
         var chart = c3.generate({
           bindto: "#chart",
           padding: padding,
+          transition: {
+            duration: 0
+          },
           data: {
             rows: rows,
             types: types,
