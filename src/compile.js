@@ -598,8 +598,6 @@ let render = (function() {
 export let compiler = (function () {
   exports.version = "v1.0.0";
   exports.compile = function compile(code, data, resume) {
-    // Compiler takes an AST in the form of a node pool and transforms it into
-    // an object to be rendered on the client by the viewer for this language.
     try {
       let options = {
         data: data
