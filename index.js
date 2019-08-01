@@ -44,7 +44,6 @@ app.post("/compile", function(req, res) {
       } else {
         let code = body.code;
         let data = body.data;
-        data.REFRESH = body.refresh; // Stowaway flag.
         let t0 = new Date;
         compiler.compile(code, data, function (err, val) {
           if (err && err.length) {
