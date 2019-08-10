@@ -448,8 +448,8 @@ window.gcexports.viewer = (function () {
     componentDidMount() {
       // NOTE this is required because C3 loads the wrong version of D3
       // otherwise.
-      loadScript("/L104/d3.js", () => {
-        loadScript("/L104/c3.js", () => {
+      loadScript("/L114/d3.js", () => {
+        loadScript("/L114/c3.js", () => {
           this.componentDidUpdate();
         });
       });
@@ -722,7 +722,7 @@ window.gcexports.viewer = (function () {
   });
   var TableChart = React.createClass({
     componentDidMount() {
-      loadScript("/L104/d3.js", () => {
+      loadScript("/L114/d3.js", () => {
         this.componentDidUpdate();
       });
     },
@@ -827,8 +827,8 @@ window.gcexports.viewer = (function () {
   });
   var TimeseriesChart = React.createClass({
     componentDidMount() {
-      loadScript("/L104/d3.js", () => {
-        loadScript("/L104/c3.js", () => {
+      loadScript("/L114/d3.js", () => {
+        loadScript("/L114/c3.js", () => {
           this.componentDidUpdate();
         });
       });
@@ -883,8 +883,8 @@ window.gcexports.viewer = (function () {
   });
   var AreaChart = React.createClass({
     componentDidMount() {
-      loadScript("/L104/d3.js", () => {
-        loadScript("/L104/c3.js", () => {
+      loadScript("/L114/d3.js", () => {
+        loadScript("/L114/c3.js", () => {
           this.componentDidUpdate();
         });
       });
@@ -1020,8 +1020,8 @@ window.gcexports.viewer = (function () {
       var elts = render(data, props);
       return (
         <div>
-        <link rel="stylesheet" href="L104/style.css" />
-        <div className="L104">
+        <link rel="stylesheet" href="L114/style.css" />
+        <div className="L114">
           {elts}
         </div>
         </div>
