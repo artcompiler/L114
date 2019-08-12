@@ -1,6 +1,4 @@
-/* Copyright (c) 2016, Art Compiler LLC */
-/* @flow */
-
+/* Copyright (c) 2019, Art Compiler LLC */
 import {
   assert,
   message,
