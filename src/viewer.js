@@ -902,15 +902,15 @@ window.gcexports.viewer = (function () {
         let dotRadius = props.dotRadius;
         let chartPadding = props.chartPadding;
         let [min, max] = getRange(rows.slice(1)); // Slice off labels.
-        let pad = (max - min) / 4;
-        rows = rebaseValues(pad - min, rows);  // val + pad - min
+        let offset = min / 4;
+//        rows = rebaseValues(offset, rows);  // val + pad - min
         let types = {}
         types[cols[cols.length - 1]] = "area";  // Use last column as values.
         let padding = {
           top: -5,
           right: -20,
-          bottom: -7,
-          left: -20,
+          bottom: 0,
+          left: 40,
         };
         if (chartPadding) {
           if (chartPadding instanceof Array) {
@@ -948,7 +948,8 @@ window.gcexports.viewer = (function () {
               padding: {
                 left: 0,
                 right: 0,
-              }
+              },
+              min: min - 10,
             },
           },
           color: {

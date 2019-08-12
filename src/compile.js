@@ -140,7 +140,17 @@ const transform = (function() {
   };
   function areaChart(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
-      let vals = val0;
+      let vals = [];
+      let keys = Object.keys(val0[0]);
+      vals.push(keys);
+      val0.forEach((v, i) => {
+        if (+v[keys[1]] < 120) {
+          vals.push([
+            v[keys[0]],
+            v[keys[1]],
+          ]);
+        }
+      });
       resume([].concat(err0), {
         type: "area-chart",
         args: {
