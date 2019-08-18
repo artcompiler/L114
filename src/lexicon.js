@@ -40,6 +40,7 @@ window.gcexports.globalLexicon = {
   "style" : { "tk": 1, "name": "STYLE", "cls": "function", "length": 2, "arity": 2 },
   "map" : { "tk": 1, "name": "MAP", "cls": "function", "length": 2, "arity": 2 },
   "apply" : { "tk": 1, "name": "APPLY", "cls": "function", "length": 2, "arity": 2 },
-  "in" : { "tk": 1, "name": "IN", "cls": "function", "length": 1, "arity": 1 },
+  "defaults" : { "tk": 1, "name": "DEFAULTS", "cls": "function", "length": 1, "arity": 1 },
+  "in" : { "tk": 1, "name": "DEFAULTS", "cls": "function", "length": 1, "arity": 1 },
   "arg" : { "tk": 1, "name": "ARG", "cls": "function", "length": 1, "arity": 1 }
 }

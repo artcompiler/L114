@@ -35,7 +35,7 @@ const transform = (function() {
     "SHOW-Y-VALUES": showYValues,
     "STACK": stack,
     "DOT-RADIUS": dotRadius,
-    "ROW-NAMES": rowNames,
+    "ROW-LABELS": rowLabels,
     "BAR-WIDTH": barWidth,
     "WIDTH": width,
     "HEIGHT": height,
@@ -64,7 +64,7 @@ const transform = (function() {
     "STYLE" : style,
     "CONCAT" : concat,
     "ARG" : arg,
-    "IN" : inData,
+    "DEFAULTS" : defaults,
     "LAMBDA" : lambda,
     "PAREN" : paren,
     "APPLY" : apply,
@@ -256,10 +256,10 @@ const transform = (function() {
       });
     });
   };
-  function rowNames(node, options, resume) {
+  function rowLabels(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
-        val1.rowNames = val0;
+        val1.rowLabels = val0;
         resume([].concat(err0).concat(err1), val1);
       });
     });
@@ -416,7 +416,7 @@ const transform = (function() {
       resume([], []);
     }
   }
-  function inData(node, options, resume) {
+  function defaults(node, options, resume) {
     // If there is input data, then use it, otherwise use default data.
     if (node.elts.length === 0) {
       // No args, so use the given data or empty.

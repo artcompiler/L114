@@ -894,24 +894,25 @@ window.gcexports.viewer = (function () {
     },
     componentDidUpdate() {
       let dataset = this.props.args.vals;
-      let rowLabels = this.props.args.rowNames,
+      let rowLabels = this.props.rowLabels,
           times = d3.range(24);
       
       let margin = {top:40, right:50, bottom:70, left:50};
       
       // calculate width and height based on window size
-      var w = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20,
-      gridSize = Math.floor(w / times.length),
-      h = gridSize * (days.length + 2);
+      var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20,
+      gridSize = Math.floor(width / times.length),
+      h = gridSize * (rowLabels.length + 2);
 
       //reset the overall font size
-      var newFontSize = w * 62.5 / 900;
+      var newFontSize = width * 62.5 / 900;
       d3.select("html").style("font-size", newFontSize + "%");
       
       // svg container
+      d3.select("#chart").html("");  // Clear view.
       var svg = d3.select("#chart")
   	.append("svg")
-  	.attr("width", w + margin.top + margin.bottom)
+  	.attr("width", width + margin.top + margin.bottom)
   	.attr("height", h + margin.left + margin.right)
   	.append("g")
   	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -922,7 +923,7 @@ window.gcexports.viewer = (function () {
   	.range(["#87cefa", "#86c6ef", "#85bde4", "#83b7d9", "#82afce", "#80a6c2", "#7e9fb8", "#7995aa", "#758b9e", "#708090"]);
       
       var dayLabels = svg.selectAll(".dayLabel")
-  	.data(days)
+  	.data(rowLabels)
   	.enter()
   	.append("text")
   	.text(function(d) { return d; })
@@ -974,8 +975,11 @@ window.gcexports.viewer = (function () {
             .data(selectLocation.values)
             .enter()
             .append("rect")
-            .attr("x", function(d) { return (d.hour-1) * gridSize; })
-            .attr("y", function(d) { return (d.day-1) * gridSize; })
+            .attr("x", function(d) {
+              return (d.col-1) * gridSize; })
+            .attr("y", function(d) {
+              return (d.row-1) * gridSize;
+            })
             .attr("class", "hour bordered")
             .attr("width", gridSize)
             .attr("height", gridSize)
