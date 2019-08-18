@@ -35,6 +35,7 @@ const transform = (function() {
     "SHOW-Y-VALUES": showYValues,
     "STACK": stack,
     "DOT-RADIUS": dotRadius,
+    "ROW-NAMES": rowNames,
     "BAR-WIDTH": barWidth,
     "WIDTH": width,
     "HEIGHT": height,
@@ -45,6 +46,7 @@ const transform = (function() {
     "BAR-CHART": barChart,
     "TIMESERIES-CHART": timeseriesChart,
     "AREA-CHART": areaChart,
+    "HEATMAP": heatmap,
     "PROG" : program,
     "EXPRS" : exprs,
     "STR": str,
@@ -157,6 +159,27 @@ const transform = (function() {
       });
     });
   };
+  function heatmap(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      // let vals = [];
+      // let keys = Object.keys(val0[0]);
+      // vals.push(keys);
+      // val0.forEach((v, i) => {
+      //   if (+v[keys[1]] < 120) {
+      //     vals.push([
+      //       v[keys[0]],
+      //       v[keys[1]],
+      //     ]);
+      //   }
+      // });
+      resume([].concat(err0), {
+        type: "heatmap",
+        args: {
+          vals: val0,
+        }
+      });
+    });
+  };
   function horizontal(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       val0.horizontal = true;
@@ -229,6 +252,14 @@ const transform = (function() {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
         val1.dotRadius = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function rowNames(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.rowNames = val0;
         resume([].concat(err0).concat(err1), val1);
       });
     });
