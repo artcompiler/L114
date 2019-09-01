@@ -1,6 +1,7 @@
 /* @flow */
 window.gcexports.globalLexicon = {
   "row-labels" : { "tk": 1, "name": "ROW-LABELS", "cls": "function", "length": 2 },
+  "rows" : { "tk": 1, "name": "ROWS", "cls": "function", "length": 2 },
   "x-tick-format" : { "tk": 1, "name": "X-TICK-FORMAT", "cls": "function", "length": 2, "arity": 2 },
   "y-tick-format" : { "tk": 1, "name": "Y-TICK-FORMAT", "cls": "function", "length": 2, "arity": 2 },
   "y-tick-size" : { "tk": 1, "name": "Y-TICK-SIZE", "cls": "function", "length": 2, "arity": 2 },

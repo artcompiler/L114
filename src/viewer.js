@@ -931,11 +931,13 @@ window.gcexports.viewer = (function () {
       // const FireBrick = "#B22222";
       // const DarkRed = "#8B0000";
       // const Red = "#FF0000";
-      
+
+      const Rd = ["#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"];
+      const OrRd = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
       // linear colour scale
       var colours = d3.scaleLinear()
-        .domain(d3.range(0, 100, 10))
-        .range([Blue, Blue, Blue, Yellow, Yellow, Yellow, Yellow, Red, Red, Red]);
+        .domain(d3.range(0, 100, 20))
+        .range(OrRd);
 
       var dayLabels = svg.selectAll(".dayLabel")
   	.data(rowLabels)
@@ -1016,7 +1018,7 @@ window.gcexports.viewer = (function () {
             .data(selectLocation.values)
             .transition()
             .duration(500)
-            .style("fill", function(d) { return colours(d.value); })
+            .style("fill", function(d) { return colours(d.gust_kph); })
         }
 
         // run update function when dropdown selection changes

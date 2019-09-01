@@ -1174,8 +1174,10 @@ window.gcexports.viewer = function () {
       // const DarkRed = "#8B0000";
       // const Red = "#FF0000";
 
+      var Rd = ["#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"];
+      var OrRd = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
       // linear colour scale
-      var colours = d3.scaleLinear().domain(d3.range(0, 100, 10)).range([Blue, Blue, Blue, Yellow, Yellow, Yellow, Yellow, Red, Red, Red]);
+      var colours = d3.scaleLinear().domain(d3.range(0, 100, 20)).range(OrRd);
 
       var dayLabels = svg.selectAll(".dayLabel").data(rowLabels).enter().append("text").text(function (d) {
         return d;
@@ -1235,7 +1237,7 @@ window.gcexports.viewer = function () {
 
         // update the data and redraw heatmap
         var heatmap = svg.selectAll(".hour").data(selectLocation.values).transition().duration(500).style("fill", function (d) {
-          return colours(d.value);
+          return colours(d.gust_kph);
         });
       };
 

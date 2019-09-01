@@ -36,6 +36,7 @@ const transform = (function() {
     "STACK": stack,
     "DOT-RADIUS": dotRadius,
     "ROW-LABELS": rowLabels,
+    "ROWS": rows,
     "BAR-WIDTH": barWidth,
     "WIDTH": width,
     "HEIGHT": height,
@@ -260,6 +261,14 @@ const transform = (function() {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
         val1.rowLabels = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  };
+  function rows(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.rows = val0;
         resume([].concat(err0).concat(err1), val1);
       });
     });
