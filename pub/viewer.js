@@ -1160,8 +1160,22 @@ window.gcexports.viewer = function () {
       d3.select("#chart").html(""); // Clear view.
       var svg = d3.select("#chart").append("svg").attr("width", width + margin.top + margin.bottom).attr("height", h + margin.left + margin.right).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+      var Blue = "#006BCA";
+      var Yellow = "#FCCE34";
+      var Red = "#FF4350";
+
+      // const LightSalmon = "#FFA07A";
+      // const Salmon = "#FA8072";
+      // const DarkSalmon = "#E9967A";
+      // const LightCoral = "#F08080";
+      // const IndianRed = "#CD5C5C";
+      // const Crimson = "#DC143C";
+      // const FireBrick = "#B22222";
+      // const DarkRed = "#8B0000";
+      // const Red = "#FF0000";
+
       // linear colour scale
-      var colours = d3.scaleLinear().domain(d3.range(1, 2000, 200)).range(["#87cefa", "#86c6ef", "#85bde4", "#83b7d9", "#82afce", "#80a6c2", "#7e9fb8", "#7995aa", "#758b9e", "#708090"]);
+      var colours = d3.scaleLinear().domain(d3.range(0, 100, 10)).range([Blue, Blue, Blue, Yellow, Yellow, Yellow, Yellow, Red, Red, Red]);
 
       var dayLabels = svg.selectAll(".dayLabel").data(rowLabels).enter().append("text").text(function (d) {
         return d;
@@ -1205,9 +1219,9 @@ window.gcexports.viewer = function () {
         var heatmap = svg.selectAll(".hour").data(selectLocation.values).enter().append("rect").attr("x", function (d) {
           return (d.col - 1) * gridSize;
         }).attr("y", function (d) {
-          return (d.row - 1) * gridSize;
+          return (d.row.row - 1) * gridSize;
         }).attr("class", "hour bordered").attr("width", gridSize).attr("height", gridSize).style("stroke", "white").style("stroke-opacity", 0.6).style("fill", function (d) {
-          return colours(d.value);
+          return colours(d.gust_kph);
         });
       };
       drawHeatmap(locations[currentLocationIndex]);
