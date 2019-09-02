@@ -894,15 +894,17 @@ window.gcexports.viewer = (function () {
     },
     componentDidUpdate() {
       let dataset = this.props.args.vals;
-      let rowLabels = this.props.rowLabels,
-          times = d3.range(24);
+      let colCount = dataset[dataset.length - 1].col + 1;
+      let rows = this.props.rows,
+          times = d3.range(colCount);
       
-      let margin = {top:40, right:50, bottom:70, left:50};
+      let margin = {top:40, right:50, bottom:70, left:100};
       
       // calculate width and height based on window size
+      let gridHeight = 50;
       var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20,
       gridSize = Math.floor(width / times.length),
-      h = gridSize * (rowLabels.length + 2);
+      h = gridHeight * (rows.length + 2);
 
       //reset the overall font size
       var newFontSize = width * 62.5 / 900;
@@ -932,22 +934,27 @@ window.gcexports.viewer = (function () {
       // const DarkRed = "#8B0000";
       // const Red = "#FF0000";
 
+      const GREEN = "#74C080";
+      const YELLOW = "#FA9F47";
+      const RED = "#D64242";
+      const GYR = [GREEN, YELLOW, RED];
+
       const Rd = ["#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"];
       const OrRd = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
       // linear colour scale
       var colours = d3.scaleLinear()
-        .domain(d3.range(0, 100, 20))
-        .range(OrRd);
+        .domain(d3.range(1, 4, 1))
+        .range(GYR);
 
       var dayLabels = svg.selectAll(".dayLabel")
-  	.data(rowLabels)
+  	.data(rows)
   	.enter()
   	.append("text")
-  	.text(function(d) { return d; })
+  	.text(function(d) { return d.label; })
   	.attr("x", 0)
-  	.attr("y", function(d, i) { return i * gridSize; })
+  	.attr("y", function(d, i) { return i * gridHeight; })
   	.style("text-anchor", "end")
-	.attr("transform", "translate(-6," + gridSize / 1.5 + ")")
+	.attr("transform", "translate(-6," + gridHeight / 1.5 + ")")
 
       var timeLabels = svg.selectAll(".timeLabel")
         .data(times)
@@ -993,16 +1000,16 @@ window.gcexports.viewer = (function () {
             .enter()
             .append("rect")
             .attr("x", function(d) {
-              return (d.col-1) * gridSize; })
+              return (d.col) * gridSize; })
             .attr("y", function(d) {
-              return (d.row.row-1) * gridSize;
+              return (d.row) * gridHeight;
             })
             .attr("class", "hour bordered")
             .attr("width", gridSize)
-            .attr("height", gridSize)
+            .attr("height", gridHeight)
             .style("stroke", "white")
-            .style("stroke-opacity", 0.6)
-            .style("fill", function(d) { return colours(d.gust_kph); })
+            .style("stroke-opacity", 1)
+            .style("fill", function(d) { return colours(d.val); })
         }
         drawHeatmap(locations[currentLocationIndex]);
 
@@ -1018,7 +1025,7 @@ window.gcexports.viewer = (function () {
             .data(selectLocation.values)
             .transition()
             .duration(500)
-            .style("fill", function(d) { return colours(d.gust_kph); })
+            .style("fill", function(d) { return colours(d.val); })
         }
 
         // run update function when dropdown selection changes

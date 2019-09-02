@@ -35,8 +35,8 @@ const transform = (function() {
     "SHOW-Y-VALUES": showYValues,
     "STACK": stack,
     "DOT-RADIUS": dotRadius,
-    "ROW-LABELS": rowLabels,
     "ROWS": rows,
+    "COLS": cols,
     "BAR-WIDTH": barWidth,
     "WIDTH": width,
     "HEIGHT": height,
@@ -269,6 +269,76 @@ const transform = (function() {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
         val1.rows = val0;
+        let vals = val1.args.vals;
+        let rows = val1.rows;
+        let newVals = []
+        vals.forEach(v => {
+          rows.forEach((r, i) => {
+            let name = r.name;
+            newVals.push(Object.assign({}, v, {
+              row: i,
+              val: scale(v[name], r),
+            })); 
+          });
+        });
+        val1.args.vals = newVals;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+    function scale(v, r) {
+      let [NONE, NORMAL, WARNING, CRITICAL] = [0, 1, 2, 3];
+      if (r.normal) {
+        let breaks = r.normal;
+        for (let i = 0; i < breaks.length; i += 2) {
+          if (v >= breaks[i] && v < breaks[i + 1]) {
+            return NORMAL;
+          }
+        }
+      }
+      if (r.warning) {
+        let breaks = r.warning;
+        for (let i = 0; i < breaks.length; i += 2) {
+          if (v >= breaks[i] && v < breaks[i + 1]) {
+            return WARNING;
+          }
+        }
+      }
+      if (r.critical) {
+        let breaks = r.critical;
+        for (let i = 0; i < breaks.length; i += 2) {
+          if (v >= breaks[i] && v < breaks[i + 1]) {
+            return CRITICAL;
+          }
+        }
+      }
+      return NONE;
+    }
+  };
+  function cols(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.cols = val0[0];
+        let vals = val1.args.vals;
+        let name = val1.cols.name;
+        let type = "time"
+        let interval = val1.cols.interval;
+        vals.forEach(v => {
+          switch (type) {
+          case "time":
+            let t = new Date(v[name]);
+            switch (interval) {
+            case "hour":
+              v.col = t.getHours();
+              break;
+            case "minute":
+              v.col = t.getMinutes();
+              break;
+            }
+            break;
+          default:
+            break;
+          }
+        });
         resume([].concat(err0).concat(err1), val1);
       });
     });

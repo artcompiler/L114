@@ -1142,15 +1142,17 @@ window.gcexports.viewer = function () {
     },
     componentDidUpdate: function componentDidUpdate() {
       var dataset = this.props.args.vals;
-      var rowLabels = this.props.rowLabels,
-          times = d3.range(24);
+      var colCount = dataset[dataset.length - 1].col + 1;
+      var rows = this.props.rows,
+          times = d3.range(colCount);
 
-      var margin = { top: 40, right: 50, bottom: 70, left: 50 };
+      var margin = { top: 40, right: 50, bottom: 70, left: 100 };
 
       // calculate width and height based on window size
+      var gridHeight = 50;
       var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20,
           gridSize = Math.floor(width / times.length),
-          h = gridSize * (rowLabels.length + 2);
+          h = gridHeight * (rows.length + 2);
 
       //reset the overall font size
       var newFontSize = width * 62.5 / 900;
@@ -1174,16 +1176,21 @@ window.gcexports.viewer = function () {
       // const DarkRed = "#8B0000";
       // const Red = "#FF0000";
 
+      var GREEN = "#74C080";
+      var YELLOW = "#FA9F47";
+      var RED = "#D64242";
+      var GYR = [GREEN, YELLOW, RED];
+
       var Rd = ["#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"];
       var OrRd = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
       // linear colour scale
-      var colours = d3.scaleLinear().domain(d3.range(0, 100, 20)).range(OrRd);
+      var colours = d3.scaleLinear().domain(d3.range(1, 4, 1)).range(GYR);
 
-      var dayLabels = svg.selectAll(".dayLabel").data(rowLabels).enter().append("text").text(function (d) {
-        return d;
+      var dayLabels = svg.selectAll(".dayLabel").data(rows).enter().append("text").text(function (d) {
+        return d.label;
       }).attr("x", 0).attr("y", function (d, i) {
-        return i * gridSize;
-      }).style("text-anchor", "end").attr("transform", "translate(-6," + gridSize / 1.5 + ")");
+        return i * gridHeight;
+      }).style("text-anchor", "end").attr("transform", "translate(-6," + gridHeight / 1.5 + ")");
 
       var timeLabels = svg.selectAll(".timeLabel").data(times).enter().append("text").text(function (d) {
         return d;
@@ -1219,11 +1226,11 @@ window.gcexports.viewer = function () {
         });
 
         var heatmap = svg.selectAll(".hour").data(selectLocation.values).enter().append("rect").attr("x", function (d) {
-          return (d.col - 1) * gridSize;
+          return d.col * gridSize;
         }).attr("y", function (d) {
-          return (d.row.row - 1) * gridSize;
-        }).attr("class", "hour bordered").attr("width", gridSize).attr("height", gridSize).style("stroke", "white").style("stroke-opacity", 0.6).style("fill", function (d) {
-          return colours(d.gust_kph);
+          return d.row * gridHeight;
+        }).attr("class", "hour bordered").attr("width", gridSize).attr("height", gridHeight).style("stroke", "white").style("stroke-opacity", 1).style("fill", function (d) {
+          return colours(d.val);
         });
       };
       drawHeatmap(locations[currentLocationIndex]);
@@ -1237,7 +1244,7 @@ window.gcexports.viewer = function () {
 
         // update the data and redraw heatmap
         var heatmap = svg.selectAll(".hour").data(selectLocation.values).transition().duration(500).style("fill", function (d) {
-          return colours(d.gust_kph);
+          return colours(d.val);
         });
       };
 
