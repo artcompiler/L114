@@ -278,7 +278,8 @@ const transform = (function() {
             newVals.push(Object.assign({}, v, {
               row: i,
               val: scale(v[name], r),
-            })); 
+              tip: v[name] + (r.units && " " + r.units || ""),
+            }));
           });
         });
         val1.args.vals = newVals;

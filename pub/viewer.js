@@ -1231,6 +1231,8 @@ window.gcexports.viewer = function () {
           return d.row * gridHeight;
         }).attr("class", "hour bordered").attr("width", gridSize).attr("height", gridHeight).style("stroke", "white").style("stroke-opacity", 1).style("fill", function (d) {
           return colours(d.val);
+        }).html(function (d) {
+          return "<title>" + d.tip + "</title>";
         });
       };
       drawHeatmap(locations[currentLocationIndex]);
