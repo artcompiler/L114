@@ -896,15 +896,16 @@ window.gcexports.viewer = (function () {
       let dataset = this.props.args.vals;
       let colCount = dataset[dataset.length - 1].col + 1;
       let rows = this.props.rows,
+          cols = this.props.cols,
           times = d3.range(colCount);
-      
+      let palette = this.props.palette || ["#777"];
       let margin = {top:40, right:50, bottom:70, left:100};
       
       // calculate width and height based on window size
-      let gridHeight = 50;
       var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20,
       gridSize = Math.floor(width / times.length),
       h = gridHeight * (rows.length + 2);
+      let gridHeight = gridSize;
 
       //reset the overall font size
       var newFontSize = width * 62.5 / 900;
@@ -919,32 +920,10 @@ window.gcexports.viewer = (function () {
   	.append("g")
   	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
-      const Blue = "#006BCA";
-      const Yellow = "#FCCE34";
-      const Red = "#FF4350";
-
-      // const LightSalmon = "#FFA07A";
-      // const Salmon = "#FA8072";
-      // const DarkSalmon = "#E9967A";
-      // const LightCoral = "#F08080";
-      // const IndianRed = "#CD5C5C";
-      // const Crimson = "#DC143C";
-      // const FireBrick = "#B22222";
-      // const DarkRed = "#8B0000";
-      // const Red = "#FF0000";
-
-      const GREEN = "#74C080";
-      const YELLOW = "#FA9F47";
-      const RED = "#D64242";
-      const GYR = [GREEN, YELLOW, RED];
-
-      const Rd = ["#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"];
-      const OrRd = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
       // linear colour scale
       var colours = d3.scaleLinear()
-        .domain(d3.range(1, 4, 1))
-        .range(GYR);
+        .domain(palette.domain)
+        .range(palette.range);
 
       var dayLabels = svg.selectAll(".dayLabel")
   	.data(rows)
@@ -960,7 +939,9 @@ window.gcexports.viewer = (function () {
         .data(times)
         .enter()
         .append("text")
-        .text(function(d) { return d; })
+        .text(function(d) {
+          return cols.interval === "day" && d + 1 || d;
+        })
         .attr("x", function(d, i) { return i * gridSize; })
         .attr("y", 0)
         .style("text-anchor", "middle")

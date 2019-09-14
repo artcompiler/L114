@@ -35,6 +35,8 @@ const transform = (function() {
     "SHOW-Y-VALUES": showYValues,
     "STACK": stack,
     "DOT-RADIUS": dotRadius,
+    "PALETTE": palette,
+    "RGB": rgb,
     "ROWS": rows,
     "COLS": cols,
     "BAR-WIDTH": barWidth,
@@ -257,6 +259,32 @@ const transform = (function() {
       });
     });
   };
+  function palette(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      visit(node.elts[1], options, function (err1, val1) {
+        val1.palette = val0;
+        resume([].concat(err0).concat(err1), val1);
+      });
+    });
+  }
+  function decimalToHex(d, padding) {
+    var hex = Number(d).toString(16);
+    padding = typeof (padding) === "undefined" || padding === null ? padding = 2 : padding;
+    while (hex.length < padding) {
+        hex = "0" + hex;
+    }
+    return hex;
+  }
+  function rgb(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      console.log("rgb() val0=" + JSON.stringify(val0));
+      let r = decimalToHex(val0[0], 2);
+      let g = decimalToHex(val0[1], 2);
+      let b = decimalToHex(val0[2], 2);
+      let val = "#" + r + g + b;
+      resume([].concat(err0), val);
+    });
+  }
   function rowLabels(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
@@ -268,22 +296,37 @@ const transform = (function() {
   function rows(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
       visit(node.elts[1], options, function (err1, val1) {
-        val1.rows = val0;
+        let rows = val1.rows = val0[0];
         let vals = val1.args.vals;
-        let rows = val1.rows;
-        let newVals = []
+        let name = rows.name;
+        let type = "none";
+        let newVals = [];
         vals.forEach(v => {
-          rows.forEach((r, i) => {
-            let name = r.name;
-            newVals.push(Object.assign({}, v, {
-              row: i,
-              val: scale(v[name], r),
-              tip: v[name] + (r.units && " " + r.units || ""),
-            }));
-          });
+          newVals.push(Object.assign({}, v, {
+            row: v[name],
+            label: v[name],
+            val: v.value, //scale(v.value, val1.rows),
+            tip: v.value + (rows.units && " " + rows.units || ""),
+          }));
         });
         val1.args.vals = newVals;
         resume([].concat(err0).concat(err1), val1);
+        // val1.rows = val0;
+        // let vals = val1.args.vals;
+        // let rows = val1.rows;
+        // let newVals = []
+        // vals.forEach(v => {
+        //   rows.forEach((r, i) => {
+        //     let name = r.name;
+        //     newVals.push(Object.assign({}, v, {
+        //       row: i,un
+        //       val: scale(v[name], r),
+        //       tip: v[name] + (r.units && " " + r.units || ""),
+        //     }));
+        //   });
+        // });
+        // val1.args.vals = newVals;
+        // resume([].concat(err0).concat(err1), val1);
       });
     });
     function scale(v, r) {
@@ -328,6 +371,9 @@ const transform = (function() {
           case "time":
             let t = new Date(v[name]);
             switch (interval) {
+            case "day":
+              v.col = t.getDate() - 1;
+              break;
             case "hour":
               v.col = t.getHours();
               break;

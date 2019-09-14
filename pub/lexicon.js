@@ -1,5 +1,7 @@
 /* @flow */
 window.gcexports.globalLexicon = {
+  "rgb" : { "tk": 1, "name": "RGB", "cls": "function", "length": 1 },
+  "palette" : { "tk": 1, "name": "PALETTE", "cls": "function", "length": 2 },
   "rows" : { "tk": 1, "name": "ROWS", "cls": "function", "length": 2 },
   "cols" : { "tk": 1, "name": "COLS", "cls": "function", "length": 2 },
   "x-tick-format" : { "tk": 1, "name": "X-TICK-FORMAT", "cls": "function", "length": 2, "arity": 2 },

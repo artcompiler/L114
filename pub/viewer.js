@@ -1144,15 +1144,16 @@ window.gcexports.viewer = function () {
       var dataset = this.props.args.vals;
       var colCount = dataset[dataset.length - 1].col + 1;
       var rows = this.props.rows,
+          cols = this.props.cols,
           times = d3.range(colCount);
-
+      var palette = this.props.palette || ["#777"];
       var margin = { top: 40, right: 50, bottom: 70, left: 100 };
 
       // calculate width and height based on window size
-      var gridHeight = 50;
       var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20,
           gridSize = Math.floor(width / times.length),
           h = gridHeight * (rows.length + 2);
+      var gridHeight = gridSize;
 
       //reset the overall font size
       var newFontSize = width * 62.5 / 900;
@@ -1162,29 +1163,8 @@ window.gcexports.viewer = function () {
       d3.select("#chart").html(""); // Clear view.
       var svg = d3.select("#chart").append("svg").attr("width", width + margin.top + margin.bottom).attr("height", h + margin.left + margin.right).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      var Blue = "#006BCA";
-      var Yellow = "#FCCE34";
-      var Red = "#FF4350";
-
-      // const LightSalmon = "#FFA07A";
-      // const Salmon = "#FA8072";
-      // const DarkSalmon = "#E9967A";
-      // const LightCoral = "#F08080";
-      // const IndianRed = "#CD5C5C";
-      // const Crimson = "#DC143C";
-      // const FireBrick = "#B22222";
-      // const DarkRed = "#8B0000";
-      // const Red = "#FF0000";
-
-      var GREEN = "#74C080";
-      var YELLOW = "#FA9F47";
-      var RED = "#D64242";
-      var GYR = [GREEN, YELLOW, RED];
-
-      var Rd = ["#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"];
-      var OrRd = ["#fef0d9", "#fdcc8a", "#fc8d59", "#e34a33", "#b30000"];
       // linear colour scale
-      var colours = d3.scaleLinear().domain(d3.range(1, 4, 1)).range(GYR);
+      var colours = d3.scaleLinear().domain(palette.domain).range(palette.range);
 
       var dayLabels = svg.selectAll(".dayLabel").data(rows).enter().append("text").text(function (d) {
         return d.label;
@@ -1193,7 +1173,7 @@ window.gcexports.viewer = function () {
       }).style("text-anchor", "end").attr("transform", "translate(-6," + gridHeight / 1.5 + ")");
 
       var timeLabels = svg.selectAll(".timeLabel").data(times).enter().append("text").text(function (d) {
-        return d;
+        return cols.interval === "day" && d + 1 || d;
       }).attr("x", function (d, i) {
         return i * gridSize;
       }).attr("y", 0).style("text-anchor", "middle").attr("transform", "translate(" + gridSize / 2 + ", -6)");
