@@ -895,16 +895,16 @@ window.gcexports.viewer = (function () {
     componentDidUpdate() {
       let dataset = this.props.args.vals;
       let colCount = dataset[dataset.length - 1].col + 1;
-      let rows = this.props.rows,
-          cols = this.props.cols,
-          times = d3.range(colCount);
+      let rows = this.props.rows
+      let cols = this.props.cols;
+      let times = d3.range(colCount);
       let palette = this.props.palette || ["#777"];
       let margin = {top:40, right:50, bottom:70, left:100};
       
       // calculate width and height based on window size
-      var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20,
-      gridSize = Math.floor(width / times.length),
-      h = gridHeight * (rows.length + 2);
+      let width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20;
+      let gridSize = Math.floor(width / times.length);
+      let h = gridSize * (rows.length + 2);
       let gridHeight = gridSize;
 
       //reset the overall font size

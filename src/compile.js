@@ -277,7 +277,6 @@ const transform = (function() {
   }
   function rgb(node, options, resume) {
     visit(node.elts[0], options, function (err0, val0) {
-      console.log("rgb() val0=" + JSON.stringify(val0));
       let r = decimalToHex(val0[0], 2);
       let g = decimalToHex(val0[1], 2);
       let b = decimalToHex(val0[2], 2);
@@ -301,14 +300,21 @@ const transform = (function() {
         let name = rows.name;
         let type = "none";
         let newVals = [];
+        let newRows = [];
         vals.forEach(v => {
+          if (!newRows[v[name]]) {
+            newRows[v[name]] = {
+              label: rows.name + "-" + v[name],
+            };
+          }
           newVals.push(Object.assign({}, v, {
             row: v[name],
             label: v[name],
-            val: v.value, //scale(v.value, val1.rows),
+            val: v.value,
             tip: v.value + (rows.units && " " + rows.units || ""),
           }));
         });
+        val1.rows = newRows;
         val1.args.vals = newVals;
         resume([].concat(err0).concat(err1), val1);
         // val1.rows = val0;

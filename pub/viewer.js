@@ -1143,16 +1143,16 @@ window.gcexports.viewer = function () {
     componentDidUpdate: function componentDidUpdate() {
       var dataset = this.props.args.vals;
       var colCount = dataset[dataset.length - 1].col + 1;
-      var rows = this.props.rows,
-          cols = this.props.cols,
-          times = d3.range(colCount);
+      var rows = this.props.rows;
+      var cols = this.props.cols;
+      var times = d3.range(colCount);
       var palette = this.props.palette || ["#777"];
       var margin = { top: 40, right: 50, bottom: 70, left: 100 };
 
       // calculate width and height based on window size
-      var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20,
-          gridSize = Math.floor(width / times.length),
-          h = gridHeight * (rows.length + 2);
+      var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20;
+      var gridSize = Math.floor(width / times.length);
+      var h = gridSize * (rows.length + 2);
       var gridHeight = gridSize;
 
       //reset the overall font size
