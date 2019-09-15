@@ -304,7 +304,7 @@ const transform = (function() {
         vals.forEach(v => {
           if (!newRows[v[name]]) {
             newRows[v[name]] = {
-              label: rows.name + "-" + v[name],
+              label: rows.label.replace("%%", v[name]),
             };
           }
           newVals.push(Object.assign({}, v, {
