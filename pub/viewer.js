@@ -1153,7 +1153,7 @@ window.gcexports.viewer = function () {
       var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20;
       var gridSize = Math.floor(width / times.length);
       var h = gridSize * (rows.length + 2);
-      var gridHeight = gridSize;
+      var gridHeight = gridSize / 2;
 
       //reset the overall font size
       var newFontSize = width * 62.5 / 900;

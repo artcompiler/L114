@@ -905,7 +905,7 @@ window.gcexports.viewer = (function () {
       let width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20;
       let gridSize = Math.floor(width / times.length);
       let h = gridSize * (rows.length + 2);
-      let gridHeight = gridSize;
+      let gridHeight = gridSize / 2;
 
       //reset the overall font size
       var newFontSize = width * 62.5 / 900;
