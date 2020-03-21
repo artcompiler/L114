@@ -398,6 +398,9 @@ window.gcexports.viewer = function () {
         case "area-chart":
           elts.push(React.createElement(AreaChart, _extends({ key: i, style: n.style }, n)));
           break;
+        case "heatmap":
+          elts.push(React.createElement(HeatmapChart, _extends({ key: i, style: n.style }, n)));
+          break;
         case "twoColumns":
           elts.push(React.createElement(
             "div",
@@ -720,8 +723,8 @@ window.gcexports.viewer = function () {
 
       // NOTE this is required because C3 loads the wrong version of D3
       // otherwise.
-      loadScript("/L104/d3.js", function () {
-        loadScript("/L104/c3.js", function () {
+      loadScript("/L114/d3.js", function () {
+        loadScript("/L114/c3.js", function () {
           _this.componentDidUpdate();
         });
       });
@@ -990,7 +993,7 @@ window.gcexports.viewer = function () {
     componentDidMount: function componentDidMount() {
       var _this3 = this;
 
-      loadScript("/L104/d3.js", function () {
+      loadScript("/L114/d3.js", function () {
         _this3.componentDidUpdate();
       });
     },
@@ -1076,8 +1079,8 @@ window.gcexports.viewer = function () {
     componentDidMount: function componentDidMount() {
       var _this4 = this;
 
-      loadScript("/L104/d3.js", function () {
-        loadScript("/L104/c3.js", function () {
+      loadScript("/L114/d3.js", function () {
+        loadScript("/L114/c3.js", function () {
           _this4.componentDidUpdate();
         });
       });
@@ -1128,14 +1131,144 @@ window.gcexports.viewer = function () {
       return React.createElement("div", { id: "chart" });
     }
   });
-  var AreaChart = React.createClass({
-    displayName: "AreaChart",
+  var HeatmapChart = React.createClass({
+    displayName: "HeatmapChart",
     componentDidMount: function componentDidMount() {
       var _this5 = this;
 
-      loadScript("/L104/d3.js", function () {
-        loadScript("/L104/c3.js", function () {
-          _this5.componentDidUpdate();
+      loadScript("/L114/d3.js", function () {
+        _this5.componentDidUpdate();
+      });
+    },
+    componentDidUpdate: function componentDidUpdate() {
+      var dataset = this.props.args.vals;
+      var colCount = dataset[dataset.length - 1].col + 1;
+      var rows = this.props.rows,
+          cols = this.props.cols,
+          times = d3.range(colCount);
+      var palette = this.props.palette || ["#777"];
+      var margin = { top: 40, right: 50, bottom: 70, left: 100 };
+
+      // calculate width and height based on window size
+      var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20,
+          gridSize = Math.floor(width / times.length),
+          h = gridHeight * (rows.length + 2);
+      var gridHeight = gridSize;
+
+      //reset the overall font size
+      var newFontSize = width * 62.5 / 900;
+      d3.select("html").style("font-size", newFontSize + "%");
+
+      // svg container
+      d3.select("#chart").html(""); // Clear view.
+      var svg = d3.select("#chart").append("svg").attr("width", width + margin.top + margin.bottom).attr("height", h + margin.left + margin.right).append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      // linear colour scale
+      var colours = d3.scaleLinear().domain(palette.domain).range(palette.range);
+
+      var dayLabels = svg.selectAll(".dayLabel").data(rows).enter().append("text").text(function (d) {
+        return d.label;
+      }).attr("x", 0).attr("y", function (d, i) {
+        return i * gridHeight;
+      }).style("text-anchor", "end").attr("transform", "translate(-6," + gridHeight / 1.5 + ")");
+
+      var timeLabels = svg.selectAll(".timeLabel").data(times).enter().append("text").text(function (d) {
+        return cols.interval === "day" && d + 1 || d;
+      }).attr("x", function (d, i) {
+        return i * gridSize;
+      }).attr("y", 0).style("text-anchor", "middle").attr("transform", "translate(" + gridSize / 2 + ", -6)");
+
+      // group data by location
+      var nest = d3.nest().key(function (d) {
+        return d.location;
+      }).entries(dataset);
+
+      // array of locations in the data
+      var locations = nest.map(function (d) {
+        return d.key;
+      });
+      var currentLocationIndex = 0;
+
+      // create location dropdown menu
+      var locationMenu = d3.select("#locationDropdown");
+      locationMenu.append("select").attr("id", "locationMenu").selectAll("option").data(locations).enter().append("option").attr("value", function (d, i) {
+        return i;
+      }).text(function (d) {
+        return d;
+      });
+
+      // function to create the initial heatmap
+      var drawHeatmap = function drawHeatmap(location) {
+
+        // filter the data to return object of location of interest
+        var selectLocation = nest.find(function (d) {
+          return d.key == location;
+        });
+
+        var heatmap = svg.selectAll(".hour").data(selectLocation.values).enter().append("rect").attr("x", function (d) {
+          return d.col * gridSize;
+        }).attr("y", function (d) {
+          return d.row * gridHeight;
+        }).attr("class", "hour bordered").attr("width", gridSize).attr("height", gridHeight).style("stroke", "white").style("stroke-opacity", 1).style("fill", function (d) {
+          return colours(d.val);
+        }).html(function (d) {
+          return "<title>" + d.tip + "</title>";
+        });
+      };
+      drawHeatmap(locations[currentLocationIndex]);
+
+      var updateHeatmap = function updateHeatmap(location) {
+        console.log("currentLocationIndex: " + currentLocationIndex);
+        // filter data to return object of location of interest
+        var selectLocation = nest.find(function (d) {
+          return d.key == location;
+        });
+
+        // update the data and redraw heatmap
+        var heatmap = svg.selectAll(".hour").data(selectLocation.values).transition().duration(500).style("fill", function (d) {
+          return colours(d.val);
+        });
+      };
+
+      // run update function when dropdown selection changes
+      locationMenu.on("change", function () {
+        // find which location was selected from the dropdown
+        var selectedLocation = d3.select(this).select("select").property("value");
+        currentLocationIndex = +selectedLocation;
+        // run update function with selected location
+        updateHeatmap(locations[currentLocationIndex]);
+      });
+
+      d3.selectAll(".nav").on("click", function () {
+        if (d3.select(this).classed("left")) {
+          if (currentLocationIndex == 0) {
+            currentLocationIndex = locations.length - 1;
+          } else {
+            currentLocationIndex--;
+          }
+        } else if (d3.select(this).classed("right")) {
+          if (currentLocationIndex == locations.length - 1) {
+            currentLocationIndex = 0;
+          } else {
+            currentLocationIndex++;
+          }
+        }
+        d3.select("#locationMenu").property("value", currentLocationIndex);
+        updateHeatmap(locations[currentLocationIndex]);
+      });
+    },
+    render: function render() {
+      return React.createElement("div", { id: "chart" });
+    }
+  });
+  var AreaChart = React.createClass({
+    displayName: "AreaChart",
+    componentDidMount: function componentDidMount() {
+      var _this6 = this;
+
+      loadScript("/L114/d3.js", function () {
+        loadScript("/L114/c3.js", function () {
+          _this6.componentDidUpdate();
         });
       });
     },
@@ -1158,15 +1291,15 @@ window.gcexports.viewer = function () {
             max = _getRange6[1]; // Slice off labels.
 
 
-        var pad = (max - min) / 4;
-        rows = rebaseValues(pad - min, rows); // val + pad - min
+        var offset = min / 4;
+        //        rows = rebaseValues(offset, rows);  // val + pad - min
         var types = {};
         types[cols[cols.length - 1]] = "area"; // Use last column as values.
         var padding = {
           top: -5,
           right: -20,
-          bottom: -7,
-          left: -20
+          bottom: 0,
+          left: 40
         };
         if (chartPadding) {
           if (chartPadding instanceof Array) {
@@ -1204,7 +1337,8 @@ window.gcexports.viewer = function () {
               padding: {
                 left: 0,
                 right: 0
-              }
+              },
+              min: min - 10
             }
           },
           color: {
@@ -1275,10 +1409,10 @@ window.gcexports.viewer = function () {
       return React.createElement(
         "div",
         null,
-        React.createElement("link", { rel: "stylesheet", href: "L104/style.css" }),
+        React.createElement("link", { rel: "stylesheet", href: "L114/style.css" }),
         React.createElement(
           "div",
-          { className: "L104" },
+          { className: "L114" },
           elts
         )
       );
@@ -1418,7 +1552,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 },{}],4:[function(require,module,exports){
 
 },{}],5:[function(require,module,exports){
-(function (global){
+(function (global,Buffer){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -2968,8 +3102,8 @@ function blitBuffer (src, dst, offset, length) {
   return i
 }
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":3,"ieee754":38,"isarray":41}],6:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
+},{"base64-js":3,"buffer":5,"ieee754":38,"isarray":41}],6:[function(require,module,exports){
 module.exports = {
   "100": "Continue",
   "101": "Switching Protocols",
@@ -5255,7 +5389,8 @@ module.exports = Array.isArray || function (arr) {
 (function (process){
 'use strict';
 
-if (!process.version ||
+if (typeof process === 'undefined' ||
+    !process.version ||
     process.version.indexOf('v0.') === 0 ||
     process.version.indexOf('v1.') === 0 && process.version.indexOf('v1.8.') !== 0) {
   module.exports = { nextTick: nextTick };
@@ -25280,7 +25415,7 @@ function done(stream, er, data) {
   return stream.push(null);
 }
 },{"./_stream_duplex":177,"core-util-is":7,"inherits":39}],181:[function(require,module,exports){
-(function (process,global){
+(function (process,global,setImmediate){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -25968,8 +26103,8 @@ Writable.prototype._destroy = function (err, cb) {
   this.end();
   cb(err);
 };
-}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":177,"./internal/streams/destroy":183,"./internal/streams/stream":184,"_process":43,"core-util-is":7,"inherits":39,"process-nextick-args":42,"safe-buffer":186,"util-deprecate":195}],182:[function(require,module,exports){
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
+},{"./_stream_duplex":177,"./internal/streams/destroy":183,"./internal/streams/stream":184,"_process":43,"core-util-is":7,"inherits":39,"process-nextick-args":42,"safe-buffer":186,"timers":192,"util-deprecate":196}],182:[function(require,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26288,7 +26423,7 @@ http.METHODS = [
 	'UNSUBSCRIBE'
 ]
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./lib/request":189,"./lib/response":190,"builtin-status-codes":6,"url":193,"xtend":196}],188:[function(require,module,exports){
+},{"./lib/request":189,"./lib/response":190,"builtin-status-codes":6,"url":194,"xtend":197}],188:[function(require,module,exports){
 (function (global){
 exports.fetch = isFunction(global.fetch) && isFunction(global.ReadableStream)
 
@@ -26425,6 +26560,7 @@ var ClientRequest = module.exports = function (opts) {
 		throw new Error('Invalid value for opts.mode')
 	}
 	self._mode = decideMode(preferBinary, useFetch)
+	self._fetchTimer = null
 
 	self.on('finish', function () {
 		self._onFinish()
@@ -26500,13 +26636,14 @@ ClientRequest.prototype._onFinish = function () {
 
 	if (self._mode === 'fetch') {
 		var signal = null
+		var fetchTimer = null
 		if (capability.abortController) {
 			var controller = new AbortController()
 			signal = controller.signal
 			self._fetchAbortController = controller
 
 			if ('requestTimeout' in opts && opts.requestTimeout !== 0) {
-				global.setTimeout(function () {
+				self._fetchTimer = global.setTimeout(function () {
 					self.emit('requestTimeout')
 					if (self._fetchAbortController)
 						self._fetchAbortController.abort()
@@ -26525,7 +26662,9 @@ ClientRequest.prototype._onFinish = function () {
 			self._fetchResponse = response
 			self._connect()
 		}, function (reason) {
-			self.emit('error', reason)
+			global.clearTimeout(self._fetchTimer)
+			if (!self._destroyed)
+				self.emit('error', reason)
 		})
 	} else {
 		var xhr = self._xhr = new global.XMLHttpRequest()
@@ -26625,7 +26764,7 @@ ClientRequest.prototype._connect = function () {
 	if (self._destroyed)
 		return
 
-	self._response = new IncomingMessage(self._xhr, self._fetchResponse, self._mode)
+	self._response = new IncomingMessage(self._xhr, self._fetchResponse, self._mode, self._fetchTimer)
 	self._response.on('error', function(err) {
 		self.emit('error', err)
 	})
@@ -26643,6 +26782,7 @@ ClientRequest.prototype._write = function (chunk, encoding, cb) {
 ClientRequest.prototype.abort = ClientRequest.prototype.destroy = function () {
 	var self = this
 	self._destroyed = true
+	global.clearTimeout(self._fetchTimer)
 	if (self._response)
 		self._response._destroyed = true
 	if (self._xhr)
@@ -26687,12 +26827,11 @@ var unsafeHeaders = [
 	'trailer',
 	'transfer-encoding',
 	'upgrade',
-	'user-agent',
 	'via'
 ]
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"./capability":188,"./response":190,"_process":43,"buffer":5,"inherits":39,"readable-stream":185,"to-arraybuffer":192}],190:[function(require,module,exports){
+},{"./capability":188,"./response":190,"_process":43,"buffer":5,"inherits":39,"readable-stream":185,"to-arraybuffer":193}],190:[function(require,module,exports){
 (function (process,global,Buffer){
 var capability = require('./capability')
 var inherits = require('inherits')
@@ -26706,7 +26845,7 @@ var rStates = exports.readyStates = {
 	DONE: 4
 }
 
-var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode) {
+var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, fetchTimer) {
 	var self = this
 	stream.Readable.call(self)
 
@@ -26741,7 +26880,7 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode) {
 				write: function (chunk) {
 					return new Promise(function (resolve, reject) {
 						if (self._destroyed) {
-							return
+							reject()
 						} else if(self.push(new Buffer(chunk))) {
 							resolve()
 						} else {
@@ -26750,6 +26889,7 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode) {
 					})
 				},
 				close: function () {
+					global.clearTimeout(fetchTimer)
 					if (!self._destroyed)
 						self.push(null)
 				},
@@ -26760,7 +26900,11 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode) {
 			})
 
 			try {
-				response.body.pipeTo(writable)
+				response.body.pipeTo(writable).catch(function (err) {
+					global.clearTimeout(fetchTimer)
+					if (!self._destroyed)
+						self.emit('error', err)
+				})
 				return
 			} catch (e) {} // pipeTo method isn't defined. Can't find a better way to feature test this
 		}
@@ -26771,12 +26915,14 @@ var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode) {
 				if (self._destroyed)
 					return
 				if (result.done) {
+					global.clearTimeout(fetchTimer)
 					self.push(null)
 					return
 				}
 				self.push(new Buffer(result.value))
 				read()
-			}).catch(function(err) {
+			}).catch(function (err) {
+				global.clearTimeout(fetchTimer)
 				if (!self._destroyed)
 					self.emit('error', err)
 			})
@@ -27211,6 +27357,85 @@ function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
 },{"safe-buffer":186}],192:[function(require,module,exports){
+(function (setImmediate,clearImmediate){
+var nextTick = require('process/browser.js').nextTick;
+var apply = Function.prototype.apply;
+var slice = Array.prototype.slice;
+var immediateIds = {};
+var nextImmediateId = 0;
+
+// DOM APIs, for completeness
+
+exports.setTimeout = function() {
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+};
+exports.setInterval = function() {
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+};
+exports.clearTimeout =
+exports.clearInterval = function(timeout) { timeout.close(); };
+
+function Timeout(id, clearFn) {
+  this._id = id;
+  this._clearFn = clearFn;
+}
+Timeout.prototype.unref = Timeout.prototype.ref = function() {};
+Timeout.prototype.close = function() {
+  this._clearFn.call(window, this._id);
+};
+
+// Does not start the time, just sets up the members needed.
+exports.enroll = function(item, msecs) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = msecs;
+};
+
+exports.unenroll = function(item) {
+  clearTimeout(item._idleTimeoutId);
+  item._idleTimeout = -1;
+};
+
+exports._unrefActive = exports.active = function(item) {
+  clearTimeout(item._idleTimeoutId);
+
+  var msecs = item._idleTimeout;
+  if (msecs >= 0) {
+    item._idleTimeoutId = setTimeout(function onTimeout() {
+      if (item._onTimeout)
+        item._onTimeout();
+    }, msecs);
+  }
+};
+
+// That's not how node.js implements it but the exposed api is the same.
+exports.setImmediate = typeof setImmediate === "function" ? setImmediate : function(fn) {
+  var id = nextImmediateId++;
+  var args = arguments.length < 2 ? false : slice.call(arguments, 1);
+
+  immediateIds[id] = true;
+
+  nextTick(function onNextTick() {
+    if (immediateIds[id]) {
+      // fn.call() is faster so we optimize for the common use-case
+      // @see http://jsperf.com/call-apply-segu
+      if (args) {
+        fn.apply(null, args);
+      } else {
+        fn.call(null);
+      }
+      // Prevent ids from leaking
+      exports.clearImmediate(id);
+    }
+  });
+
+  return id;
+};
+
+exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function(id) {
+  delete immediateIds[id];
+};
+}).call(this,require("timers").setImmediate,require("timers").clearImmediate)
+},{"process/browser.js":43,"timers":192}],193:[function(require,module,exports){
 var Buffer = require('buffer').Buffer
 
 module.exports = function (buf) {
@@ -27239,7 +27464,7 @@ module.exports = function (buf) {
 	}
 }
 
-},{"buffer":5}],193:[function(require,module,exports){
+},{"buffer":5}],194:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -27973,7 +28198,7 @@ Url.prototype.parseHost = function() {
   if (host) this.hostname = host;
 };
 
-},{"./util":194,"punycode":44,"querystring":47}],194:[function(require,module,exports){
+},{"./util":195,"punycode":44,"querystring":47}],195:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -27991,7 +28216,7 @@ module.exports = {
   }
 };
 
-},{}],195:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 (function (global){
 
 /**
@@ -28062,7 +28287,7 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],196:[function(require,module,exports){
+},{}],197:[function(require,module,exports){
 module.exports = extend
 
 var hasOwnProperty = Object.prototype.hasOwnProperty;
