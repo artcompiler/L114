@@ -1,5 +1,4 @@
 // NEEDS https://github.com/jsdom/jsdom/pull/2129
-
 /* Copyright (c) 2017, Art Compiler LLC */
 /* @flow */
 import {
