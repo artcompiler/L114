@@ -32,6 +32,7 @@ window.gcexports.globalLexicon = {
   "timeseries-chart" : { "tk": 1, "name": "TIMESERIES-CHART", "cls": "function", "length": 2, "arity": 2 },
   "heatmap" : { "tk": 1, "name": "HEATMAP", "cls": "function", "length": 1, "arity": 1 },
   "area-chart" : { "tk": 1, "name": "AREA-CHART", "cls": "function", "length": 1, "arity": 1 },
+  "virus-chart" : { "tk": 1, "name": "VIRUS-CHART", "cls": "function", "length": 1, "arity": 1 },
   "bar-chart" : { "tk": 1, "name": "BAR-CHART", "cls": "function", "length": 1, "arity": 1 },
   "bar" : { "tk": 1, "name": "BAR-CHART", "cls": "function", "length": 1, "arity": 1 },
   "val" : { "tk": 1, "name": "VAL", "cls": "function", "length": 2 , "arity": 2 },

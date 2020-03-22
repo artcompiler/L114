@@ -49,6 +49,7 @@ const transform = (function() {
     "BAR-CHART": barChart,
     "TIMESERIES-CHART": timeseriesChart,
     "AREA-CHART": areaChart,
+    "VIRUS-CHART": virusChart,
     "HEATMAP": heatmap,
     "PROG" : program,
     "EXPRS" : exprs,
@@ -157,6 +158,28 @@ const transform = (function() {
       resume([].concat(err0), {
         type: "area-chart",
         args: {
+          vals: vals,
+        }
+      });
+    });
+  };
+  function virusChart(node, options, resume) {
+    visit(node.elts[0], options, function (err0, val0) {
+      let vals = [];
+      let values = val0.values;
+      let region = val0.region;
+      let keys = Object.keys(values[0]);
+      vals.push(keys);
+      values.forEach((v, i) => {
+        vals.push([
+          v[keys[0]],
+          v[keys[1]],
+        ]);
+      });
+      resume([].concat(err0), {
+        type: "virus-chart",
+        args: {
+          region: region,
           vals: vals,
         }
       });

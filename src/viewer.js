@@ -137,6 +137,11 @@ window.gcexports.viewer = (function () {
           <AreaChart key={i} style={n.style} {...n}/>
         );
         break;
+      case "virus-chart":
+        elts.push(
+          <VirusChart key={i} style={n.style} {...n}/>
+        );
+        break;
       case "heatmap":
         elts.push(
           <HeatmapChart key={i} style={n.style} {...n}/>
@@ -449,288 +454,12 @@ window.gcexports.viewer = (function () {
       return (d.getUTCMonth() + 1) + "/" + d.getUTCDate();
     }
   };
-  var BarChart = React.createClass({
-    componentDidMount() {
-      // NOTE this is required because C3 loads the wrong version of D3
-      // otherwise.
-      loadScript("/L114/d3.js", () => {
-        loadScript("/L114/c3.js", () => {
-          this.componentDidUpdate();
-        });
-      });
-    },
-    componentDidUpdate() {
-      if (window.c3) {
-        let props = this.props;
-        let xAxisLabel = props.xAxisLabel;
-        let yAxisLabel = props.yAxisLabel;
-        let barWidth = props.barWidth || {ratio: 0.5};
-        let labels = props.labels ? this.props.labels : props.args.vals[0];
-        let keys = { value: labels.slice(1) }; // Slice off first label label.
-        let rows = props.labels ? labels.concat(props.args.vals) : props.args.vals;
-        let colors = props.colors;
-        let horizontal = props.horizontal;
-        let scale = props.scale;
-        let chartPadding = props.chartPadding;
-        let gap = props.gap;
-        let style = props.style;
-        let groups = props.stack ? [labels.slice(1)] : undefined; // Slice off label label.
-        let yTickSize = "20%"; // Ignore user setting.
-        let showLegend = props.hideLegend !== true;
-        let showXGrid = props.hideGrid !== true && props.hideXGrid !== true;
-        let showYGrid = props.hideGrid !== true && props.hideYGrid !== true;
-        let showXAxis = props.hideXAxis !== true;
-        let showYAxis = props.hideYAxis !== true;
-        let showYValues = !!props.showYValues;
-        let xTickFormat = props.xTickFormat || "_";
-        let yTickFormat = props.yTickFormat || "_";
-        let width = props.width || "100%";
-        let height = props.height || "100%";
-        let yTickValues;
-        if (yTickSize) {
-          let values = [];
-          let [minValue, maxValue] = getRange(rows.slice(1), props.stack, 0); // Slice off labels.
-          if (typeof yTickSize === "string" && yTickSize.indexOf("%") >= 0) {
-            // Make tick size a percent of maxValue.
-            let precision = maxValue.toString().indexOf(".");
-            var factor = Math.pow(10, precision < 0 ? -(maxValue.toString().length - 1): -precision);  // Avoid edge case.
-            let scale = Math.round(maxValue);
-            let percent = +yTickSize.substring(0, yTickSize.indexOf("%"));
-            yTickSize = Math.round(scale * percent * 0.01, 0) || 1;  // avoid 0
-          } else {
-            yTickSize = +yTickSize;
-          }
-          minValue--;  // To show ticks.
-          maxValue = maxValue + yTickSize;
-          for (let i = minValue; i < maxValue - 1; i += yTickSize) {
-            let value = Math.floor((i + yTickSize) / yTickSize) * yTickSize;
-            values.push(value);
-          }
-          yTickValues = values;
-        }
-        let legend;
-        let padding;
-        if (showLegend) {
-          legend = {
-            padding: 0,
-            item: {
-              tile: {
-                width: .1,  // 0 doesn't work in phantomjs
-                height: 10,
-              },
-            }
-          };
-          padding = {
-            top: 0,
-            right: 0,
-            bottom: 5,
-            left: 0,
-          };
-        } else {
-          legend = {
-            show: false,
-          };
-          padding = {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          };
-        }
-        if (chartPadding) {
-          const yValueWidth = showYValues ? 13 : 0;
-          if (chartPadding instanceof Array) {
-            padding = {
-              top: padding.top + chartPadding[0],
-              right: padding.right + chartPadding[1] + yValueWidth,
-              bottom: padding.bottom + chartPadding[2],
-              left: padding.left + chartPadding[3],
-            }
-          } // Otherwise, its undefine, scalar or object, which is fine.
-        }
-        let json = [];
-        rows.slice(1).forEach(vals => {
-          let row = {};
-          vals.forEach((val, i) => {
-            row[labels[i]] = val;
-          });
-          json.push(row);
-        });
-        var chart = c3.generate({
-          bindto: "#chart",
-          padding: padding,
-          transition: {
-            duration: 0
-          },
-          data: {
-            json: json,
-            type: 'bar',
-            groups: groups,
-            keys: keys,
-            order: null,
-          },
-          color: {
-            pattern: colors,
-          },
-          bar: {
-            width: barWidth,
-          },
-          size: {
-            width: width,
-            height: height,
-          },
-          axis: {
-            x: {
-              show: showXAxis,
-              label: {
-                text: xAxisLabel,
-                position: "outer-center",
-              },
-              tick: {
-                format: (d, i) => {
-                  let self = this;
-                  return formatTick(xTickFormat, d, rows);
-                },
-              },
-            },
-            y: {
-              show: showYAxis,
-              padding: {
-                top: 25,
-                bottom: 0,
-              },
-              tick: {
-                values: yTickValues,
-                format: (d, i) => {
-                  return formatTick(yTickFormat, d, []);
-                },
-              },
-              label: {
-                text: yAxisLabel,
-                position: "outer-center",
-              },
-            },
-            rotated: horizontal,
-          },
-          grid: {
-            x: {
-              show: showXGrid,
-            },
-            y: {
-              show: showYGrid,
-              lines: [
-                {value: 0}
-              ]
-            },
-          },
-          legend: legend,
-        });
-        if (gap && !groups) {
-          if (labels.length === 3) {
-            let dx = horizontal ? 0 : gap / 2;
-            let dy = horizontal ? gap / 2 : 0;
-            d3.selectAll(".c3-target-" + labels[1]).attr("transform", "translate(" + -dx + "," + -dy + ")");
-            d3.selectAll(".c3-target-" + labels[2]).attr("transform", "translate(" + dx + "," + dy + ")");
-          }
-        }
-        let nodes = d3.selectAll(".c3-legend-item").nodes();
-        nodes.forEach((n, i) => {
-          if (nodes.length === 2) {
-            if (i === 0) {
-              d3.select(n).attr("transform", "translate(0, 5)");
-            } else {
-              d3.select(n).attr("transform", "translate(40, 5)");
-            }
-          }
-        });
-        d3.selectAll(".c3-legend-item text").nodes().forEach(n => {
-          // Put space between the tile and the label.
-          d3.select(n).attr("transform", "translate(5)");
-        });
-        d3.selectAll(".c3-legend-item-tile").attr("stroke-linecap", "round");
-        if (style) {
-          // Apply global styles.
-          Object.keys(style).forEach(selector => {
-            let styles = style[selector];
-            Object.keys(styles).forEach(style => {
-              d3.selectAll(selector).style(style, styles[style]);
-            });
-          });
-        }
-        let data = rows;
-        if (showYValues) {
-          tabulate(data, ["Visitors"]);  // FIXME put this in the code.
-        }
-        function tabulate(data, columns) {
-          var topPadding = padding.top - 5 + chartPadding[0];
-          var table = d3.select("#chart svg"),
-          tbody = table.append("g").classed("y-values", true);
-          table
-            .attr("width", width)
-            .attr("height", height);
-
-          // create a row for each object in the data
-          let count = data.length;
-          let dy = (height - 2) / count;
-          let textSize = style.tspan && +style.tspan["font-size"] || 11.8;
-          var rows = tbody.selectAll("text")
-            .data(data.slice(1))  // Slice off labels.
-            .enter()
-            .append("text")
-            .attr("x", 10 /*padding*/)
-            .attr("y", (d, i) => {
-              return topPadding + (i + 1) * dy - (dy - textSize) / 2;
-            });
-
-          // create a cell in each row for each column
-          var cells = rows.selectAll("tspan")
-            .data(function(row) {
-              return columns.map(function(column) {
-                let i = data[0].indexOf(column);  // Index of column.
-                return {column: i, value: row[i]};
-              });
-            })
-            .enter()
-            .append("tspan")
-            .attr("text-anchor", "end")
-            .attr("x", (d, i) => {
-              return width - 10; // right padding
-            })
-            .html(function(d) {
-              let text = d.value;
-              if (text.length > 34) {
-                let words = text.split(" ");
-                text = "";
-                for (let i = 0; text.length < 36; i++) {
-                  if (i) {
-                    text += " ";
-                  }
-                  text += words[i];
-                }
-                // Now slice off the last word.
-                text = text.slice(0, text.lastIndexOf(" ")) + "\u2026";
-              }
-              return text;
-            });
-          return table;
-        }
-      }
-      setTimeout(() => {
-//        snap();
-      }, 100);
-    },
-    render () {
-      return (
-        <div id="chart"/>
-      );
-    },
-  });
-  var TableChart = React.createClass({
+  class TableChart extends React.Component {
     componentDidMount() {
       loadScript("/L114/d3.js", () => {
         this.componentDidUpdate();
       });
-    },
+    }
     componentDidUpdate() {
       let props = this.props;
       let data = props.args.vals.slice(1); // Slice off labels.
@@ -823,75 +552,19 @@ window.gcexports.viewer = (function () {
       setTimeout(() => {
 //        snap();
       }, 100);
-    },
+    }
     render () {
       return (
         <div id="chart" />
       );
-    },
-  });
-  var TimeseriesChart = React.createClass({
-    componentDidMount() {
-      loadScript("/L114/d3.js", () => {
-        loadScript("/L114/c3.js", () => {
-          this.componentDidUpdate();
-        });
-      });
-    },
-    componentDidUpdate() {
-      let rows = [["x", "data1"]].concat(this.props.args.vals);
-      let lineWidth = this.props.lineWidth;
-      let colors = this.props.colors;
-      let showXAxis = this.props.hideXAxis !== true;
-      let showYAxis = this.props.hideYAxis !== true;
-      var chart = c3.generate({
-        bindto: "#chart",
-        transition: {
-          duration: 0
-        },
-        data: {
-          x: "x",
-          rows: rows,
-        },
-        axis: {
-          x: {
-            type: 'timeseries',
-            tick: {
-//                format: '%m-%d'
-            },
-            show: showXAxis,
-          },
-          y: {
-            show: showYAxis,
-          },
-        },
-        color: {
-          pattern: colors,
-        },
-        legend: {
-          show: false,
-        },
-        size: {
-          width: this.props.width,
-          height: this.props.height,
-        },
-      });
-      if (this.props.lineWidth) {
-        d3.selectAll(".c3-line").style("stroke-width", lineWidth)
-      }
-    },
-    render () {
-      return (
-        <div id="chart" />
-      );
-    },
-  });
-  var HeatmapChart = React.createClass({
+    }
+  }
+  class HeatmapChart extends React.Component {
     componentDidMount() {
       loadScript("/L114/d3.js", () => {
         this.componentDidUpdate();
       });
-    },
+    }
     componentDidUpdate() {
       let dataset = this.props.args.vals;
       let colCount = dataset[dataset.length - 1].col + 1;
@@ -914,12 +587,12 @@ window.gcexports.viewer = (function () {
       // svg container
       d3.select("#chart").html("");  // Clear view.
       var svg = d3.select("#chart")
-  	.append("svg")
-  	.attr("width", width + margin.top + margin.bottom)
-  	.attr("height", h + margin.left + margin.right)
-  	.append("g")
-  	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+  	      .append("svg")
+  	      .attr("width", width + margin.top + margin.bottom)
+  	      .attr("height", h + margin.left + margin.right)
+  	      .append("g")
+  	      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      
       // linear colour scale
       var colours = d3.scaleLinear()
         .domain(palette.domain)
@@ -933,7 +606,7 @@ window.gcexports.viewer = (function () {
   	.attr("x", 0)
   	.attr("y", function(d, i) { return i * gridHeight; })
   	.style("text-anchor", "end")
-	.attr("transform", "translate(-6," + gridHeight / 1.5 + ")")
+	        .attr("transform", "translate(-6," + gridHeight / 1.5 + ")")
 
       var timeLabels = svg.selectAll(".timeLabel")
         .data(times)
@@ -1040,21 +713,21 @@ window.gcexports.viewer = (function () {
           d3.select("#locationMenu").property("value", currentLocationIndex)
           updateHeatmap(locations[currentLocationIndex]);
         });
-    },
+    }
     render () {
       return (
         <div id="chart" />
       );
-    },
-  });
-  var AreaChart = React.createClass({
+    }
+  }
+  class AreaChart extends React.Component {
     componentDidMount() {
       loadScript("/L114/d3.js", () => {
         loadScript("/L114/c3.js", () => {
           this.componentDidUpdate();
         });
       });
-    },
+    }
     componentDidUpdate() {
       if (window.c3) {
         let props = this.props;
@@ -1068,9 +741,9 @@ window.gcexports.viewer = (function () {
         let dotRadius = props.dotRadius;
         let chartPadding = props.chartPadding;
         let [min, max] = getRange(rows.slice(1)); // Slice off labels.
-        let offset = min / 4;
-//        rows = rebaseValues(offset, rows);  // val + pad - min
-        let types = {}
+        // let offset = min / 4;
+        // rows = rebaseValues(offset, rows);  // val + pad - min
+        let types = {};
         types[cols[cols.length - 1]] = "area";  // Use last column as values.
         let padding = {
           top: -5,
@@ -1136,13 +809,157 @@ window.gcexports.viewer = (function () {
 //          snap();
         }, 100);
       }
-    },
+    }
+  }
+  class VirusChart extends React.Component {
+    componentDidMount() {
+      loadScript("/L114/d3.js", () => {
+        loadScript("/L114/c3.js", () => {
+          this.componentDidUpdate();
+        });
+      });
+    }
+    componentDidUpdate() {
+      if (window.c3) {
+        let props = this.props;
+        let xAxisLabel = props.args.region;
+        let cols = props.args.vals[0];
+        let rows = props.args.vals;
+        let vals = [];
+        let style = props.style;
+        let colors = props.colors;
+        let showXAxis = props.hideXAxis !== true;
+        let showYAxis = props.hideYAxis !== true;
+        let lineWidth = props.lineWidth;
+        let dotRadius = props.dotRadius;
+        let chartPadding = props.chartPadding;
+        let [min, max] = getRange(rows.slice(1)); // Slice off labels.
+        let yTickSize = "50%"; // Ignore user setting.
+        let yTickFormat = props.yTickFormat || "_";
+        let yTickValues;
+        if (yTickSize) {
+          let values = [];
+          let [minValue, maxValue] = getRange(rows.slice(1), props.stack, 0); // Slice off labels.
+          if (typeof yTickSize === "string" && yTickSize.indexOf("%") >= 0) {
+            // Make tick size a percent of maxValue.
+            let precision = maxValue.toString().indexOf(".");
+            var factor = Math.pow(10, precision < 0 ? -(maxValue.toString().length - 1): -precision);  // Avoid edge case.
+            let scale = Math.round(maxValue);
+            let percent = +yTickSize.substring(0, yTickSize.indexOf("%"));
+            yTickSize = Math.round(scale * percent * 0.01, 0) || 1;  // avoid 0
+          } else {
+            yTickSize = +yTickSize;
+          }
+          minValue--;  // To show ticks.
+          maxValue = maxValue + yTickSize;
+          for (let i = minValue; i < maxValue - 1; i += yTickSize) {
+            let value = Math.floor((i + yTickSize) / yTickSize) * yTickSize;
+            values.push(value);
+          }
+          yTickValues = values;
+        }
+        // let offset = min / 4;
+        // rows = rebaseValues(offset, rows);  // val + pad - min
+        let types = {};
+        types[cols[cols.length - 1]] = "area";  // Use last column as values.
+        let padding = {
+          top: -5,
+          right: -20,
+          bottom: 0,
+          left: 40,
+        };
+        if (chartPadding) {
+          if (chartPadding instanceof Array) {
+            padding = {
+              top: padding.top + chartPadding[0],
+              right: padding.right + chartPadding[1],
+              bottom: padding.bottom + chartPadding[2],
+              left: padding.left + chartPadding[3],
+            }
+          } // Otherwise, its undefine, scalar or object, which is fine.
+        }
+        var chart = c3.generate({
+          bindto: "#chart",
+          padding: padding,
+          transition: {
+            duration: 0
+          },
+          data: {
+            rows: rows,
+            types: types,
+          },
+          legend: {
+            show: false,
+          },
+          axis: {
+            x: {
+              show: showXAxis,
+              label: {
+                text: xAxisLabel,
+                position: "inner-right",
+              },
+              padding: {
+                left: 1,
+                right: 1,
+              },
+            },
+            y: {
+              show: true, //showYAxis,
+              padding: {
+                left: 0,
+                right: 0,
+              },
+              tick: {
+                values: yTickValues,
+                format: (d, i) => {
+                  return formatTick(yTickFormat, d, []);
+                },
+              },
+              min: min - 10,
+            },
+          },
+          grid: {
+            x: {
+              show: false,
+            },
+            y: {
+              show: true,
+              lines: [
+                {value: 0}
+              ]
+            },
+          },
+          color: {
+            pattern: colors,
+          },
+          size: {
+            width: this.props.width,
+            height: this.props.height,
+          },
+        });
+        if (lineWidth) {
+          d3.selectAll(".c3-line").style("stroke-width", lineWidth)
+        }
+        if (dotRadius) {
+          d3.selectAll(".c3-circle").attr("r", dotRadius)
+        }
+        if (style) {
+          // Apply global styles.
+          Object.keys(style).forEach(selector => {
+            let styles = style[selector];
+            Object.keys(styles).forEach(style => {
+              d3.selectAll(selector).style(style, styles[style]);
+            });
+          });
+        }        
+      }
+    }
     render () {
       return (
         <div id="chart" />
       );
-    },
-  });
+    }
+  }
   function snap() {
     let svg = d3.select("#graff-view")
     let html = svg && svg.html() || "<div/>";
@@ -1176,9 +993,9 @@ window.gcexports.viewer = (function () {
       }
     });
   }
-  var Viewer = React.createClass({
+  class Viewer extends React.Component {
     componentDidMount() {
-    },
+    }
     render () {
       // If you have nested components, make sure you send the props down to the
       // owned components.
@@ -1193,8 +1010,8 @@ window.gcexports.viewer = (function () {
         </div>
         </div>
       );
-    },
-  });
+    }
+  }
   return {
     capture: capture,
     Viewer: Viewer
