@@ -1201,13 +1201,18 @@ window.gcexports.viewer = function () {
             },
             axis: {
               x: {
+                height: 10,
                 show: showXAxis,
                 label: {
                   text: xAxisLabel,
-                  position: "inner-right"
+                  position: "outer-center"
+                },
+                tick: {
+                  values: [0, 4, 8, 12, 16, 20, 24, 28]
+                  //                format: (x) => parseInt(x),
                 },
                 padding: {
-                  left: 1,
+                  left: 0,
                   right: 1
                 }
               },
