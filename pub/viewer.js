@@ -1200,15 +1200,15 @@ window.gcexports.viewer = function () {
             },
             axis: {
               x: {
-                height: 10,
-                show: showXAxis,
-                label: {
-                  text: xAxisLabel,
-                  position: "outer-center"
-                },
+                height: 30,
+                show: true, //showXAxis,
+                // label: {
+                //   text: xAxisLabel,
+                //   position: "outer-left",
+                // },
                 tick: {
-                  values: [0, 4, 8, 12, 16, 20, 24, 28]
-                  //                format: (x) => parseInt(x),
+                  values: [0, 4, 8, 12, 16, 20, 24, 28],
+                  outer: false
                 },
                 padding: {
                   left: 0,
@@ -1227,7 +1227,7 @@ window.gcexports.viewer = function () {
                     return formatTick(yTickFormat, d, []);
                   }
                 },
-                min: min - 10
+                min: min
               }
             },
             grid: {
