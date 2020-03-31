@@ -1135,7 +1135,7 @@ window.gcexports.viewer = function () {
               max = _getRange6[1]; // Slice off labels.
 
 
-          var yTickSize = "50%"; // Ignore user setting.
+          var yTickSize = "25%"; // Ignore user setting.
           var yTickFormat = props.yTickFormat || "_";
           var yTickValues = void 0;
           if (yTickSize) {
@@ -1207,7 +1207,12 @@ window.gcexports.viewer = function () {
                 //   position: "outer-left",
                 // },
                 tick: {
-                  values: [0, 4, 8, 12, 16, 20, 24, 28],
+                  format: function format(i) {
+                    var date = new Date();
+                    date.setDate(date.getDate() - 29 + i);
+                    return date.toISOString().slice(5, 10);
+                  },
+                  values: [1, 15, 29],
                   outer: false
                 },
                 padding: {

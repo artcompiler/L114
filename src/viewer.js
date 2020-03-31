@@ -833,7 +833,7 @@ window.gcexports.viewer = (function () {
         let dotRadius = props.dotRadius;
         let chartPadding = props.chartPadding;
         let [min, max] = getRange(rows.slice(1)); // Slice off labels.
-        let yTickSize = "50%"; // Ignore user setting.
+        let yTickSize = "25%"; // Ignore user setting.
         let yTickFormat = props.yTickFormat || "_";
         let yTickValues;
         if (yTickSize) {
@@ -899,7 +899,12 @@ window.gcexports.viewer = (function () {
               //   position: "outer-left",
               // },
               tick: {
-                values: [0,4,8,12,16,20,24,28],
+                format: (i) => {
+                  const date = new Date();
+                  date.setDate(date.getDate() - 29 + i);
+                  return date.toISOString().slice(5,10);
+                },
+                values: [1, 15, 29],
                 outer: false,
               },
               padding: {
