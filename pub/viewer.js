@@ -1233,7 +1233,7 @@ window.gcexports.viewer = function () {
                   }
                 },
                 min: min,
-                max: max < 5 && max || max + max * .20
+                max: max + max * .20
               }
             },
             grid: {
