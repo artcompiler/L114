@@ -925,7 +925,7 @@ window.gcexports.viewer = (function () {
                 },
               },
               min: min,
-              max: max + (max < 10 && max ||max * .1),
+              max: max < 10 && max || max + max * .1,
             },
           },
           grid: {
