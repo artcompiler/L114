@@ -1232,7 +1232,8 @@ window.gcexports.viewer = function () {
                     return formatTick(yTickFormat, d, []);
                   }
                 },
-                min: min
+                min: min,
+                max: max + 1
               }
             },
             grid: {
