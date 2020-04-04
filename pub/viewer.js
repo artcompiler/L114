@@ -1212,7 +1212,7 @@ window.gcexports.viewer = function () {
                     date.setDate(date.getDate() - 30 + i);
                     return date.toISOString().slice(5, 10);
                   },
-                  values: [1, 15, 29],
+                  values: [1, 8, 15, 22, 29],
                   outer: false
                 },
                 padding: {
