@@ -7,58 +7,13 @@ const langID = 114;
 const fs = require('fs');
 const http = require("http");
 const https = require("https");
-const express = require('express')
+const path = require('path');
 const compiler = require("./lib/compile.js");
-const app = express();
+const {
+  AuthError,
+  createLambda,
+} = require('@graffiticode/graffiticode-compiler-framework');
 const jsonDiff = require("json-diff");
-const bodyParser = require('body-parser');
-app.use(bodyParser.json({ type: 'application/json', limit: '50mb' }));
-app.set('port', (process.env.PORT || "5" + langID));
-app.use(express.static(__dirname + '/pub'));
-app.get('/', function(req, res) {
-  res.send("Hello, L" + langID + "!");
-});
-app.listen(app.get('port'), function() {
-  global.port = +app.get('port');
-  console.log("Node app is running at localhost:" + app.get('port'))
-  if (process.argv.includes("test")) {
-    test();
-  }
-});
-process.on('uncaughtException', function(err) {
-  console.log('Caught exception: ' + err);
-});
-app.get("/version", function(req, res) {
-  res.send(compiler.version || "v0.0.0");
-});
-app.post("/compile", function(req, res) {
-  let body = req.body;
-  let auth = body.auth;
-  validate(auth, (err, data) => {
-    if (err) {
-      res.send(err);
-    } else {
-      if (data.access.indexOf("compile") === -1) {
-        // Don't have compile access.
-        res.sendStatus(401).send(err);
-      } else {
-        let code = body.code;
-        let data = body.data;
-        let t0 = new Date;
-        compiler.compile(code, data, function (err, val) {
-          if (err && err.length) {
-            res.send({
-              error: err,
-            });
-          } else {
-            console.log("GET /compile " + (new Date - t0) + "ms");
-            res.json(val);
-          }
-        });
-      }
-    }
-  });
-});
 function postAuth(path, data, resume) {
   let encodedData = JSON.stringify(data);
   var options = {
@@ -125,7 +80,7 @@ const recompileItem = (id, host, resume) => {
   let protocol, url;
   if (host === "localhost") {
     protocol = http;
-    url = "http://localhost:3000/data/?id=" + id + "&refresh=true&dontSave=true";
+    url = "http://localhost:3001/data/?id=" + id + "&refresh=true&dontSave=true";
   } else {
     protocol = https;
     url = "https://" + host + "/data/?id=" + id + "&refresh=true&dontSave=true";
@@ -197,3 +152,34 @@ const test = () => {
   });
 };
 // SHARED STOP
+
+const compilerDefinition = {
+  language: langID,
+  compile: (code, data, config) => {
+    return new Promise((resolve, reject) => {
+      compiler.compile(code, data, (err, val) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(val);
+        }
+      });
+    });
+  },
+  auth: (token) => {
+    return new Promise((resolve, reject) => {
+      validate(token, (err, data) => {
+        if (err) {
+          reject(err);
+        } else if (data.access.indexOf('compile') === -1) {
+          reject(new AuthError('User does not have compile access'));
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  },
+  assetPath: path.join(__dirname, 'pub'),
+};
+exports.compiler = compilerDefinition;
+exports.lambdaHandler = createLambda(compilerDefinition);
