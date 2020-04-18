@@ -168,6 +168,7 @@ const transform = (function() {
       let vals = [];
       let values = val0.values;
       let region = val0.region;
+      let type = val0.type;
       let keys = Object.keys(values[0]);
       vals.push(keys);
       values.forEach((v, i) => {
@@ -179,6 +180,7 @@ const transform = (function() {
       resume([].concat(err0), {
         type: "virus-chart",
         args: {
+          type: type,
           region: region,
           vals: vals,
         }

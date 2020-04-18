@@ -1117,7 +1117,8 @@ window.gcexports.viewer = function () {
       value: function componentDidUpdate() {
         if (window.c3) {
           var props = this.props;
-          var xAxisLabel = props.args.region;
+          //        let xAxisLabel = props.args.type.toUpperCase() + ', ' + props.args.region;
+          var xAxisLabel = props.args.type.toUpperCase();
           var cols = props.args.vals[0];
           var rows = props.args.vals;
           var vals = [];
@@ -1200,12 +1201,12 @@ window.gcexports.viewer = function () {
             },
             axis: {
               x: {
-                height: 30,
+                height: 50,
                 show: true, //showXAxis,
-                // label: {
-                //   text: xAxisLabel,
-                //   position: "outer-left",
-                // },
+                label: {
+                  text: xAxisLabel,
+                  position: "outer-center"
+                },
                 tick: {
                   format: function format(i) {
                     var date = new Date();

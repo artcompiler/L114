@@ -5,7 +5,7 @@
   "author": "Art Compiler LLC",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node --stack-size=1200 index.js",
     "build-dev": "./node_modules/babel-cli/bin/babel-node.js tools/build",
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
