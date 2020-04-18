@@ -1117,8 +1117,7 @@ window.gcexports.viewer = function () {
       value: function componentDidUpdate() {
         if (window.c3) {
           var props = this.props;
-          //        let xAxisLabel = props.args.type.toUpperCase() + ', ' + props.args.region;
-          var xAxisLabel = props.args.type.toUpperCase();
+          var xAxisLabel = props.args.type.toUpperCase() + ', ' + props.args.region.toUpperCase();
           var cols = props.args.vals[0];
           var rows = props.args.vals;
           var vals = [];
