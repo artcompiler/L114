@@ -810,6 +810,11 @@ window.gcexports.viewer = (function () {
       }
     }
   }
+  function capitalize(str) {
+    let parts = str.split(" ");
+    
+    return caps;
+  }
   class VirusChart extends React.Component {
     componentDidMount() {
       loadScript("/L114/d3.js", () => {
@@ -821,7 +826,7 @@ window.gcexports.viewer = (function () {
     componentDidUpdate() {
       if (window.c3) {
         let props = this.props;
-        let xAxisLabel = props.args.type.toUpperCase() + ', ' + props.args.region.toUpperCase();
+        let xAxisLabel = props.args.type + ' in ' + props.args.region;
         let cols = props.args.vals[0];
         let rows = props.args.vals;
         let vals = [];

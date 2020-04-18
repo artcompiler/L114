@@ -167,7 +167,7 @@ const transform = (function() {
     visit(node.elts[0], options, function (err0, val0) {
       let vals = [];
       let values = val0.values;
-      let region = val0.region;
+      let region = val0.region + ', ' + val0.parent;
       let type = val0.type;
       let keys = Object.keys(values[0]);
       vals.push(keys);

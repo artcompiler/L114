@@ -1092,6 +1092,12 @@ window.gcexports.viewer = function () {
     return AreaChart;
   }(React.Component);
 
+  function capitalize(str) {
+    var parts = str.split(" ");
+
+    return caps;
+  }
+
   var VirusChart = function (_React$Component4) {
     _inherits(VirusChart, _React$Component4);
 
@@ -1117,7 +1123,7 @@ window.gcexports.viewer = function () {
       value: function componentDidUpdate() {
         if (window.c3) {
           var props = this.props;
-          var xAxisLabel = props.args.type.toUpperCase() + ', ' + props.args.region.toUpperCase();
+          var xAxisLabel = props.args.type + ' in ' + props.args.region;
           var cols = props.args.vals[0];
           var rows = props.args.vals;
           var vals = [];
