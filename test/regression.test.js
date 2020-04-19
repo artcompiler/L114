@@ -4,6 +4,7 @@ const { compiler } = require('./../');
 const apiApp = require('@graffiticode/api');
 
 describe('regression', () => {
+  // TODO(kevindyer) Create list IDs (with data) to run through both current and local compilers
   let apiServer;
   beforeAll((done) => {
     apiServer = http.createServer(apiApp);
