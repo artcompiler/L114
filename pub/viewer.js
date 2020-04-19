@@ -1215,7 +1215,7 @@ window.gcexports.viewer = function () {
                 tick: {
                   format: function format(i) {
                     var date = new Date();
-                    date.setDate(date.getDate() - 31 + i); // FIXME why 31?
+                    date.setDate(date.getDate() - 30 + i); // FIXME why 30?
                     return date.toISOString().slice(5, 10);
                   },
                   values: [1, 8, 15, 22, 29],
