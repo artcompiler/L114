@@ -1204,6 +1204,18 @@ window.gcexports.viewer = function () {
             legend: {
               show: false
             },
+            tooltip: {
+              format: {
+                title: function title(d) {
+                  var date = new Date();
+                  date.setDate(date.getDate() - 30 + d - 1); // FIXME why 30?
+                  return date.toISOString().slice(5, 10);
+                },
+                name: function name(_name, ratio, id, index) {
+                  return xAxisLabel;
+                }
+              }
+            },
             axis: {
               x: {
                 height: 50,
