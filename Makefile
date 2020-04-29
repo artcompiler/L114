@@ -10,3 +10,7 @@ build:
 run:
 	npm start
 
+test:
+	npm run test
+
+.PHONY: build test
