@@ -899,7 +899,7 @@ window.gcexports.viewer = (function () {
             format: {
               title: function (d) {
                 const date = new Date();
-                date.setDate(date.getDate() - 30 + d - 1);  // FIXME why 30?
+                date.setDate(date.getDate() - 29 + d - 1);
                 return date.toISOString().slice(5,10);
               },
               name: function (name, ratio, id, index) {
