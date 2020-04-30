@@ -5,42 +5,69 @@
   "author": "Art Compiler LLC",
   "main": "index.js",
   "scripts": {
-    "start": "node --stack-size=1200 index.js",
-    "build-dev": "./node_modules/babel-cli/bin/babel-node.js tools/build",
-    "flow": "flow; test $? -eq 0 -o $? -eq 2"
+    "start": "graffiticode-compiler-framework --target=compiler",
+    "build-dev": "babel-node tools/build.js",
+    "flow": "flow; test $? -eq 0 -o $? -eq 2",
+    "test": "jest --env node"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "d3": "^5.11.0",
+    "@babel/polyfill": "^7.8.7",
+    "@graffiticode/graffiticode-compiler-framework": "0.0.14",
+    "core-js": "^2.6.11",
+    "d3": "^5.15.1",
     "domready": "^1.0.8",
-    "express": "^4.0.x",
-    "hashids": "1.1.1",
-    "json-diff": "^0.5.4"
-  },
-  "engines": {
-    "node": "latest"
+    "hashids": "1.1.1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/artcompiler/L104"
+    "url": "https://github.com/artcompiler/L114"
   },
   "babel": {
     "presets": [
-      "es2015",
-      "react"
+      [
+        "@babel/env",
+        {
+          "targets": {
+            "edge": "17",
+            "firefox": "60",
+            "chrome": "67",
+            "safari": "11.1"
+          },
+          "useBuiltIns": false
+        }
+      ],
+      [
+        "@babel/preset-typescript",
+        {
+          "isTSX": true,
+          "allExtensions": true
+        }
+      ],
+      [
+        "@babel/preset-react",
+        {
+          "pragmaFrag": "DomFrag",
+          "throwIfNamespace": false,
+          "runtime": "classic"
+        }
+      ]
     ]
   },
   "devDependencies": {
-    "babel": "^6.0.x",
-    "babel-cli": "^6.4.5",
-    "babel-plugin-transform-es2015-modules-amd": "^6.8.0",
-    "babel-preset-es2015": "^6.1.2",
-    "babel-preset-react": "^6.1.2",
-    "babelify": "^7.0.2",
-    "browserify": "^16.5.0",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "@babel/preset-typescript": "^7.9.0",
+    "@graffiticode/api": "0.0.2",
+    "browserify": "^16.5.1",
     "flow-bin": "^0.32.0",
+    "jest": "^25.3.0",
+    "json-diff": "^0.5.4",
     "react": "^16.13.1",
-    "react-dom": "0.14.5",
+    "react-dom": "^0.14.9",
     "uglify-js": "^2.7.3"
   }
 }
