@@ -50,7 +50,7 @@ window.gcexports.viewer = function () {
 
       switch (n.type) {
         case "container":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "container",
             key: i,
             style: n.style
@@ -58,7 +58,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "container-fluid":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "container-fluid",
             key: i,
             style: n.style
@@ -66,21 +66,21 @@ window.gcexports.viewer = function () {
           break;
 
         case "table":
-          elts.push(dom("table", _extends({
+          elts.push( /*#__PURE__*/React.createElement("table", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "thead":
-          elts.push(dom("thead", _extends({
+          elts.push( /*#__PURE__*/React.createElement("thead", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "tbody":
-          elts.push(dom("tbody", _extends({
+          elts.push( /*#__PURE__*/React.createElement("tbody", _extends({
             className: "container",
             key: i,
             style: n.style
@@ -88,21 +88,21 @@ window.gcexports.viewer = function () {
           break;
 
         case "tr":
-          elts.push(dom("tr", _extends({
+          elts.push( /*#__PURE__*/React.createElement("tr", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "th":
-          elts.push(dom("th", _extends({
+          elts.push( /*#__PURE__*/React.createElement("th", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "td":
-          elts.push(dom("td", _extends({
+          elts.push( /*#__PURE__*/React.createElement("td", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
@@ -112,7 +112,7 @@ window.gcexports.viewer = function () {
         case "col":
         case "col-sm":
         case "col-sm-4":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: n.type,
             key: i,
             style: n.style
@@ -120,7 +120,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "col-sm":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "col-sm",
             key: i,
             style: n.style
@@ -128,49 +128,49 @@ window.gcexports.viewer = function () {
           break;
 
         case "table-chart":
-          elts.push(dom(TableChart, _extends({
+          elts.push( /*#__PURE__*/React.createElement(TableChart, _extends({
             key: i,
             style: n.style
           }, n)));
           break;
 
         case "bar-chart":
-          elts.push(dom(BarChart, _extends({
+          elts.push( /*#__PURE__*/React.createElement(BarChart, _extends({
             key: i,
             style: n.style
           }, n)));
           break;
 
         case "timeseries-chart":
-          elts.push(dom(TimeseriesChart, _extends({
+          elts.push( /*#__PURE__*/React.createElement(TimeseriesChart, _extends({
             key: i,
             style: n.style
           }, n)));
           break;
 
         case "area-chart":
-          elts.push(dom(AreaChart, _extends({
+          elts.push( /*#__PURE__*/React.createElement(AreaChart, _extends({
             key: i,
             style: n.style
           }, n)));
           break;
 
         case "virus-chart":
-          elts.push(dom(VirusChart, _extends({
+          elts.push( /*#__PURE__*/React.createElement(VirusChart, _extends({
             key: i,
             style: n.style
           }, n)));
           break;
 
         case "heatmap":
-          elts.push(dom(HeatmapChart, _extends({
+          elts.push( /*#__PURE__*/React.createElement(HeatmapChart, _extends({
             key: i,
             style: n.style
           }, n)));
           break;
 
         case "twoColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "two columns",
             key: i,
             style: n.style
@@ -178,7 +178,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "threeColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "three columns",
             key: i,
             style: n.style
@@ -186,7 +186,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "fourColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "four columns",
             key: i,
             style: n.style
@@ -194,7 +194,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "fiveColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "five columns",
             key: i,
             style: n.style
@@ -202,7 +202,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "sixColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "six columns",
             key: i,
             style: n.style
@@ -210,7 +210,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "sevenColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "seven columns",
             key: i,
             style: n.style
@@ -218,7 +218,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "eightColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "eight columns",
             key: i,
             style: n.style
@@ -226,7 +226,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "nineColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "nine columns",
             key: i,
             style: n.style
@@ -234,7 +234,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "tenColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "ten columns",
             key: i,
             style: n.style
@@ -242,7 +242,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "elevenColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "eleven columns",
             key: i,
             style: n.style
@@ -250,7 +250,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "twelveColumns":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "twelve columns",
             key: i,
             style: n.style
@@ -258,7 +258,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "oneThirdColumn":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "one-third column",
             key: i,
             style: n.style
@@ -266,7 +266,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "twoThirdsColumn":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "two-thirds column",
             key: i,
             style: n.style
@@ -274,7 +274,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "oneHalfColumn":
-          elts.push(dom("div", _extends({
+          elts.push( /*#__PURE__*/React.createElement("div", _extends({
             className: "one-half column",
             key: i,
             style: n.style
@@ -282,70 +282,70 @@ window.gcexports.viewer = function () {
           break;
 
         case "h1":
-          elts.push(dom("h1", _extends({
+          elts.push( /*#__PURE__*/React.createElement("h1", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "h2":
-          elts.push(dom("h2", _extends({
+          elts.push( /*#__PURE__*/React.createElement("h2", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "h3":
-          elts.push(dom("h3", _extends({
+          elts.push( /*#__PURE__*/React.createElement("h3", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "h4":
-          elts.push(dom("h4", _extends({
+          elts.push( /*#__PURE__*/React.createElement("h4", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "h5":
-          elts.push(dom("h5", _extends({
+          elts.push( /*#__PURE__*/React.createElement("h5", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "h6":
-          elts.push(dom("h6", _extends({
+          elts.push( /*#__PURE__*/React.createElement("h6", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "br":
-          elts.push(dom("br", {
+          elts.push( /*#__PURE__*/React.createElement("br", {
             key: i
           }));
           break;
 
         case "code":
           n.style.fontSize = n.style && n.style.fontSize ? n.style.fontSize : "90%";
-          elts.push(dom("pre", _extends({
+          elts.push( /*#__PURE__*/React.createElement("pre", _extends({
             key: i,
             style: n.style
-          }, n.attrs), dom("code", null, args)));
+          }, n.attrs), /*#__PURE__*/React.createElement("code", null, args)));
           break;
 
         case "cspan":
-          elts.push(dom("code", _extends({
+          elts.push( /*#__PURE__*/React.createElement("code", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "textarea":
-          elts.push(dom("textarea", _extends({
+          elts.push( /*#__PURE__*/React.createElement("textarea", _extends({
             className: "u-full-width",
             key: i,
             rows: "1",
@@ -355,7 +355,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "button":
-          elts.push(dom("a", _extends({
+          elts.push( /*#__PURE__*/React.createElement("a", _extends({
             className: "button",
             key: i,
             style: n.style
@@ -363,35 +363,35 @@ window.gcexports.viewer = function () {
           break;
 
         case "ul":
-          elts.push(dom("ul", _extends({
+          elts.push( /*#__PURE__*/React.createElement("ul", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "ol":
-          elts.push(dom("ol", _extends({
+          elts.push( /*#__PURE__*/React.createElement("ol", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "li":
-          elts.push(dom("li", _extends({
+          elts.push( /*#__PURE__*/React.createElement("li", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
           break;
 
         case "img":
-          elts.push(dom("img", _extends({
+          elts.push( /*#__PURE__*/React.createElement("img", _extends({
             key: i,
             style: n.style
           }, n.attrs)));
           break;
 
         case "a":
-          elts.push(dom("a", _extends({
+          elts.push( /*#__PURE__*/React.createElement("a", _extends({
             key: i,
             style: n.style
           }, n.attrs), args));
@@ -423,7 +423,7 @@ window.gcexports.viewer = function () {
           let src = n.attrs.src;
           let width = n.attrs.width;
           let height = n.style.height;
-          elts.push(dom(HTMLView, {
+          elts.push( /*#__PURE__*/React.createElement(HTMLView, {
             key: i,
             width: width,
             style: n.style,
@@ -432,7 +432,7 @@ window.gcexports.viewer = function () {
           break;
 
         case "str":
-          elts.push(dom("span", {
+          elts.push( /*#__PURE__*/React.createElement("span", {
             className: "u-full-width",
             key: i,
             style: n.style
@@ -610,7 +610,7 @@ window.gcexports.viewer = function () {
     }
 
     render() {
-      return dom("div", {
+      return /*#__PURE__*/React.createElement("div", {
         id: "chart"
       });
     }
@@ -737,7 +737,7 @@ window.gcexports.viewer = function () {
     }
 
     render() {
-      return dom("div", {
+      return /*#__PURE__*/React.createElement("div", {
         id: "chart"
       });
     }
@@ -1039,7 +1039,7 @@ window.gcexports.viewer = function () {
     }
 
     render() {
-      return dom("div", {
+      return /*#__PURE__*/React.createElement("div", {
         id: "chart"
       });
     }
@@ -1090,10 +1090,10 @@ window.gcexports.viewer = function () {
       let props = this.props;
       var data = props.obj ? [].concat(props.obj) : [];
       var elts = render(data, props);
-      return dom("div", null, dom("link", {
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("link", {
         rel: "stylesheet",
         href: "L114/style.css"
-      }), dom("div", {
+      }), /*#__PURE__*/React.createElement("div", {
         className: "L114"
       }, elts));
     }

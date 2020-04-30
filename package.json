@@ -46,7 +46,6 @@
       [
         "@babel/preset-react",
         {
-          "pragma": "dom",
           "pragmaFrag": "DomFrag",
           "throwIfNamespace": false,
           "runtime": "classic"
@@ -63,7 +62,6 @@
     "@babel/preset-react": "^7.9.4",
     "@babel/preset-typescript": "^7.9.0",
     "@graffiticode/api": "0.0.2",
-    "babelify": "^7.0.2",
     "browserify": "^16.5.1",
     "flow-bin": "^0.32.0",
     "jest": "^25.3.0",
