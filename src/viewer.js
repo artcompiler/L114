@@ -838,12 +838,14 @@ window.gcexports.viewer = (function () {
         let dotRadius = props.dotRadius;
         let chartPadding = props.chartPadding;
         let [min, max] = getRange(rows.slice(1)); // Slice off labels.
+        min = 0;
         let yTickSize = "25%"; // Ignore user setting.
         let yTickFormat = props.yTickFormat || "_";
         let yTickValues;
         if (yTickSize) {
           let values = [];
           let [minValue, maxValue] = getRange(rows.slice(1), props.stack, 0); // Slice off labels.
+          minValue = 0;
           if (typeof yTickSize === "string" && yTickSize.indexOf("%") >= 0) {
             // Make tick size a percent of maxValue.
             let precision = maxValue.toString().indexOf(".");

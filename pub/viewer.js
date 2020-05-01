@@ -1141,6 +1141,7 @@ window.gcexports.viewer = function () {
               max = _getRange6[1]; // Slice off labels.
 
 
+          min = 0;
           var yTickSize = "25%"; // Ignore user setting.
           var yTickFormat = props.yTickFormat || "_";
           var yTickValues = void 0;
@@ -1153,6 +1154,7 @@ window.gcexports.viewer = function () {
                 maxValue = _getRange8[1]; // Slice off labels.
 
 
+            minValue = 0;
             if (typeof yTickSize === "string" && yTickSize.indexOf("%") >= 0) {
               // Make tick size a percent of maxValue.
               var precision = maxValue.toString().indexOf(".");
