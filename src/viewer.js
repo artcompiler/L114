@@ -939,9 +939,7 @@ window.gcexports.viewer = (function () {
               },
               tick: {
                 values: yTickValues,
-                format: (d, i) => {
-                  return formatTick(yTickFormat, d, []);
-                },
+                format: d3.format(yTickFormat),
               },
               min: min,
               max: max + max * .20,
