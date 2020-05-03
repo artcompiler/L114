@@ -878,7 +878,7 @@ window.gcexports.viewer = function () {
         min = 0;
         let yTickSize = "25%"; // Ignore user setting.
 
-        let yTickFormat = props.yTickFormat || "_";
+        let yTickFormat = props.yTickFormat || ",d";
         let yTickValues;
 
         if (yTickSize) {
