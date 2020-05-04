@@ -27,7 +27,7 @@ function cldir(path) {
 }
 
 function exec(cmd, args) {
-  execSync(cmd, args);
+  return execSync(cmd, args);
 }
 
 function clean() {
@@ -38,6 +38,7 @@ function clean() {
 
 function compile() {
   console.log("Compiling...");
+  prebuild();
   exec("babel src --out-dir lib");
 }
 
@@ -61,6 +62,15 @@ function build(debug) {
   compile();
   bundle(debug);
   console.log("Build completed in " + (Date.now() - t0) + " ms");
+}
+
+function prebuild() {
+  const commit = String(exec('git rev-parse HEAD'));
+  const build = {
+    'name': 'L114',
+    'commit': commit.trim().slice(0, 7),
+  };
+  fs.writeFile('build.json', JSON.stringify(build, null, 2), () => {});
 }
 
 build(true);

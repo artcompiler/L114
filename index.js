@@ -21,7 +21,18 @@ function isError(err) {
   return false;
 }
 
+function setBuildsMetadata(data, build) {
+  if (!data._) {
+    data._ = {};
+  }
+  if (!data._.builds) {
+    data._.builds = [];
+  }
+  data._.builds.push(build);
+}
+
 const validateToken = createValidateToken({ lang: langID });
+const build = require('./build.json');
 const compilerDefinition = {
   language: langID,
   compile: (code, data, config) => {
@@ -30,6 +41,7 @@ const compilerDefinition = {
         if (isError(err)) {
           reject(err);
         } else {
+          setBuildsMetadata(val, build);
           resolve(val);
         }
       });
