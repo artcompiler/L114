@@ -2,11 +2,11 @@
    L114 compiler service.
    @flow weak
 */
-const langID = 114;
 const path = require('path');
 const compiler = require('./lib/compile.js');
 const {
   AuthError,
+  createCloudFunction,
   createLambda,
   createValidateToken,
 } = require('@graffiticode/graffiticode-compiler-framework');
@@ -31,10 +31,12 @@ function setBuildsMetadata(data, build) {
   data._.builds.push(build);
 }
 
-const validateToken = createValidateToken({ lang: langID });
 const build = require('./build.json');
+const langID = 114;
+const language = `L${langID}`;
+const validateToken = createValidateToken({ lang: language });
 const compilerDefinition = {
-  language: langID,
+  language,
   compile: (code, data, config) => {
     return new Promise((resolve, reject) => {
       compiler.compile(code, data, (err, val) => {
@@ -57,3 +59,4 @@ const compilerDefinition = {
 };
 exports.compiler = compilerDefinition;
 exports.lambdaHandler = createLambda(compilerDefinition);
+exports.cloudFunctionHandler = createCloudFunction(compilerDefinition);
