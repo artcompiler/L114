@@ -4163,7 +4163,7 @@ function brush$1(dim) {
         .attr("fill", "#777")
         .attr("fill-opacity", 0.3)
         .attr("stroke", "#fff")
-        .attr("shape-rendering", "auto");
+        .attr("shape-rendering", "crispEdges");
 
     var handle = group.selectAll(".handle")
       .data(dim.handles, function(d) { return d.type; });

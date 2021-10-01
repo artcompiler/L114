@@ -62,7 +62,7 @@ app.post("/compile", function(req, res) {
 function postAuth(path, data, resume) {
   let encodedData = JSON.stringify(data);
   var options = {
-    host: "auth.artcompiler.com",
+    host: "auth-artcompiler.herokuapp.com",
     port: "443",
     path: path,
     method: "POST",
