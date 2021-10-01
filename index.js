@@ -1,5 +1,5 @@
 /*
-   L104 compiler service.
+   L114 compiler service.
    @flow weak
 */
 const langID = 104;

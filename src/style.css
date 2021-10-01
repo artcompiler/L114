@@ -1,15 +1,5 @@
 /* localhost
  */
-/* fivestars domains
- */
-@import url("https://p.typekit.net/p.css?s=1&k=pae0xgm&ht=tk&f=139.140.171.173.174.175.176.5474.5475.32897.32898.32902.32903.32904&a=617053&app=typekit&e=css");
-
-@font-face {
-font-family:"proxima-nova";
-src:url("https://use.typekit.net/af/437c3d/00000000000000003b9b0932/27/l?subset_id=2&fvd=n3&v=3") format("woff2"),url("https://use.typekit.net/af/437c3d/00000000000000003b9b0932/27/d?subset_id=2&fvd=n3&v=3") format("woff"),url("https://use.typekit.net/af/437c3d/00000000000000003b9b0932/27/a?subset_id=2&fvd=n3&v=3") format("opentype");
-font-style:normal;font-weight:300;
-}
-
 .editor {
 	border-collapse: collapse;
 	width: 800px;
