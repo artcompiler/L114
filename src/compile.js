@@ -65,7 +65,7 @@ const transform = (function() {
     "CONCAT" : concat,
     "ARG" : arg,
     "IN" : inData,
-    '"DEFAULTS"' : inData,
+    "DEFAULTS" : inData,
     "LAMBDA" : lambda,
     "PAREN" : paren,
     "APPLY" : apply,
@@ -96,6 +96,7 @@ const transform = (function() {
     } else {
       node = nodePool[nid];
     }
+    console.log("visit() node.tag=" + node.tag + " table[node.tag]=" + table[node.tag]);
     assert(node, message(1001, [nid]));
     assert(node.tag, message(1001, [nid]));
     assert(typeof table[node.tag] === "function", message(1004, [JSON.stringify(node.tag)]));
