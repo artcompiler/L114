@@ -68,6 +68,7 @@ const transform = (function() {
     "CONCAT" : concat,
     "ARG" : arg,
     "DEFAULTS" : defaults,
+    "IN" : defaults,
     "LAMBDA" : lambda,
     "PAREN" : paren,
     "APPLY" : apply,
