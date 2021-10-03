@@ -88,6 +88,7 @@ const transform = (function() {
     };
   }
   function visit(nid, options, resume) {
+    console.log("visit() nid=" + nid);
     assert(typeof resume === "function", message(1003));
     // Get the node from the pool of nodes.
     let node;
