@@ -1182,8 +1182,16 @@ window.gcexports.viewer = (function () {
     render () {
       // If you have nested components, make sure you send the props down to the
       // owned components.
-      let props = this.props;
-      var data = props.obj ? [].concat(props.obj) : [];
+      const props = this.props;
+      const obj = props.obj;
+      let data;
+      if (obj.status === 'success') {
+        // Response from new API: {status, data, errors}
+        data = obj.data;
+      } else {
+        data = obj || {};
+      }
+      data = [].concat(data);
       var elts = render(data, props);
       return (
         <div>
