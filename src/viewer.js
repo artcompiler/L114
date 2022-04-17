@@ -137,6 +137,11 @@ window.gcexports.viewer = (function () {
           <AreaChart key={i} style={n.style} {...n}/>
         );
         break;
+      case "heatmap":
+        elts.push(
+          <HeatmapChart key={i} style={n.style} {...n}/>
+        );
+        break;
       case "twoColumns":
         elts.push(
           <div className="two columns" key={i} style={n.style} {...n.attrs}>
@@ -448,8 +453,8 @@ window.gcexports.viewer = (function () {
     componentDidMount() {
       // NOTE this is required because C3 loads the wrong version of D3
       // otherwise.
-      loadScript("/L104/d3.js", () => {
-        loadScript("/L104/c3.js", () => {
+      loadScript("/L114/d3.js", () => {
+        loadScript("/L114/c3.js", () => {
           this.componentDidUpdate();
         });
       });
@@ -722,7 +727,7 @@ window.gcexports.viewer = (function () {
   });
   var TableChart = React.createClass({
     componentDidMount() {
-      loadScript("/L104/d3.js", () => {
+      loadScript("/L114/d3.js", () => {
         this.componentDidUpdate();
       });
     },
@@ -827,8 +832,8 @@ window.gcexports.viewer = (function () {
   });
   var TimeseriesChart = React.createClass({
     componentDidMount() {
-      loadScript("/L104/d3.js", () => {
-        loadScript("/L104/c3.js", () => {
+      loadScript("/L114/d3.js", () => {
+        loadScript("/L114/c3.js", () => {
           this.componentDidUpdate();
         });
       });
@@ -881,10 +886,171 @@ window.gcexports.viewer = (function () {
       );
     },
   });
+  var HeatmapChart = React.createClass({
+    componentDidMount() {
+      loadScript("/L114/d3.js", () => {
+        this.componentDidUpdate();
+      });
+    },
+    componentDidUpdate() {
+      let dataset = this.props.args.vals;
+      let colCount = dataset[dataset.length - 1].col + 1;
+      let rows = this.props.rows,
+          cols = this.props.cols,
+          times = d3.range(colCount);
+      let palette = this.props.palette || ["#777"];
+      let margin = {top:40, right:50, bottom:70, left:100};
+      
+      // calculate width and height based on window size
+      var width = Math.max(Math.min(window.innerWidth, 1000), 500) - margin.left - margin.right - 20,
+      gridSize = Math.floor(width / times.length),
+      h = gridHeight * (rows.length + 2);
+      let gridHeight = gridSize;
+
+      //reset the overall font size
+      var newFontSize = width * 62.5 / 900;
+      d3.select("html").style("font-size", newFontSize + "%");
+      
+      // svg container
+      d3.select("#chart").html("");  // Clear view.
+      var svg = d3.select("#chart")
+  	.append("svg")
+  	.attr("width", width + margin.top + margin.bottom)
+  	.attr("height", h + margin.left + margin.right)
+  	.append("g")
+  	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+      // linear colour scale
+      var colours = d3.scaleLinear()
+        .domain(palette.domain)
+        .range(palette.range);
+
+      var dayLabels = svg.selectAll(".dayLabel")
+  	.data(rows)
+  	.enter()
+  	.append("text")
+  	.text(function(d) { return d.label; })
+  	.attr("x", 0)
+  	.attr("y", function(d, i) { return i * gridHeight; })
+  	.style("text-anchor", "end")
+	.attr("transform", "translate(-6," + gridHeight / 1.5 + ")")
+
+      var timeLabels = svg.selectAll(".timeLabel")
+        .data(times)
+        .enter()
+        .append("text")
+        .text(function(d) {
+          return cols.interval === "day" && d + 1 || d;
+        })
+        .attr("x", function(d, i) { return i * gridSize; })
+        .attr("y", 0)
+        .style("text-anchor", "middle")
+        .attr("transform", "translate(" + gridSize / 2 + ", -6)");
+
+        // group data by location
+        var nest = d3.nest()
+          .key(function(d) { return d.location; })
+          .entries(dataset);
+
+        // array of locations in the data
+        var locations = nest.map(function(d) { return d.key; });
+        var currentLocationIndex = 0;
+
+        // create location dropdown menu
+        var locationMenu = d3.select("#locationDropdown");
+        locationMenu
+          .append("select")
+          .attr("id", "locationMenu")
+          .selectAll("option")
+          .data(locations)
+          .enter()
+          .append("option")
+          .attr("value", function(d, i) { return i; })
+          .text(function(d) { return d; });
+
+        // function to create the initial heatmap
+        var drawHeatmap = function(location) {
+
+          // filter the data to return object of location of interest
+          var selectLocation = nest.find(function(d) {
+            return d.key == location;
+          });
+
+          var heatmap = svg.selectAll(".hour")
+            .data(selectLocation.values)
+            .enter()
+            .append("rect")
+            .attr("x", function(d) {
+              return (d.col) * gridSize; })
+            .attr("y", function(d) {
+              return (d.row) * gridHeight;
+            })
+            .attr("class", "hour bordered")
+            .attr("width", gridSize)
+            .attr("height", gridHeight)
+            .style("stroke", "white")
+            .style("stroke-opacity", 1)
+            .style("fill", function(d) { return colours(d.val); })
+            .html(function (d) {
+              return "<title>" + d.tip + "</title>"
+            });
+        }
+        drawHeatmap(locations[currentLocationIndex]);
+
+        var updateHeatmap = function(location) {
+          console.log("currentLocationIndex: " + currentLocationIndex)
+          // filter data to return object of location of interest
+          var selectLocation = nest.find(function(d) {
+            return d.key == location;
+          });
+
+          // update the data and redraw heatmap
+          var heatmap = svg.selectAll(".hour")
+            .data(selectLocation.values)
+            .transition()
+            .duration(500)
+            .style("fill", function(d) { return colours(d.val); })
+        }
+
+        // run update function when dropdown selection changes
+        locationMenu.on("change", function() {
+          // find which location was selected from the dropdown
+          var selectedLocation = d3.select(this)
+            .select("select")
+            .property("value");
+          currentLocationIndex = +selectedLocation;
+          // run update function with selected location
+          updateHeatmap(locations[currentLocationIndex]);
+        });    
+
+        d3.selectAll(".nav").on("click", function() {
+          if(d3.select(this).classed("left")) {
+            if(currentLocationIndex == 0) {
+              currentLocationIndex = locations.length-1;
+            } else {
+              currentLocationIndex--;  
+            }
+          } else if(d3.select(this).classed("right")) {
+            if(currentLocationIndex == locations.length-1) {
+              currentLocationIndex = 0;
+            } else {
+              currentLocationIndex++;  
+            }
+          }
+          d3.select("#locationMenu").property("value", currentLocationIndex)
+          updateHeatmap(locations[currentLocationIndex]);
+        });
+    },
+    render () {
+      return (
+        <div id="chart" />
+      );
+    },
+  });
   var AreaChart = React.createClass({
     componentDidMount() {
-      loadScript("/L104/d3.js", () => {
-        loadScript("/L104/c3.js", () => {
+      loadScript("/L114/d3.js", () => {
+        loadScript("/L114/c3.js", () => {
           this.componentDidUpdate();
         });
       });
@@ -902,15 +1068,15 @@ window.gcexports.viewer = (function () {
         let dotRadius = props.dotRadius;
         let chartPadding = props.chartPadding;
         let [min, max] = getRange(rows.slice(1)); // Slice off labels.
-        let pad = (max - min) / 4;
-        rows = rebaseValues(pad - min, rows);  // val + pad - min
+        let offset = min / 4;
+//        rows = rebaseValues(offset, rows);  // val + pad - min
         let types = {}
         types[cols[cols.length - 1]] = "area";  // Use last column as values.
         let padding = {
           top: -5,
           right: -20,
-          bottom: -7,
-          left: -20,
+          bottom: 0,
+          left: 40,
         };
         if (chartPadding) {
           if (chartPadding instanceof Array) {
@@ -948,7 +1114,8 @@ window.gcexports.viewer = (function () {
               padding: {
                 left: 0,
                 right: 0,
-              }
+              },
+              min: min - 10,
             },
           },
           color: {
@@ -1015,13 +1182,21 @@ window.gcexports.viewer = (function () {
     render () {
       // If you have nested components, make sure you send the props down to the
       // owned components.
-      let props = this.props;
-      var data = props.obj ? [].concat(props.obj) : [];
+      const props = this.props;
+      const obj = props.obj;
+      let data;
+      if (obj.status === 'success') {
+        // Response from new API: {status, data, errors}
+        data = obj.data;
+      } else {
+        data = obj || {};
+      }
+      data = [].concat(data);
       var elts = render(data, props);
       return (
         <div>
-        <link rel="stylesheet" href="L104/style.css" />
-        <div className="L104">
+        <link rel="stylesheet" href="L114/style.css" />
+        <div className="L114">
           {elts}
         </div>
         </div>
