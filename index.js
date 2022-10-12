@@ -2,7 +2,7 @@
    L114 compiler service.
    @flow weak
 */
-const langID = 104;
+const langID = 114;
 // SHARED START
 const fs = require('fs');
 const http = require("http");
@@ -20,7 +20,7 @@ app.get('/', function(req, res) {
 });
 app.listen(app.get('port'), function() {
   global.port = +app.get('port');
-  console.log("XXX Node app is running at localhost:" + app.get('port'))
+  console.log("Node app is running at localhost:" + app.get('port'))
   if (process.argv.includes("test")) {
     test();
   }
